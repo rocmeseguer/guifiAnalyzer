@@ -36,6 +36,10 @@ class GuifiNet:
             print e.reason
         print self.gui.is_authenticated()
         print self.gui.authToken
+        print "Parsing World..."
+        self.world = self.getZoneCNML(3671)
+        links = 
+
 
 
 
@@ -95,7 +99,7 @@ class GuifiNet:
         if  not zone:
             zone = raw_input("Select a zone: ")
         try:
-            fp = self.gui.downloadCNML(int(zone), 'zones')
+            fp = self.gui.downloadCNML(int(zone), 'detail')
             filename = os.path.join(os.getcwd(),'cnml',str(zone))
             with open(filename, 'w') as zonefile:
                 zonefile.write(fp.read())
