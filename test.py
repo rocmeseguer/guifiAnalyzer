@@ -22,7 +22,7 @@ from urllib2 import URLError
 import gettext
 _ = gettext.gettext
 
-
+import json
 
 class GuifiNet:
     def __init__(self, cnmlFile=None):
@@ -36,9 +36,28 @@ class GuifiNet:
             print e.reason
         print self.gui.is_authenticated()
         print self.gui.authToken
-        print "Parsing World..."
-        self.world = self.getZoneCNML(3671)
-        links = 
+        zone = int(raw_input("Select a zone: "))
+        print _('Parsing:'), zone
+        #self.world = self.getZoneCNML(3671)
+        self.zone = self.parseZoneCNML(zone)
+        nodesFile = os.path.join(os.getcwd(),"topo.js")
+        fpTopo = open(nodesFile,"w")
+        print>> fpTopo, "var nodes = ["
+        for node in self.zone.getNodes():
+            entry = {"id": node.id}
+            fpTopo.write("%s,\n" % json.dumps(entry))
+        print>> fpTopo, "];\n"
+        print>> fpTopo, "var edges = ["
+        for link in self.zone.getLinks():
+            #if link.link_status == "Working" and  
+            #entry = { "from": link.nodeA.id, "to": link.nodeB.id},
+            #print _('The entry is: '), entry
+            #fpTopo.write("%s,\n" % json.dumps(entry))
+            print _('Link type'), link.type
+        print>> fpTopo, "];"
+        fpTopo.close()
+
+
 
 
 
