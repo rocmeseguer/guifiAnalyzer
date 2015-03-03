@@ -40,6 +40,27 @@ class GuifiNet:
         print _('Parsing:'), zone
         #self.world = self.getZoneCNML(3671)
         self.zone = self.parseZoneCNML(zone)
+        print "Find all link types"
+        linkType = {}
+        for link in self.zone.getLinks():
+            if not linkType[link.type]:
+                linkType.update({link.type:1})
+            else:
+                counter = linkType[link.type]
+                linkType.update({})
+        print _('Link Types:'), linkType
+        print "Find all iface types"
+        ifaceType = {}
+        for iface in self.zone.getInterfaces():
+            if iface.type not in ifaceType:
+                ifaceType.append(iface.type)
+
+        print _('IFace Types:'), ifaceType
+
+        
+
+
+    def createTopoJSON(self):
         nodesFile = os.path.join(os.getcwd(),"topo.js")
         fpTopo = open(nodesFile,"w")
         print>> fpTopo, "var nodes = ["
