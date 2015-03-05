@@ -23,6 +23,7 @@ import gettext
 _ = gettext.gettext
 
 import json
+import operator
 
 class GuifiNet:
     def __init__(self, cnmlFile=None):
@@ -40,86 +41,11 @@ class GuifiNet:
         print _('Parsing:'), zone
         #self.world = self.getZoneCNML(3671)
         self.zone = self.parseZoneCNML(zone)
-        print "Find all link types"
-        linkType = {}
-        for link in self.zone.getLinks():
-            if not linkType[link.type]:
-                linkType.update({link.type:1})
-            else:
-                counter = linkType[link.type]
-                linkType.update({})
-        print _('Link Types:'), linkType
-        print "Find all iface types"
-        ifaceType = {}
-        for iface in self.zone.getInterfaces():
-            if iface.type not in ifaceType:
-                ifaceType.append(iface.type)
+        print vars(self.zone)
 
-        print _('IFace Types:'), ifaceType
-
-        
-
-
-    def createTopoJSON(self):
-        nodesFile = os.path.join(os.getcwd(),"topo.js")
-        fpTopo = open(nodesFile,"w")
-        print>> fpTopo, "var nodes = ["
-        for node in self.zone.getNodes():
-            entry = {"id": node.id}
-            fpTopo.write("%s,\n" % json.dumps(entry))
-        print>> fpTopo, "];\n"
-        print>> fpTopo, "var edges = ["
-        for link in self.zone.getLinks():
-            #if link.link_status == "Working" and  
-            #entry = { "from": link.nodeA.id, "to": link.nodeB.id},
-            #print _('The entry is: '), entry
-            #fpTopo.write("%s,\n" % json.dumps(entry))
-            print _('Link type'), link.type
-        print>> fpTopo, "];"
-        fpTopo.close()
-
-
-
-
-
-
-    #     if not cnmlFile:
-    #         # Load default zone cnml
-    #         print "Download World CNML"
-    #         try:
-    #             fp = self.gui.downloadCNML(GUIFI_NET_WORLD_ZONE_ID, 'zones')
-    #             filename = os.path.join(os.getcwd(),'cnml',str(GUIFI_NET_WORLD_ZONE_ID))
-    #             with open(filename, 'w') as zonefile:
-    #                 zonefile.write(fp.read())
-    #             print _('Zone saved successfully to'), filename
-    #             self.cnmlFile = filename
-    #         except URLError, e:
-    #             print _('Error accessing to the Internet:'), str(e.reason)
-
-    #     if cnmlFile:
-    #         print "Using indicated CNML file"
-    #         self.cnmlFile = cnmlFile
-
-
-    # def saveZones(self):
-    #     # CNMLParser
-    #     print "CNML Parser"
-    #     try:
-    #         self.cnmlp = CNMLParser(self.cnmlFile)
-    #         try:
-    #             #self.zonecnmlp = CNMLParser(cnmlFile)
-    #             self.zonecnmlp = self.cnmlp
-    #             for z in self.zonecnmlp.getZones():
-    #                 #print _('Zone id:'), z.id
-    #                 #print _('Zone Title:'), z.title
-    #                 self.allZones.append((z.id, z.title))
-    #         except IOError:
-    #             print _('Error loading cnml guifiworld zone:'), self.cnmlFile
-    #             self.zonecnmlp = None
-    #     except IOError:
-    #         self.cnmlp = None
-    #         self.cnmlFile = None
-    #         print _('Error opening CNML file')
+    def dump(self,obj):
+        for attr in dir(obj):
+            print "obj.%s = %s" % (attr, getattr(obj, attr))
 
 
     def parseZoneCNML(self,zone):
@@ -147,6 +73,58 @@ class GuifiNet:
             return filename
         except URLError, e:
             print _('Error accessing to the Internet:'), str(e.reason)
+
+
+
+    def findAttributeTypes(self):
+        print _('Select type of attribute:')
+        attr = int(raw_input("Enter: 1 for devices, 2 for ifaces, 3 for links or 4 for Services: "))
+        if  attr == 1 :
+            objects = self.zone.getDevices()
+            print "Find all device types"
+        elif attr == 2 :
+            objects = self.zone.getInterfaces()
+            print "Find all Interface types"
+        elif attr == 3 :
+            objects = self.zone.getLinks()
+            print "Find all link types"
+        elif attr == 4 :
+            objects = self.zone.getServices()
+            print "Find all service types"
+        else :
+            print _('Wrong Input')
+            return
+
+        types = {}
+        for obj in objects:
+            if obj.type not in types:
+                types.update({obj.type:1})
+            else:
+                counter = types[obj.type] + 1
+                types.update({obj.type:counter})
+        print _('Different Types: '), len(types)
+        sortedTypes = sorted(types.iteritems(), key=operator.itemgetter(1))
+        print _('Types: '), sortedTypes
+        print _('Total Number: '), len(objects)
+
+
+    def createTopoJSON(self):
+        nodesFile = os.path.join(os.getcwd(),"topo.js")
+        fpTopo = open(nodesFile,"w")
+        print>> fpTopo, "var nodes = ["
+        for node in self.zone.getNodes():
+            entry = {"id": node.id}
+            fpTopo.write("%s,\n" % json.dumps(entry))
+        print>> fpTopo, "];\n"
+        print>> fpTopo, "var edges = ["
+        for link in self.zone.getLinks():
+            #if link.link_status == "Working" and
+            #entry = { "from": link.nodeA.id, "to": link.nodeB.id},
+            #print _('The entry is: '), entry
+            #fpTopo.write("%s,\n" % json.dumps(entry))
+            print _('Link type'), link.type
+        print>> fpTopo, "];"
+        fpTopo.close()
 
 
 
