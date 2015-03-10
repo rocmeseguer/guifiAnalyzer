@@ -123,6 +123,7 @@ class GuifiNet:
         print>> fpTopo, "var edges = ["
         for link in self.zone.getLinks():
             #if link.link_status == "Working" and
+            print ('Link of node:'), self.getParentNode(link).id
             print _('Link id'), link.id
             print _('Link type'), link.type
             entry = { "from": link.nodeA.id, "to": link.nodeB.id}
@@ -131,6 +132,24 @@ class GuifiNet:
             
         print>> fpTopo, "];"
         fpTopo.close()
+
+
+    def getParentNode(self, comp):
+        if type(comp) is libcnml.libcnml.CNMLLink :  
+            return self.getParentNode(comp.parentInterface)
+        elif type(comp) is libcnml.libcnml.CNMLInterface :
+            return self.getParentNode(comp.parentRadio)
+        elif type(comp) is libcnml.libcnml.CNMLRadio :
+            return self.getParentNode(comp.parentDevice)
+        elif type(comp) is libcnml.libcnml.CNMLDevice :
+            return self.getParentNode(comp.parentNode)
+        elif type(comp) is libcnml.libcnml.CNMLNode :
+            return comp
+        else :
+            return None
+
+
+
 
 
         # # Find the relevant links
