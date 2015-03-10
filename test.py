@@ -6,10 +6,13 @@ import os
 import sys
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append('lib')
-sys.path.append('lib/libcnml')
+#sys.path.append('lib/libcnml')
 sys.path.append('lib/pyGuifiAPI')
 
-from libcnml import CNMLParser, Status
+import libcnml
+import logging
+libcnml.logger.setLevel(logging.DEBUG)
+
 import pyGuifiAPI
 from pyGuifiAPI.error import GuifiApiError
 
@@ -41,7 +44,10 @@ class GuifiNet:
         print _('Parsing:'), zone
         #self.world = self.getZoneCNML(3671)
         self.zone = self.parseZoneCNML(zone)
-        print vars(self.zone)
+        #for n in self.zone.nodes:
+        #    print self.zone.nodes[n].status
+        self.zone.nodes =  {i: self.zone.nodes[i] for i in self.zone.nodes if self.zone.nodes[i].status == libcnml.Status.WORKING}
+
 
     def dump(self,obj):
         for attr in dir(obj):
@@ -55,7 +61,7 @@ class GuifiNet:
             zonefile = self.getZoneCNML(zone)
 
         try:
-            return CNMLParser(zonefile)
+            return libcnml.CNMLParser(zonefile)
         except  IOError:
             print _('Error opening CNML file: ' ), zonefile
 
@@ -73,8 +79,6 @@ class GuifiNet:
             return filename
         except URLError, e:
             print _('Error accessing to the Internet:'), str(e.reason)
-
-
 
     def findAttributeTypes(self):
         print _('Select type of attribute:')
@@ -119,14 +123,14 @@ class GuifiNet:
         print>> fpTopo, "var edges = ["
         for link in self.zone.getLinks():
             #if link.link_status == "Working" and
-            #entry = { "from": link.nodeA.id, "to": link.nodeB.id},
-            #print _('The entry is: '), entry
-            #fpTopo.write("%s,\n" % json.dumps(entry))
+            print _('Link id'), link.id
             print _('Link type'), link.type
+            entry = { "from": link.nodeA.id, "to": link.nodeB.id}
+            print _('The entry is: '), entry
+            fpTopo.write("%s,\n" % json.dumps(entry))
+            
         print>> fpTopo, "];"
         fpTopo.close()
-
-
 
 
         # # Find the relevant links
