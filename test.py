@@ -6,7 +6,7 @@ import os
 import sys
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append('lib')
-#sys.path.append('lib/libcnml')
+sys.path.append('lib/libcnml')
 sys.path.append('lib/pyGuifiAPI')
 
 import libcnml
@@ -43,11 +43,17 @@ class GuifiNet:
         zone = int(raw_input("Select a zone: "))
         print _('Parsing:'), zone
         #self.world = self.getZoneCNML(3671)
-        self.zone = self.parseZoneCNML(zone)
-        #for n in self.zone.nodes:
-        #    print self.zone.nodes[n].status
-        self.zone.nodes =  {i: self.zone.nodes[i] for i in self.zone.nodes if self.zone.nodes[i].status == libcnml.Status.WORKING}
-
+        self.cnml = self.parseZoneCNML(zone)
+        #for n in self.cnml.nodes:
+        #    print self.cnml.nodes[n].status
+        print _('Total nodes: '),  len(self.cnml.nodes)
+        print _('Total devices: '),  len(self.cnml.devices)
+        print _('Total links: '),  len(self.cnml.links)
+        self.cnml.nodes =  {i: self.cnml.nodes[i] for i in self.cnml.nodes if self.cnml.nodes[i].status == libcnml.Status.WORKING}
+        print "After keeping only working nodes"
+        print _('Total nodes: '),  len(self.cnml.nodes)
+        print _('Total devices: '),  len(self.cnml.getDevices())
+        print _('Total links: '),  len(self.cnml.getLinks())
 
     def dump(self,obj):
         for attr in dir(obj):
@@ -84,16 +90,16 @@ class GuifiNet:
         print _('Select type of attribute:')
         attr = int(raw_input("Enter: 1 for devices, 2 for ifaces, 3 for links or 4 for Services: "))
         if  attr == 1 :
-            objects = self.zone.getDevices()
+            objects = self.cnml.getDevices()
             print "Find all device types"
         elif attr == 2 :
-            objects = self.zone.getInterfaces()
+            objects = self.cnml.getInterfaces()
             print "Find all Interface types"
         elif attr == 3 :
-            objects = self.zone.getLinks()
+            objects = self.cnml.getLinks()
             print "Find all link types"
         elif attr == 4 :
-            objects = self.zone.getServices()
+            objects = self.cnml.getServices()
             print "Find all service types"
         else :
             print _('Wrong Input')
@@ -116,12 +122,12 @@ class GuifiNet:
         nodesFile = os.path.join(os.getcwd(),"topo.js")
         fpTopo = open(nodesFile,"w")
         print>> fpTopo, "var nodes = ["
-        for node in self.zone.getNodes():
+        for node in self.cnml.getNodes():
             entry = {"id": node.id}
             fpTopo.write("%s,\n" % json.dumps(entry))
         print>> fpTopo, "];\n"
         print>> fpTopo, "var edges = ["
-        for link in self.zone.getLinks():
+        for link in self.cnml.getLinks():
             #if link.link_status == "Working" and
             print ('Link of node:'), self.getParentNode(link).id
             print _('Link id'), link.id
@@ -129,13 +135,13 @@ class GuifiNet:
             entry = { "from": link.nodeA.id, "to": link.nodeB.id}
             print _('The entry is: '), entry
             fpTopo.write("%s,\n" % json.dumps(entry))
-            
+
         print>> fpTopo, "];"
         fpTopo.close()
 
 
     def getParentNode(self, comp):
-        if type(comp) is libcnml.libcnml.CNMLLink :  
+        if type(comp) is libcnml.libcnml.CNMLLink :
             return self.getParentNode(comp.parentInterface)
         elif type(comp) is libcnml.libcnml.CNMLInterface :
             return self.getParentNode(comp.parentRadio)
