@@ -5,8 +5,15 @@ from networkx import *
 import matplotlib.pyplot as plt
 
 G=Graph()
-G.add_nodes_from([1,2,3,4,5,6])
-G.add_edges_from([(1,2),(3,4),(5,6),(1,6),(4,5)])
+G.add_node(1, {'id':'a','type':'supernode'}, color='red')
+G.add_node(2, {'id':'b','color':'blue'}, type='node')
+G.add_node(3, {'id':'c','type':'node'}, color='blue')
+G.add_edge(1,2, {'id':'a','type':'wds'}, color='green')
+G.add_edge(3,2, {'id':'b','type':'ap'}, color='yellow')
+
+
+#G.add_nodes_from([1,2,3,4,5,6])
+#G.add_edges_from([(1,2),(3,4),(5,6),(1,6),(4,5)])
 #A=to_agraph(G)        # convert to a graphviz graph
 #A.layout()            # neato layout
 #A.draw("k5.ps")       # write postscript in k5.ps with neato layout
@@ -46,3 +53,6 @@ print("density: %s" % density(G))
 
 draw(G,with_labels=True)
 plt.show()
+
+write_gexf(G,"test.gexf")
+write_pajek(G, "test.net")
