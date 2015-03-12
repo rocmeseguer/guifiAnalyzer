@@ -50,11 +50,11 @@ class GuifiNet:
         print _('Total nodes: '),  len(self.cnml.nodes)
         print _('Total devices: '),  len(self.cnml.devices)
         print _('Total links: '),  len(self.cnml.links)
-        self.cnml.nodes =  {i: self.cnml.nodes[i] for i in self.cnml.nodes if self.cnml.nodes[i].status == libcnml.Status.WORKING}
-        print "After keeping only working nodes"
-        print _('Total nodes: '),  len(self.cnml.nodes)
-        print _('Total devices: '),  len(self.cnml.getDevices())
-        print _('Total links: '),  len(self.cnml.getLinks())
+       # self.cnml.nodes =  {i: self.cnml.nodes[i] for i in self.cnml.nodes if self.cnml.nodes[i].status == libcnml.Status.WORKING}
+        #print "After keeping only working nodes"
+        #print _('Total nodes: '),  len(self.cnml.nodes)
+        #print _('Total devices: '),  len(self.cnml.getDevices())
+        #print _('Total links: '),  len(self.cnml.getLinks())
 
     def dump(self,obj):
         for attr in dir(obj):
