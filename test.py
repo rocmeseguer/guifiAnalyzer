@@ -40,7 +40,8 @@ class GuifiNet:
             print e.reason
         print self.gui.is_authenticated()
         print self.gui.authToken
-        zone = int(raw_input("Select a zone: "))
+        if not cnmlFile:
+            zone = int(raw_input("Select a zone: "))
         print _('Parsing:'), zone
         #self.world = self.getZoneCNML(3671)
         self.cnml = self.parseZoneCNML(zone)
