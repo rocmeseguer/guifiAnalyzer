@@ -31,6 +31,9 @@ import operator
 class GuifiNet:
     def __init__(self, cnmlFile=None):
         # GuifiAPI
+        libcnml.logger.info("Starting process")
+        libcnml.logger.debug("Starting debug")
+        libcnml.logger.warning("Starting warn")
         self.gui = pyGuifiAPI.GuifiAPI('edimoger', '100105a')
         self.allZones = []
         print "Going to auth"
@@ -50,6 +53,7 @@ class GuifiNet:
         print _('Total nodes: '),  len(self.cnml.nodes)
         print _('Total devices: '),  len(self.cnml.devices)
         print _('Total links: '),  len(self.cnml.links)
+        #TODO fix using only working nodes 
        # self.cnml.nodes =  {i: self.cnml.nodes[i] for i in self.cnml.nodes if self.cnml.nodes[i].status == libcnml.Status.WORKING}
         #print "After keeping only working nodes"
         #print _('Total nodes: '),  len(self.cnml.nodes)
@@ -130,9 +134,18 @@ class GuifiNet:
         print>> fpTopo, "var edges = ["
         for link in self.cnml.getLinks():
             #if link.link_status == "Working" and
-            print ('Link of node:'), self.getParentNode(link).id
+            parent = self.getParentNode(link)
+            print ('Link of node:'), parent.id
             print _('Link id'), link.id
             print _('Link type'), link.type
+            print type(link.nodeB)
+            print link.nodeB            
+            if type(link.nodeB) is int:
+                print _('Link to node outside the zone. Ignoring. Link id:'), link.id
+                continue
+            if parent.id == link.nodeB.id :
+                print _('Link to self. Ignoring. Link id:'), link.id
+                continue
             entry = { "from": link.nodeA.id, "to": link.nodeB.id}
             print _('The entry is: '), entry
             fpTopo.write("%s,\n" % json.dumps(entry))
