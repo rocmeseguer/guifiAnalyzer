@@ -137,11 +137,9 @@ class GuifiNet:
             parent = self.getParentNode(link)
             print ('Link of node:'), parent.id
             print _('Link id'), link.id
-            print _('Link type'), link.type
-            print type(link.nodeB)
-            print link.nodeB            
-            if type(link.nodeB) is int:
-                print _('Link to node outside the zone. Ignoring. Link id:'), link.id
+            print _('Link type'), link.type           
+            if not link.nodeB:
+                print _('Link to node outside the zone or not proper CNML data. Ignoring. Link id:'), link.id
                 continue
             if parent.id == link.nodeB.id :
                 print _('Link to self. Ignoring. Link id:'), link.id

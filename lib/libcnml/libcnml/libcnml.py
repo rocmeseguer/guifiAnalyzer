@@ -504,7 +504,7 @@ class CNMLLink(object):
         nidB = self.nodeB
 
         if self.nodeB is None:
-            #logger.info("Couldn't find linked node (%d) in link %d. It may be defined in a different CNML zone." % (self.nodeA, self.id))
+            logger.info("Couldn't find linked node (%d) in link %d. It may be defined in a different CNML zone." % (self.nodeA, self.id))
             return
 
         if didA in devs:
@@ -547,6 +547,7 @@ class CNMLLink(object):
     def parseLxml(l, parent):
         lid = int(l.get('id'))
         status = l.get('link_status')
+        status = Status.strToStatus(status)
         ltype = l.get('link_type')
         ldid = int(l.get('linked_device_id'))
         liid = int(l.get('linked_interface_id'))
@@ -559,6 +560,7 @@ class CNMLLink(object):
     def parseMinidom(l, parent):
         lid = int(l.getAttribute('id'))
         status = l.getAttribute('link_status')
+        status = Status.strToStatus(status)
         ltype = l.getAttribute('link_type')
         ldid = int(l.getAttribute('linked_device_id'))
         liid = int(l.getAttribute('linked_interface_id'))
