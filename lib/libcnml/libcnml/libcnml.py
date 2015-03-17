@@ -43,7 +43,7 @@ class CNMLZone(object):
     A zone has a title, which is the most useful for the end-users
     CNML can also provide the total amount of clients, devices, links, services... in the area
     """
-    def __init__(self, zid, parentid, aps=0, box=[], nclients=0, ndevices=0, nlinks=0, nservices=0, title=''):
+    def __init__(self, zid, parentid, aps=0, box=[], nclients=0, ndevices=0, nlinks=0, nservices=0, nnodes =0, title=''):
         self.id = zid
         self.parentzone = parentid
         self.totalAPs = aps
@@ -52,6 +52,7 @@ class CNMLZone(object):
         self.totalDevices = ndevices
         self.totalLinks = nlinks
         self.totalServices = nservices
+        self.totalNodes = nnodes
         self.title = title
         self.subzones = dict()
         self.nodes = dict()
@@ -92,10 +93,14 @@ class CNMLZone(object):
         nservices = z.get('services') or 0
         nservices = int(nservices)
         title = z.get('title')
-#       nnodes = int(z.getAttribute('zone_nodes'))
+#       nnodes = int(z.get('zone_nodes'))
 #       nnodes is not useful --> len(nodes)
+#     Manos: Pablo is wrong in this one, because the attribute total of the CNML contains also
+#     information from the subzones. Thus len(nodes) is not the same as CNML attirbute zone_nodes
+        nnodes = z.get('zone_nodes') or 0
+        nnodes = int(nnodes)
 
-        newzone = CNMLZone(zid, zparentid, nAPs, box, nclients, ndevices, nlinks, nservices, title)
+        newzone = CNMLZone(zid, zparentid, nAPs, box, nclients, ndevices, nlinks, nservices, nnodes, title)
         return newzone
 
     @staticmethod
@@ -123,8 +128,13 @@ class CNMLZone(object):
         title = z.getAttribute('title')
 #       nnodes = int(z.getAttribute('zone_nodes'))
 #       nnodes is not useful --> len(nodes)
+#     Manos: Pablo is wrong in this one, because the attribute total of the CNML contains also
+#     information from the subzones. Thus len(nodes) is not the same as CNML attirbute zone_nodes
+        nnodes = z.getAttribute('zone_nodes') or 0
+        nnodes = int(nnodes)
 
-        newzone = CNMLZone(zid, zparentid, nAPs, box, nclients, ndevices, nlinks, nservices, title)
+
+        newzone = CNMLZone(zid, zparentid, nAPs, box, nclients, ndevices, nlinks, nservices, nnodes, title)
         return newzone
 
     @staticmethod
