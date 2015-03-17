@@ -29,7 +29,7 @@ import json
 import operator
 
 class GuifiNet:
-    def __init__(self, zone=None):
+    def __init__(self, rootZoneId=None):
         # GuifiAPI
         libcnml.logger.info("Starting process")
         libcnml.logger.debug("Starting debug")
@@ -43,13 +43,14 @@ class GuifiNet:
             print e.reason
         print self.gui.is_authenticated()
         print self.gui.authToken
-        if zone:
-            self.zone = int(zone)
+        if rootZoneId:
+            self.rootZoneId = int(rootZoneId)
         else:
-            self.zone = int(raw_input("Select a zone: "))
-        print _('Parsing:'), zone
+            self.rootZoneId = int(raw_input("Select a zone: "))
+        print _('Parsing:'), rootZoneId
         #self.world = self.getZoneCNML(3671)
-        self.cnml = self.parseZoneCNML(zone)
+        self.cnml = self.parseZoneCNML(rootZoneId)
+        self.rootZone = self.cnml.zones[rootZoneId]
         #for n in self.cnml.nodes:
         #    print self.cnml.nodes[n].status
         print _('Total nodes: '),  len(self.cnml.nodes)
@@ -125,6 +126,7 @@ class GuifiNet:
         print _('Total Number: '), len(objects)
 
 
+    # ToDo  Check why not working properly
     def createTopoJSON(self):
         nodesFile = os.path.join(os.getcwd(),"topo.js")
         fpTopo = open(nodesFile,"w")
@@ -168,24 +170,21 @@ class GuifiNet:
         else :
             return None
 
+    def zoneWorking(self,zoneId):
+        if not zoneId:
+            zoneId = self.rootZoneId
+        zone = self.cnml.zones[zoneId]
+
+        # Discard non-working nodes
+        zone.nodes = {{node.id}:node for node in zone.nodes if nodes}
+
+        # From the nodes left discard non-working Devices
 
 
+        # From the nodes and  devices left discard non-working Services
 
 
-        # # Find the relevant links
-        # print "Find the relevant links"
-        # try:
-        #     zonecnmlp = CNMLParser(zonefile)
-        #     try:
-        #         for z in zonecnmlp.getLinks():
-        #             print "Found a link"
-        #             print _('Link id:'), z.id
-        #             print _('Node A:'), z.nodeA
-        #             print _('Node B:'), z.nodeB
-        #     except IOError:
-        #         print _('Error loading cnml guifiworld zone:'), self.cnmlFile
-        # except IOError:
-        #     print _('Error opening CNML file')
+        # From the nodes and  devices left discard non-working Links
 
 
 if __name__ == "__main__":
