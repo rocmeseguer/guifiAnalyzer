@@ -29,7 +29,7 @@ import json
 import operator
 
 class GuifiNet:
-    def __init__(self, cnmlFile=None):
+    def __init__(self, zone=None):
         # GuifiAPI
         libcnml.logger.info("Starting process")
         libcnml.logger.debug("Starting debug")
@@ -43,8 +43,10 @@ class GuifiNet:
             print e.reason
         print self.gui.is_authenticated()
         print self.gui.authToken
-        if not cnmlFile:
-            zone = int(raw_input("Select a zone: "))
+        if zone:
+            self.zone = int(zone)
+        else:
+            self.zone = int(raw_input("Select a zone: "))
         print _('Parsing:'), zone
         #self.world = self.getZoneCNML(3671)
         self.cnml = self.parseZoneCNML(zone)
@@ -53,7 +55,7 @@ class GuifiNet:
         print _('Total nodes: '),  len(self.cnml.nodes)
         print _('Total devices: '),  len(self.cnml.devices)
         print _('Total links: '),  len(self.cnml.links)
-        #TODO fix using only working nodes 
+        #TODO fix using only working nodes
        # self.cnml.nodes =  {i: self.cnml.nodes[i] for i in self.cnml.nodes if self.cnml.nodes[i].status == libcnml.Status.WORKING}
         #print "After keeping only working nodes"
         #print _('Total nodes: '),  len(self.cnml.nodes)
@@ -137,7 +139,7 @@ class GuifiNet:
             parent = self.getParentNode(link)
             print ('Link of node:'), parent.id
             print _('Link id'), link.id
-            print _('Link type'), link.type           
+            print _('Link type'), link.type
             if not link.nodeB:
                 print _('Link to node outside the zone or not proper CNML data. Ignoring. Link id:'), link.id
                 continue
