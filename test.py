@@ -79,7 +79,7 @@ class GuifiNet:
         except  IOError:
             print _('Error opening CNML file: ' ), zonefile
 
-    def getZoneCNML(self,zone):
+    def getZoneCNML(self,zone=None):
         # Download zone cnml and get links
         print "Get links and their nodes of a zone"
         if  not zone:
@@ -170,21 +170,60 @@ class GuifiNet:
         else :
             return None
 
-    def zoneWorking(self,zoneId):
-        if not zoneId:
-            zoneId = self.rootZoneId
-        zone = self.cnml.zones[zoneId]
+    def workingElements(self):
+        #TODO fix counters from upper elements (for example node counter in zone) OR MAYBE not necessary
 
-        # Discard non-working nodes
-        zone.nodes = {{node.id}:node for node in zone.nodes if nodes}
+        # Can parse zones as indepent since their data are not crossing one another
+        for zone in self.cnml.getZones():
+            # Discard non-working nodes
+            zone.nodes = {node.id:node for node in zone.getNodes() if node.status==test.libcnml.Status.WORKING}
 
-        # From the nodes left discard non-working Devices
+            # From the nodes left discard non-working Devices and Services
+            for node in zone.nodes:
+                node.devices = {device.id:device for device in node.getDevices() if device.status==test.libcnml.Status.WORKING}
+                node.services = {service.id:service for service in node.getServices() if service.status==test.libcnml.Status.WORKING}
+                
+                # From the nodes and devices left discard non-working Links
+                for device in node.getDevices():
+                    for interface in device.getInterfaces():
+                        interface.links = {link.id:link for link in interface.getLinks() if link.status==test.libcnml.Status.WORKING}
+                    for radio in device.getRadios():
+                        for interface in device.getInterfaces():
+                            interface.links = {link.id:link for link in interface.getLinks() if link.status==test.libcnml.Status.WORKING}
+                        
+        # Fix counters
+        
+    def elementsIds(self):
+        #if not zoneId:
+        #    zoneId = self.rootZoneId
+        #root = self.cnml.zones[zoneId]
+        #zones = [root] + 
+        for zone in self.cnml.getZones():
+            print _('Zone Id: '), zone.id
+            for node in zone.getNodes():
+                print _('\tNode: '), node.id
+                deviceIds = [d for d in node.devices]
+                serviceIds = [s for s in node.services]
+                radioIds = []
+                ifaceIds = []
+                linkIds = []
+                for device in node.getDevices():
+                    radioIds = radioIds + [r for r in device.radios]
+                    ifaceIds = ifaceIds + [i for i in device.interfaces]
+                    for radio in device.getRadios():
+                        ifaceIds = ifaceIds + [i for i in radio.interfaces]
+                        for iface in radio.getInterfaces():
+                            linkIds = linkIds + [l for l in device.interfaces]
+                    for iface in device.getInterfaces():
+                        linkIds = linkIds + [l for l in device.interfaces]
+                print _('\t\tDevices: '), deviceIds
+                print _('\t\t\tServices: '), serviceIds
+                print _('\t\t\tRadios: '), radioIds
+                print _('\t\t\tInterfaces: '), ifaceIds
+                print _('\t\t\t\tLinks: '), linkIds
 
 
-        # From the nodes and  devices left discard non-working Services
-
-
-        # From the nodes and  devices left discard non-working Links
+            
 
 
 if __name__ == "__main__":
