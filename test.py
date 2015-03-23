@@ -174,26 +174,33 @@ class GuifiNet:
         #TODO fix counters from upper elements (for example node counter in zone) OR MAYBE not necessary
 
         # Can parse zones as indepent since their data are not crossing one another
+        # copying list objects with [:]
+        # copying dictionary object with .copy()
+        #workingZones = self.cnml.getZones()[:]
+        # Return a list with zones where all the objects
+        # are new
+        # import copy
+        # copy.deepcopy(zone)
         for zone in self.cnml.getZones():
             # Discard non-working nodes
-            zone.nodes = {node.id:node for node in zone.getNodes() if node.status==test.libcnml.Status.WORKING}
+            zone.nodes = {node.id:node for node in zone.getNodes() if node.status==libcnml.Status.WORKING}
 
             # From the nodes left discard non-working Devices and Services
-            for node in zone.nodes:
-                node.devices = {device.id:device for device in node.getDevices() if device.status==test.libcnml.Status.WORKING}
-                node.services = {service.id:service for service in node.getServices() if service.status==test.libcnml.Status.WORKING}
+            for node in zone.getNodes():
+                node.devices = {device.id:device for device in node.getDevices() if device.status==libcnml.Status.WORKING}
+                node.services = {service.id:service for service in node.getServices() if service.status==libcnml.Status.WORKING}
                 
                 # From the nodes and devices left discard non-working Links
                 for device in node.getDevices():
                     for interface in device.getInterfaces():
-                        interface.links = {link.id:link for link in interface.getLinks() if link.status==test.libcnml.Status.WORKING}
+                        interface.links = {link.id:link for link in interface.getLinks() if link.status==libcnml.Status.WORKING}
                     for radio in device.getRadios():
                         for interface in device.getInterfaces():
-                            interface.links = {link.id:link for link in interface.getLinks() if link.status==test.libcnml.Status.WORKING}
+                            interface.links = {link.id:link for link in interface.getLinks() if link.status==libcnml.Status.WORKING}
                         
         # Fix counters
         
-    def elementsIds(self):
+    def getZoneElements(self):
         #if not zoneId:
         #    zoneId = self.rootZoneId
         #root = self.cnml.zones[zoneId]
@@ -201,29 +208,37 @@ class GuifiNet:
         for zone in self.cnml.getZones():
             print _('Zone Id: '), zone.id
             for node in zone.getNodes():
-                print _('\tNode: '), node.id
-                deviceIds = [d for d in node.devices]
-                serviceIds = [s for s in node.services]
-                radioIds = []
-                ifaceIds = []
-                linkIds = []
-                for device in node.getDevices():
-                    radioIds = radioIds + [r for r in device.radios]
-                    ifaceIds = ifaceIds + [i for i in device.interfaces]
-                    for radio in device.getRadios():
-                        ifaceIds = ifaceIds + [i for i in radio.interfaces]
-                        for iface in radio.getInterfaces():
-                            linkIds = linkIds + [l for l in device.interfaces]
-                    for iface in device.getInterfaces():
-                        linkIds = linkIds + [l for l in device.interfaces]
-                print _('\t\tDevices: '), deviceIds
-                print _('\t\t\tServices: '), serviceIds
-                print _('\t\t\tRadios: '), radioIds
-                print _('\t\t\tInterfaces: '), ifaceIds
-                print _('\t\t\t\tLinks: '), linkIds
+                self.getNodeElements(node)
+                # PRoblem??? One node is not parsed. The planned one...
+     
+    #def getNodeLinks           
 
+    def getNodeElements(self,node):
+        if node is int :
+            node = self.cnml.nodes[node]
+        deviceIds = [d for d in node.devices]
+        serviceIds = [s for s in node.services]
+        radioIds = []
+        ifaceIds = []
+        linkIds = []
+        for device in node.getDevices():
+            radioIds = radioIds + [r for r in device.radios]
+            ifaceIds = ifaceIds + [i for i in device.interfaces]
+            for radio in device.getRadios():
+                ifaceIds = ifaceIds + [i for i in radio.interfaces]
+                for iface in radio.getInterfaces():
+                    # Add new links (ignoring duplicates)
+                    linkIds = linkIds + [l for l in iface.links if l not in linkIds]
+            for iface in device.getInterfaces():
 
-            
+                linkIds = linkIds + [l for l in iface.links if l not in linkIds]
+        print "\tNode: %d Devices: %d Services: %d Radios: %d Ifaces: %d Links: %d  " % (node.id, len(deviceIds), len(serviceIds), len(radioIds), len(ifaceIds), len(linkIds))
+        return {'devices':deviceIds,'services':serviceIds,'radios':radioIds,'ifaces':ifaceIds, 'links':linkIds}
+        #print _('\t\tDevices: '), deviceIds
+        #print _('\t\t\tServices: '), serviceIds
+        #print _('\t\t\tRadios: '), radioIds
+        #print _('\t\t\tInterfaces: '), ifaceIds
+        #print _('\t\t\t\tLinks: '), linkIds
 
 
 if __name__ == "__main__":
