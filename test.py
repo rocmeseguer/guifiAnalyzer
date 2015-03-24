@@ -27,6 +27,7 @@ _ = gettext.gettext
 
 import json
 import operator
+import copy
 
 class GuifiNet:
     def __init__(self, rootZoneId=None):
@@ -174,42 +175,42 @@ class GuifiNet:
         #TODO fix counters from upper elements (for example node counter in zone) OR MAYBE not necessary
 
         # Can parse zones as indepent since their data are not crossing one another
-        # copying list objects with [:]
-        # copying dictionary object with .copy()
-        #workingZones = self.cnml.getZones()[:]
-        # Return a list with zones where all the objects
-        # are new
-        # import copy
-        # copy.deepcopy(zone)
-        for zone in self.cnml.getZones():
+        zonesWorking = []
+        for z in self.cnml.getZones():
+            # Since we are only deleting elements from the dictionary
+            # we just have to deepcopy the zone object
+            # If we were modifying the attributes of other objects linked
+            # to zone (like nodes) we should deepcopy them also
+            zone = copy.deepcopy(z)
             # Discard non-working nodes
-            zone.nodes = {node.id:node for node in zone.getNodes() if node.status==libcnml.Status.WORKING}
-
+            nodes = {node.id:copy.deepcopy(node) for node in zone.getNodes() if node.status==libcnml.Status.WORKING}
+            zone.nodes = nodes
             # From the nodes left discard non-working Devices and Services
             for node in zone.getNodes():
-                node.devices = {device.id:device for device in node.getDevices() if device.status==libcnml.Status.WORKING}
-                node.services = {service.id:service for service in node.getServices() if service.status==libcnml.Status.WORKING}
+                node.devices = {device.id:copy.deepcopy(device) for device in node.getDevices() if device.status==libcnml.Status.WORKING}
+                node.services = {service.id:copy.deepcopy(service) for service in node.getServices() if service.status==libcnml.Status.WORKING}
                 
                 # From the nodes and devices left discard non-working Links
                 for device in node.getDevices():
                     for interface in device.getInterfaces():
-                        interface.links = {link.id:link for link in interface.getLinks() if link.status==libcnml.Status.WORKING}
+                        interface.links = {link.id:copy.deepcopy(link) for link in interface.getLinks() if link.status==libcnml.Status.WORKING}
                     for radio in device.getRadios():
                         for interface in device.getInterfaces():
-                            interface.links = {link.id:link for link in interface.getLinks() if link.status==libcnml.Status.WORKING}
-                        
+                            interface.links = {link.id:link for link in interface.getLinks() if link.status==libcnml.Status.WORKING and link.id not in interface.links}
+            zonesWorking.append(zone)            
         # Fix counters
-        
-    def getZoneElements(self):
+        return zonesWorking
+
+
+    def getZoneElements(self, zone):
         #if not zoneId:
         #    zoneId = self.rootZoneId
         #root = self.cnml.zones[zoneId]
         #zones = [root] + 
-        for zone in self.cnml.getZones():
-            print _('Zone Id: '), zone.id
-            for node in zone.getNodes():
-                self.getNodeElements(node)
-                # PRoblem??? One node is not parsed. The planned one...
+        print _('Zone Id: '), zone.id
+        for node in zone.getNodes():
+            self.getNodeElements(node)
+            # PRoblem??? One node is not parsed. The planned one...
      
     #def getNodeLinks           
 
@@ -230,7 +231,6 @@ class GuifiNet:
                     # Add new links (ignoring duplicates)
                     linkIds = linkIds + [l for l in iface.links if l not in linkIds]
             for iface in device.getInterfaces():
-
                 linkIds = linkIds + [l for l in iface.links if l not in linkIds]
         print "\tNode: %d Devices: %d Services: %d Radios: %d Ifaces: %d Links: %d  " % (node.id, len(deviceIds), len(serviceIds), len(radioIds), len(ifaceIds), len(linkIds))
         return {'devices':deviceIds,'services':serviceIds,'radios':radioIds,'ifaces':ifaceIds, 'links':linkIds}
@@ -239,6 +239,20 @@ class GuifiNet:
         #print _('\t\t\tRadios: '), radioIds
         #print _('\t\t\tInterfaces: '), ifaceIds
         #print _('\t\t\t\tLinks: '), linkIds
+
+    def getZoneLinks(self,zone):
+        links = []
+        for node in zone.getNodes():
+            for device in node.getDevices():
+                for radio in device.getRadios():
+                    for iface in radio.getInterfaces():
+                        newLinks = [l for l in iface.getLinks() if l not in links]
+                        links.extend(newLinks)
+                for iface in device.getInterfaces():
+                    newLinks = [l for l in iface.getLinks() if l not in links]
+                    links.extend(newLinks)
+        return links
+
 
 
 if __name__ == "__main__":
