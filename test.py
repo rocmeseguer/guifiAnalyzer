@@ -139,7 +139,7 @@ class GuifiNet:
         print>> fpTopo, "var edges = ["
         for link in self.cnml.getLinks():
             #if link.link_status == "Working" and
-            parent = self.getParentNode(link)
+            parent = self.getParentNode(link) # ERROR not working cause of logical error descired down
             print ('Link of node:'), parent.id
             print _('Link id'), link.id
             print _('Link type'), link.type
@@ -156,7 +156,7 @@ class GuifiNet:
         print>> fpTopo, "];"
         fpTopo.close()
 
-
+    # Careful for Links: If there is a node B it will return this as Id
     def getParentNode(self, comp):
         if type(comp) is libcnml.libcnml.CNMLLink :
             return self.getParentNode(comp.parentInterface)
@@ -188,31 +188,25 @@ class GuifiNet:
         for node in zone.getNodes():
             node.devices = {device.id:copy.deepcopy(device) for device in node.getDevices() if device.status==libcnml.Status.WORKING}
             node.services = {service.id:copy.deepcopy(service) for service in node.getServices() if service.status==libcnml.Status.WORKING}
-
             # From the nodes and devices left discard non-working Links
             for device in node.getDevices():
                 device.interfaces = {iface.id:copy.deepcopy(iface) for iface in device.getInterfaces()}
-                device.radios = {radio.id:copy.deepcopy(radio) for radio in device.getRadios()}
+                device.radios = {(device.id,radio.id):copy.deepcopy(radio) for radio in device.getRadios()}
                 for interface in device.getInterfaces():
-                    #interface.links = {link.id:copy.deepcopy(link) for link in interface.getLinks() if link.status==libcnml.Status.WORKING}
-                    links = interface.getLinks()
-                    temp = {}
-                    for l in links:
-                        if l.status == libcnml.Status.WORKING:
-                            temp[l.id]=copy.deepcopy(l)
-                            print l.status
-                    interface.links = temp
+                    interface.links = {link.id:copy.deepcopy(link) for link in interface.getLinks() if link.status==libcnml.Status.WORKING}
+                    # Remove links that reach outside the zone
+                    interface.links = {link.id:link for link in  interface.getLinks()  if isinstance(link.nodeB, libcnml.libcnml.CNMLNode)}
+                    # Remove self-links
+                    interface.links = {link.id:link for link in  interface.getLinks()  if link.nodeB.id != link.nodeA.id}
                 for radio in device.getRadios():
                     radio.interfaces = {iface.id:copy.deepcopy(iface) for iface in radio.getInterfaces()}
-                    for interface in device.getInterfaces():
-                        #interface.links = {link.id:copy.deepcopy(link) for link in interface.getLinks() if link.status==libcnml.Status.WORKING}
-                        links = interface.getLinks()
-                        temp = {}
-                        for l in links:
-                            if l.status == libcnml.Status.WORKING:
-                                temp[l.id]=copy.deepcopy(l)
-                                print l.status
-                        interface.links = temp
+                    for interface in radio.getInterfaces():
+                        interface.links = {link.id:copy.deepcopy(link) for link in interface.getLinks() if link.status==libcnml.Status.WORKING}
+                        # Remove links that reach outside the zone
+                        interface.links = {link.id:link for link in  interface.getLinks()  if isinstance(link.nodeB, libcnml.libcnml.CNMLNode)}
+                        # Remove self-links
+                        #interface.links = {link.id:link for link in  interface.getLinks()  if link.nodeB.id != node.id}
+                        interface.links = {link.id:link for link in  interface.getLinks()  if link.nodeB.id != link.nodeA.id}
         # Fix counters
         return zone
 
@@ -258,11 +252,29 @@ class GuifiNet:
         print "\tNode: %d Devices: %d Services: %d Radios: %d Ifaces: %d Links: %d  " % (node.id, len(deviceIds),\
            len(serviceIds), len(radioIds), len(ifaceIds), len(linkIds))
         print _('\t\tDevices: '), deviceIds
-        print _('\t\t\tServices: '), serviceIds
-        print _('\t\t\tRadios: '), radioIds
-        print _('\t\t\tInterfaces: '), ifaceIds
-        print _('\t\t\t\tLinks: '), linkIds
+        print _('\t\tServices: '), serviceIds
+        print _('\t\tRadios: '), radioIds
+        print _('\t\tInterfaces: '), ifaceIds
+        print _('\t\tLinks: '), linkIds
         return {'devices':deviceIds,'services':serviceIds,'radios':radioIds,'ifaces':ifaceIds, 'links':linkIds}
+
+    #def prettyPrintNode(self,node):
+
+    def nodeToDict(self,node):
+        result = {}
+        for device in node.getDevices():
+            result[('device',device)] = {}
+            for interface in device.getInterfaces():
+                result[('device',device)][('interface',interface)]  = {}
+                for link in interface.getLinks():
+                    result[('device',device)][('interface',interface)]['link',link] = {}
+            for radio in device.getRadios():
+                result[('device',device)]['radio',radio] = {}
+                for interface in radio.getInterfaces():
+                    result[('device',device)]['radio',radio][('interface',interface)] = {}
+                    for link in interface.getLinks():
+                        result[('device',device)]['radio',radio][('interface',interface)]['link',link] = {}
+        return result
 
     def getZoneLinks(self,zone):
         links = []
@@ -277,10 +289,6 @@ class GuifiNet:
                     links.extend(newLinks)
         return links
 
-
-    #def linksToSelf???
-
-        #def get(self, iface)
 
 
 if __name__ == "__main__":
@@ -301,6 +309,7 @@ def test1():
             print "Working"
             zo = g.getZoneWorking(zone);
             g.getZoneElements(zo);
+        return (zone,zo)
        # linksZone = g.getZoneLinks(zone);
         #linksZo = g.getZoneLinks(zo);
         #linksZoneNW = [l.id for l in linksZone if l.status != libcnml.Status.WORKING]
