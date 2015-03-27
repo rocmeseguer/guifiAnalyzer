@@ -145,6 +145,9 @@ class CNMLZone(object):
             return CNMLZone.parseMinidom(z)
 
 
+    def __str__(self):
+        return "<CNMLZone Id:%s Status:%s>" % (self.id, self.status)
+
 class CNMLNode(object):
     """
     This CNMLNode class represents a node in the network
@@ -216,6 +219,9 @@ class CNMLNode(object):
         else:
             return CNMLNode.parseMinidom(n)
 
+    def __str__(self):
+        return "<CNMLNode Id:%s Status:%s>" % (self.id, self.status)
+
 
 class CNMLService(object):
     """
@@ -264,6 +270,9 @@ class CNMLService(object):
             return CNMLService.parseLxml(s, parent)
         else:
             return CNMLService.parseMinidom(s, parent)
+
+    def __str__(self):
+        return "<CNMLService Id:%s Status:%s>" % (self.id, self.status)
 
 
 class CNMLDevice(object):
@@ -331,6 +340,9 @@ class CNMLDevice(object):
             return CNMLDevice.parseLxml(d, parent)
         else:
             return CNMLDevice.parseMinidom(d, parent)
+
+    def __str__(self):
+        return "<CNMLDevice Id:%s Status:%s>" % (self.id, self.status)
 
 
 class CNMLRadio(object):
@@ -403,6 +415,9 @@ class CNMLRadio(object):
         else:
             return CNMLRadio.parseMinidom(r, parent)
 
+    def __str__(self):
+        return "<CNMLRadio Id:%s>" % (self.id)
+
 
 class CNMLInterface(object):
     """
@@ -455,6 +470,9 @@ class CNMLInterface(object):
             return CNMLInterface.parseLxml(i, parent)
         else:
             return CNMLInterface.parseMinidom(i, parent)
+
+    def __str__(self):
+        return "<CNMLInterface Id:%s >" % (self.id)
 
 
 # Note that for two connected nodes there's just one link, that is,
@@ -585,6 +603,9 @@ class CNMLLink(object):
             return CNMLLink.parseLxml(l, parent)
         else:
             return CNMLLink.parseMinidom(l, parent)
+
+    def __str__(self):
+        return "<CNMLLinks Id:%s Status:%s>" % (self.id, self.status)
 
 
 class Status(object):
