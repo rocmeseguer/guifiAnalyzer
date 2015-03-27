@@ -35,7 +35,7 @@ class GuifiNet:
         libcnml.logger.info("Starting process")
         libcnml.logger.debug("Starting debug")
         libcnml.logger.warning("Starting warn")
-        self.gui = pyGuifiAPI.GuifiAPI('edimoger', '100105a')
+        self.gui = pyGuifiAPI.GuifiAPI('edimoger', '100105a',secure=False)
         self.allZones = []
         print "Going to auth"
         try:
@@ -275,6 +275,17 @@ class GuifiNet:
                     for link in interface.getLinks():
                         result[('device',device)]['radio',radio][('interface',interface)]['link',link] = {}
         return result
+
+
+    def print_dict(self, dictionary, ident = '\t', braces=0):
+        """ Recursively prints nested dictionaries."""
+        for key, value in dictionary.iteritems():
+            if isinstance(value, dict):
+                print '%s%s%s%s%s' %(ident,braces*'[',key[0],key[1],braces*']') 
+                self.print_dict(value, ident+ident, braces+0)
+            else:
+                print ident+'%s \t %s : %s' %(key[0], key[1], str(value))
+
 
     def getZoneLinks(self,zone):
         links = []
