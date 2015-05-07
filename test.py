@@ -72,7 +72,7 @@ class GuifiNet:
         return conn
 
 
-    def dump(self,obj):       
+    def dump(self,obj):
         for attr in dir(obj):
             print "obj.%s = %s" % (attr, getattr(obj, attr))
 
@@ -94,7 +94,7 @@ class GuifiNet:
     def getZoneCNML(self,zone=None):
         """
         Return detail CNML of zone
-        Search for file locally, if not found Download zone cnml 
+        Search for file locally, if not found Download zone cnml
         """
         print "Get links and their nodes of a zone"
         if  not zone:
@@ -111,7 +111,7 @@ class GuifiNet:
 
     def findAttributeTypes(self):
         """
-        List different types of attributes in the loaded CNML
+        List different types of components in the loaded CNML
         """
         print _('Select type of attribute:')
         attr = int(raw_input("Enter: 1 for devices, 2 for ifaces, 3 for links or 4 for Services: "))
@@ -175,6 +175,9 @@ class GuifiNet:
 
     # Careful for Links: If there is a node B it will return this as Id
     def getParentNode(self, comp):
+        """
+        Return the CNMLNode object of the parent node of a component
+        """
         if type(comp) is libcnml.libcnml.CNMLLink :
             return self.getParentNode(comp.parentInterface)
         elif type(comp) is libcnml.libcnml.CNMLInterface :
@@ -189,6 +192,9 @@ class GuifiNet:
             return None
 
     def getZoneWorking(self,zoneIn):
+        """
+        From input a CNMLZone object return a new CNMLZone object that  contains only working elements
+        """
         #TODO fix counters from upper elements (for example node counter in zone) OR MAYBE not necessary
 
         # Can parse zones as indepent since their data are not crossing one another
@@ -229,6 +235,10 @@ class GuifiNet:
 
 
     def getZoneElements(self, zone):
+        """
+        Returns a dictionary of lists that contain the 'devices' the 'services' the 'radios' the 'ifaces' and the 'links'
+        contained in the zone
+        """
         #if not zoneId:
         #    zoneId = self.rootZoneId
         #root = self.cnml.zones[zoneId]
@@ -249,6 +259,9 @@ class GuifiNet:
     #def getNodeLinks
 
     def getNodeElements(self,node):
+        """
+        Get all the elements of a node
+        """
         if node is int :
             node = self.cnml.nodes[node]
         deviceIds = [d for d in node.devices]
@@ -298,7 +311,7 @@ class GuifiNet:
         """ Recursively prints nested dictionaries."""
         for key, value in dictionary.iteritems():
             if isinstance(value, dict):
-                print '%s%s%s%s%s' %(ident,braces*'[',key[0],key[1],braces*']') 
+                print '%s%s%s%s%s' %(ident,braces*'[',key[0],key[1],braces*']')
                 self.print_dict(value, ident+ident, braces+0)
             else:
                 print ident+'%s \t %s : %s' %(key[0], key[1], str(value))
