@@ -10,8 +10,11 @@ sys.path.append('lib/libcnml')
 sys.path.append('lib/pyGuifiAPI')
 
 import libcnml
+from libcnml import logger as logger
 import logging
-libcnml.logger.setLevel(logging.DEBUG)
+
+# Change format of logger
+logger.setLevel(logging.DEBUG)
 
 import pyGuifiAPI
 from pyGuifiAPI.error import GuifiApiError
@@ -32,18 +35,7 @@ import copy
 class GuifiNet:
     def __init__(self, rootZoneId=None):
         # GuifiAPI
-        libcnml.logger.info("Starting process")
-        libcnml.logger.debug("Starting debug")
-        libcnml.logger.warning("Starting warn")
-        self.gui = pyGuifiAPI.GuifiAPI('edimoger', '100105a',secure=False)
-        self.allZones = []
-        print "Going to auth"
-        try:
-            self.gui.auth()
-        except GuifiApiError, e:
-            print e.reason
-        print self.gui.is_authenticated()
-        print self.gui.authToken
+        self.gui = self.auth()
         if rootZoneId:
             self.rootZoneId = int(rootZoneId)
         else:
@@ -54,9 +46,9 @@ class GuifiNet:
         self.rootZone = self.cnml.zones[rootZoneId]
         #for n in self.cnml.nodes:
         #    print self.cnml.nodes[n].status
-        print _('Total nodes: '),  len(self.cnml.nodes)
-        print _('Total devices: '),  len(self.cnml.devices)
-        print _('Total links: '),  len(self.cnml.links)
+        logger.info('Zone nodes:  %s',len(self.cnml.nodes))
+        logger.info('Zone devices:  %s', len(self.cnml.devices))
+        logger.info('Zone links:  %s',len(self.cnml.links))
         #TODO fix using only working nodes
        # self.cnml.nodes =  {i: self.cnml.nodes[i] for i in self.cnml.nodes if self.cnml.nodes[i].status == libcnml.Status.WORKING}
         #print "After keeping only working nodes"
@@ -64,12 +56,31 @@ class GuifiNet:
         #print _('Total devices: '),  len(self.cnml.getDevices())
         #print _('Total links: '),  len(self.cnml.getLinks())
 
-    def dump(self,obj):
+    def auth(self):
+        """
+        Authenticate to the test server (using pyGuififAPI library)
+        """
+        conn = pyGuifiAPI.GuifiAPI('edimoger', '100105a',secure=False)
+        logger.info("Going to authenticate")
+        try:
+            conn.auth()
+        except GuifiApiError, e:
+            print e.reason
+        #logger.info(conn.is_authenticated())
+        #logger.info(conn.authToken)
+        logger.info("Authenticated succesfully")
+        return conn
+
+
+    def dump(self,obj):       
         for attr in dir(obj):
             print "obj.%s = %s" % (attr, getattr(obj, attr))
 
 
     def parseZoneCNML(self,zone):
+        """
+        Return a zone parced by libcnml
+        """
         zonefile = os.path.join(os.getcwd(),'cnml',str(zone))
         if not os.path.isfile(zonefile):
             print "Cannot find zone locally. Will download"
@@ -81,7 +92,10 @@ class GuifiNet:
             print _('Error opening CNML file: ' ), zonefile
 
     def getZoneCNML(self,zone=None):
-        # Download zone cnml and get links
+        """
+        Return detail CNML of zone
+        Search for file locally, if not found Download zone cnml 
+        """
         print "Get links and their nodes of a zone"
         if  not zone:
             zone = raw_input("Select a zone: ")
@@ -96,6 +110,9 @@ class GuifiNet:
             print _('Error accessing to the Internet:'), str(e.reason)
 
     def findAttributeTypes(self):
+        """
+        List different types of attributes in the loaded CNML
+        """
         print _('Select type of attribute:')
         attr = int(raw_input("Enter: 1 for devices, 2 for ifaces, 3 for links or 4 for Services: "))
         if  attr == 1 :
