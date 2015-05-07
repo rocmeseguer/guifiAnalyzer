@@ -29,7 +29,9 @@ logger = logging.getLogger(__name__)
 #  import logging
 #  libcnml.logger.setLevel(logging.INFO)
 logger.setLevel(logging.ERROR)
+formatter = logging.Formatter(fmt='%(asctime)s |  %(pathname)s | %(levelname)s:%(message)s',datefmt='%m/%d/%Y %I:%M:%S %p')
 ch = logging.StreamHandler()
+ch.setFormatter(formatter)
 logger.addHandler(ch)
 
 from .libcnml import CNMLParser, Status
