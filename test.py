@@ -32,6 +32,8 @@ import json
 import operator
 import copy
 
+from cnmlUtils import *
+
 class GuifiNet(object):
     def __init__(self, rootZoneId=None):
         # GuifiAPI
@@ -41,11 +43,20 @@ class GuifiNet(object):
         else:
             self.rootZoneId = int(raw_input("Select a zone: "))
         print _('Parsing:'), rootZoneId
-        #self.world = self.getZoneCNML(3671)
-        self.cnml = parseZoneCNML(rootZoneId,self.conn)
-        self.rootZone = self.cnml.zones[rootZoneId]
+        #self.world = getCNMLZone(3671)
+        self.cnml = parseCNMLZone(rootZoneId,self.conn)
+        self.zone = self.cnml.zones[rootZoneId]
+        self.workingZone = self.getCNMLZoneWorking(self.zone)
         #for n in self.cnml.nodes:
         #    print self.cnml.nodes[n].status
+        temp = self.getZoneElements1(self.workingZone)
+        self.nodes = {temp['nodes']}
+        #TODO the rest
+        self.devices = {}
+        self.services = {}
+        self.radios = {}
+        self.ifaces = {}
+        self.links = {}
         logger.info('Zone nodes:  %s',len(self.cnml.nodes))
         logger.info('Zone devices:  %s', len(self.cnml.devices))
         logger.info('Zone links:  %s',len(self.cnml.links))
@@ -90,55 +101,7 @@ class GuifiNet(object):
         print _('Types: '), sortedTypes
         print _('Total Number: '), len(objects)
 
-
-    # ToDo  Check why not working properly
-    def createTopoJSON(self):
-        nodesFile = os.path.join(os.getcwd(),"topo.js")
-        fpTopo = open(nodesFile,"w")
-        print>> fpTopo, "var nodes = ["
-        for node in self.cnml.getNodes():
-            entry = {"id": node.id}
-            fpTopo.write("%s,\n" % json.dumps(entry))
-        print>> fpTopo, "];\n"
-        print>> fpTopo, "var edges = ["
-        for link in self.cnml.getLinks():
-            #if link.link_status == "Working" and
-            parent = self.getParentNode(link) # ERROR not working cause of logical error descired down
-            print ('Link of node:'), parent.id
-            print _('Link id'), link.id
-            print _('Link type'), link.type
-            if not link.nodeB:
-                print _('Link to node outside the zone or not proper CNML data. Ignoring. Link id:'), link.id
-                continue
-            if parent.id == link.nodeB.id :
-                print _('Link to self. Ignoring. Link id:'), link.id
-                continue
-            entry = { "from": link.nodeA.id, "to": link.nodeB.id}
-            print _('The entry is: '), entry
-            fpTopo.write("%s,\n" % json.dumps(entry))
-
-        print>> fpTopo, "];"
-        fpTopo.close()
-
-    # Careful for Links: If there is a node B it will return this as Id
-    def getParentNode(self, comp):
-        """
-        Return the CNMLNode object of the parent node of a component
-        """
-        if type(comp) is libcnml.libcnml.CNMLLink :
-            return self.getParentNode(comp.parentInterface)
-        elif type(comp) is libcnml.libcnml.CNMLInterface :
-            return self.getParentNode(comp.parentRadio)
-        elif type(comp) is libcnml.libcnml.CNMLRadio :
-            return self.getParentNode(comp.parentDevice)
-        elif type(comp) is libcnml.libcnml.CNMLDevice :
-            return self.getParentNode(comp.parentNode)
-        elif type(comp) is libcnml.libcnml.CNMLNode :
-            return comp
-        else :
-            return None
-
-    def getZoneWorking(self,zoneIn):
+    def getCNMLZoneWorking(self,zoneIn):
         """
         From input a CNMLZone object return a new CNMLZone object that  contains only working elements
         """
@@ -180,28 +143,7 @@ class GuifiNet(object):
         # Fix counters
         return zone
 
-
-    def getZoneElements(self, zone):
-        """
-        Returns a dictionary of lists that contain the 'devices' the 'services' the 'radios' the 'ifaces' and the 'links'
-        contained in the zone
-        """
-        #if not zoneId:
-        #    zoneId = self.rootZoneId
-        #root = self.cnml.zones[zoneId]
-        #zones = [root] +
-        print _('Zone Id: '), zone.id
-        result = {}
-        for node in zone.getNodes():
-            elements  = self.getNodeElements(node)
-            #print "\tNode: %d Devices: %d Services: %d Radios: %d Ifaces: %d Links: %d  " % (node.id, \
-            #    len(elements['devices']), len(elements['services']), len(elements['radios']), len(elements['ifaces']),\
-            #    len(elements['links']))
-            result[node.id] = {'devices':elements['devices'],'services':elements['services'],\
-                'radios':elements['radios'],'ifaces':elements['ifaces'], 'links':elements['links']}
-
-        return result
-         # PRoblem??? One node is not parsed. The planned one...
+    
 
     #def getNodeLinks
 
@@ -237,7 +179,83 @@ class GuifiNet(object):
         print _('\t\tLinks: '), linkStats
         return {'devices':deviceIds,'services':serviceIds,'radios':radioIds,'ifaces':ifaceIds, 'links':linkIds}
 
+    def getZoneElements1(self, zone):
+        """
+        Returns a dictionary of lists that contain the 'devices' the 'services' the 'radios' the 'ifaces' and the 'links'
+        contained in the zone
+        """
+        #if not zoneId:
+        #    zoneId = self.rootZoneId
+        #root = self.cnml.zones[zoneId]
+        #zones = [root] +
+        print _('Zone Id: '), zone.id
+        nodes = {}
+        devices = {}
+        services = {}
+        radios = {}
+        ifaces = {}
+        links = {}
+        for node in zone.getNodes():
+            elements  = self.getNodeElements(node)
+            #print "\tNode: %d Devices: %d Services: %d Radios: %d Ifaces: %d Links: %d  " % (node.id, \
+            #    len(elements['devices']), len(elements['services']), len(elements['radios']), len(elements['ifaces']),\
+            #    len(elements['links']))
+            nodes.update({node.id:node})
+            devices.update(elements['devices'])
+            services.update(elements['services'])
+            radios.update(elements['radios'])
+            ifaces.update(elements['ifaces'])
+            links.update(elements['links'])
+ 
+        return {'devices':devices,'services':services,'radios':radios,'ifaces':ifaces, 'links':links}
+         # PRoblem??? One node is not parsed. The planned one...
 
+    def getNodeElements1(self,node):
+        """
+        Get all the elements of a node
+        """
+        node = self.getNode(node)
+        devices = node.devices
+        deviceIds = [d for d in node.devices]
+        services = node.services
+        serviceIds = [s for s in node.services]
+        radios = {}
+        radioIds = []
+        ifaces = {}
+        ifaceIds = []
+        links = {}
+        linkIds = []
+        for device in node.getDevices():
+            radios.update(device.radios)
+            radioIds = radioIds + [r for r in device.radios]
+            ifaces.update(device.interfaces)
+            ifaceIds = ifaceIds + [i for i in device.interfaces]
+            for radio in device.getRadios():
+                ifaces.update(radio.interfaces)
+                ifaceIds = ifaceIds + [i for i in radio.interfaces]
+                for iface in radio.getInterfaces():
+                    # Add new links (ignoring duplicates)
+                    temp = [l for l in iface.links if l not in linkIds]
+                    linkIds = linkIds + temp
+                    for link in temp:
+                        links.update(iface.links[link]) 
+            for iface in device.getInterfaces():
+                temp = [l for l in iface.links if l not in linkIds]
+                linkIds = linkIds + temp
+                for link in temp:
+                        links.update(iface.links[link])
+        print "\t(Node: %d | Status: %s) \tDevices: %d Services: %d Radios: %d Ifaces: %d Links: %d  " % (node.id, node.status, len(deviceIds),\
+           len(serviceIds), len(radioIds), len(ifaceIds), len(linkIds))
+        devStats = [ (i,(self.cnml.devices[i]).status) for i in deviceIds ]
+        print _('\t\tDevices: '), devStats
+        servStats = [ (i,(self.cnml.services[i]).status) for i in serviceIds ]
+        print _('\t\tServices: '), servStats
+        print _('\t\tRadios: '), radioIds
+        print _('\t\tInterfaces: '), ifaceIds
+        linkStats = [ (i,(self.cnml.links[i]).status) for i in linkIds ]
+        print _('\t\tLinks: '), linkStats
+        #return {'devices':deviceIds,'services':serviceIds,'radios':radioIds,'ifaces':ifaceIds, 'links':linkIds}
+        return {'devices':devices,'services':services,'radios':radios,'ifaces':ifaces, 'links':links}
 
 
     def getZoneLinks(self,zone):
@@ -253,6 +271,8 @@ class GuifiNet(object):
                     links.extend(newLinks)
         return links
 
+
+
     def getNode(self, node):
         """
         Return CNMLNode object
@@ -260,6 +280,35 @@ class GuifiNet(object):
         if node is int :
             return self.cnml.nodes[node]
         return node
+
+    # ToDo  Check why not working properly
+    def createTopoJSON(self):
+        nodesFile = os.path.join(os.getcwd(),"topo.js")
+        fpTopo = open(nodesFile,"w")
+        print>> fpTopo, "var nodes = ["
+        for node in self.cnml.getNodes():
+            entry = {"id": node.id}
+            fpTopo.write("%s,\n" % json.dumps(entry))
+        print>> fpTopo, "];\n"
+        print>> fpTopo, "var edges = ["
+        for link in self.cnml.getLinks():
+            #if link.link_status == "Working" and
+            parent = getParentCNMLNode(link) # ERROR not working cause of logical error descired down
+            print ('Link of node:'), parent.id
+            print _('Link id'), link.id
+            print _('Link type'), link.type
+            if not link.nodeB:
+                print _('Link to node outside the zone or not proper CNML data. Ignoring. Link id:'), link.id
+                continue
+            if parent.id == link.nodeB.id :
+                print _('Link to self. Ignoring. Link id:'), link.id
+                continue
+            entry = { "from": link.nodeA.id, "to": link.nodeB.id}
+            print _('The entry is: '), entry
+            fpTopo.write("%s,\n" % json.dumps(entry))
+
+        print>> fpTopo, "];"
+        fpTopo.close()
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
@@ -276,16 +325,16 @@ if __name__ == "__main__":
 
 def testWZone():
         #reload(test);
-        #g = GuifiNet(50962);
-        g = GuifiNet(23918);
+        g = GuifiNet(50962);
+        #g = GuifiNet(23918);
         #zone = g.cnml.getZones()[0];
         for zone in g.cnml.getZones():
             g.getZoneElements(zone);
             logger.debug("Working Elements:")
-            zo = g.getZoneWorking(zone);
+            zo = g.getCNMLZoneWorking(zone);
             g.getZoneElements(zo);
-        return (zone,zo)
-        #return g
+        #return (zone,zo)
+        return g
        # linksZone = g.getZoneLinks(zone);
         #linksZo = g.getZoneLinks(zo);
         #linksZoneNW = [l.id for l in linksZone if l.status != libcnml.Status.WORKING]
@@ -300,86 +349,4 @@ def testWZone():
         #print len(set(linksZoneNW))
 
 ## Select Working Objects:
-#reload(test); g = test.GuifiNet(23918); zone = g.cnml.getZones()[0]; zo = g.getZoneWorking(zone); g.getZoneElements(zone); g.getZoneElements(zo); linksZone = g.getZoneLinks(zone); linksZo = g.getZoneLinks(zo);
-
-
-###############################################################
-####                 HELPERS                                ###   
-###############################################################    
-
-def authenticate():
-    """
-    Authenticate to the test server (using pyGuififAPI library)
-    """
-    conn = pyGuifiAPI.GuifiAPI('edimoger', '100105a',secure=False)
-    logger.info("Going to authenticate")
-    try:
-        conn.auth()
-    except GuifiApiError, e:
-        print e.reason
-    #logger.info(conn.is_authenticated())
-    #logger.info(conn.authToken)
-    logger.info("Authenticated succesfully")
-    return conn
-
-def parseZoneCNML(zoneId,conn):
-    """
-    Return a zone parced by libcnml
-    """
-    zonefile = os.path.join(os.getcwd(),'cnml',str(zoneId))
-    if not os.path.isfile(zonefile):
-        logger.info('Cannot find zone %s locally. Will download',zoneId)
-        zonefile = getZoneCNML(zoneId,conn)
-    try:
-        return libcnml.CNMLParser(zonefile)
-    except  IOError:
-        print _('Error opening CNML file: ' ), zonefile
-
-def getZoneCNML(zoneId,conn):
-    """
-    Return unparsed detail CNML of zone
-    Search for file locally, if not found Download zone cnml
-    """
-    logger.info('Downloading Zone %s detailed CNML ',zoneId)
-    try:
-        fp = conn.downloadCNML(int(zoneId), 'detail')
-        filename = os.path.join(os.getcwd(),'cnml',str(zoneId))
-        with open(filename, 'w') as zonefile:
-            zonefile.write(fp.read())
-        logger.info('Zone saved successfully to', filename)
-        return filename
-    except URLError, e:
-        print _('Error accessing to the Internet:'), str(e.reason)
-
-def nodeToDict(node):
-    """
-    Convert a CNMLNode object to a dictionary with accessable properties:
-
-    """
-    result = {}
-    for device in node.getDevices():
-        result[('device',device)] = {}
-        for interface in device.getInterfaces():
-            result[('device',device)][('interface',interface)]  = {}
-            for link in interface.getLinks():
-                result[('device',device)][('interface',interface)]['link',link] = {}
-        for radio in device.getRadios():
-            result[('device',device)]['radio',radio] = {}
-            for interface in radio.getInterfaces():
-                result[('device',device)]['radio',radio][('interface',interface)] = {}
-                for link in interface.getLinks():
-                    result[('device',device)]['radio',radio][('interface',interface)]['link',link] = {}
-    return result
-
-def dump(obj):
-    for attr in dir(obj):
-        print "obj.%s = %s" % (attr, getattr(obj, attr))
-
-def print_dict(dictionary, ident = '\t', braces=0):
-    """ Recursively prints nested dictionaries."""
-    for key, value in dictionary.iteritems():
-        if isinstance(value, dict):
-            print '%s%s%s%s%s' %(ident,braces*'[',key[0],key[1],braces*']')
-            self.print_dict(value, ident+ident, braces+0)
-        else:
-            print ident+'%s \t %s : %s' %(key[0], key[1], str(value))
+#reload(test); g = test.GuifiNet(23918); zone = g.cnml.getZones()[0]; zo = g.getCNMLZoneWorking(zone); g.getZoneElements(zone); g.getZoneElements(zo); linksZone = g.getZoneLinks(zone); linksZo = g.getZoneLinks(zo);
