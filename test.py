@@ -32,17 +32,17 @@ import json
 import operator
 import copy
 
-class GuifiNet:
+class GuifiNet(object):
     def __init__(self, rootZoneId=None):
         # GuifiAPI
-        self.gui = self.auth()
+        self.conn = authenticate()
         if rootZoneId:
             self.rootZoneId = int(rootZoneId)
         else:
             self.rootZoneId = int(raw_input("Select a zone: "))
         print _('Parsing:'), rootZoneId
         #self.world = self.getZoneCNML(3671)
-        self.cnml = self.parseZoneCNML(rootZoneId)
+        self.cnml = parseZoneCNML(rootZoneId,self.conn)
         self.rootZone = self.cnml.zones[rootZoneId]
         #for n in self.cnml.nodes:
         #    print self.cnml.nodes[n].status
@@ -55,59 +55,6 @@ class GuifiNet:
         #print _('Total nodes: '),  len(self.cnml.nodes)
         #print _('Total devices: '),  len(self.cnml.getDevices())
         #print _('Total links: '),  len(self.cnml.getLinks())
-
-    def auth(self):
-        """
-        Authenticate to the test server (using pyGuififAPI library)
-        """
-        conn = pyGuifiAPI.GuifiAPI('edimoger', '100105a',secure=False)
-        logger.info("Going to authenticate")
-        try:
-            conn.auth()
-        except GuifiApiError, e:
-            print e.reason
-        #logger.info(conn.is_authenticated())
-        #logger.info(conn.authToken)
-        logger.info("Authenticated succesfully")
-        return conn
-
-
-    def dump(self,obj):
-        for attr in dir(obj):
-            print "obj.%s = %s" % (attr, getattr(obj, attr))
-
-
-    def parseZoneCNML(self,zone):
-        """
-        Return a zone parced by libcnml
-        """
-        zonefile = os.path.join(os.getcwd(),'cnml',str(zone))
-        if not os.path.isfile(zonefile):
-            print "Cannot find zone locally. Will download"
-            zonefile = self.getZoneCNML(zone)
-
-        try:
-            return libcnml.CNMLParser(zonefile)
-        except  IOError:
-            print _('Error opening CNML file: ' ), zonefile
-
-    def getZoneCNML(self,zone=None):
-        """
-        Return detail CNML of zone
-        Search for file locally, if not found Download zone cnml
-        """
-        print "Get links and their nodes of a zone"
-        if  not zone:
-            zone = raw_input("Select a zone: ")
-        try:
-            fp = self.gui.downloadCNML(int(zone), 'detail')
-            filename = os.path.join(os.getcwd(),'cnml',str(zone))
-            with open(filename, 'w') as zonefile:
-                zonefile.write(fp.read())
-            print _('Zone saved successfully to'), filename
-            return filename
-        except URLError, e:
-            print _('Error accessing to the Internet:'), str(e.reason)
 
     def findAttributeTypes(self):
         """
@@ -262,8 +209,7 @@ class GuifiNet:
         """
         Get all the elements of a node
         """
-        if node is int :
-            node = self.cnml.nodes[node]
+        node = self.getNode(node)
         deviceIds = [d for d in node.devices]
         serviceIds = [s for s in node.services]
         radioIds = []
@@ -279,42 +225,19 @@ class GuifiNet:
                     linkIds = linkIds + [l for l in iface.links if l not in linkIds]
             for iface in device.getInterfaces():
                 linkIds = linkIds + [l for l in iface.links if l not in linkIds]
-        print "\tNode: %d Devices: %d Services: %d Radios: %d Ifaces: %d Links: %d  " % (node.id, len(deviceIds),\
+        print "\t(Node: %d | Status: %s) \tDevices: %d Services: %d Radios: %d Ifaces: %d Links: %d  " % (node.id, node.status, len(deviceIds),\
            len(serviceIds), len(radioIds), len(ifaceIds), len(linkIds))
-        print _('\t\tDevices: '), deviceIds
-        print _('\t\tServices: '), serviceIds
+        devStats = [ (i,(self.cnml.devices[i]).status) for i in deviceIds ]
+        print _('\t\tDevices: '), devStats
+        servStats = [ (i,(self.cnml.services[i]).status) for i in serviceIds ]
+        print _('\t\tServices: '), servStats
         print _('\t\tRadios: '), radioIds
         print _('\t\tInterfaces: '), ifaceIds
-        print _('\t\tLinks: '), linkIds
+        linkStats = [ (i,(self.cnml.links[i]).status) for i in linkIds ]
+        print _('\t\tLinks: '), linkStats
         return {'devices':deviceIds,'services':serviceIds,'radios':radioIds,'ifaces':ifaceIds, 'links':linkIds}
 
-    #def prettyPrintNode(self,node):
 
-    def nodeToDict(self,node):
-        result = {}
-        for device in node.getDevices():
-            result[('device',device)] = {}
-            for interface in device.getInterfaces():
-                result[('device',device)][('interface',interface)]  = {}
-                for link in interface.getLinks():
-                    result[('device',device)][('interface',interface)]['link',link] = {}
-            for radio in device.getRadios():
-                result[('device',device)]['radio',radio] = {}
-                for interface in radio.getInterfaces():
-                    result[('device',device)]['radio',radio][('interface',interface)] = {}
-                    for link in interface.getLinks():
-                        result[('device',device)]['radio',radio][('interface',interface)]['link',link] = {}
-        return result
-
-
-    def print_dict(self, dictionary, ident = '\t', braces=0):
-        """ Recursively prints nested dictionaries."""
-        for key, value in dictionary.iteritems():
-            if isinstance(value, dict):
-                print '%s%s%s%s%s' %(ident,braces*'[',key[0],key[1],braces*']')
-                self.print_dict(value, ident+ident, braces+0)
-            else:
-                print ident+'%s \t %s : %s' %(key[0], key[1], str(value))
 
 
     def getZoneLinks(self,zone):
@@ -330,7 +253,13 @@ class GuifiNet:
                     links.extend(newLinks)
         return links
 
-
+    def getNode(self, node):
+        """
+        Return CNMLNode object
+        """
+        if node is int :
+            return self.cnml.nodes[node]
+        return node
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
@@ -338,19 +267,25 @@ if __name__ == "__main__":
     else:
         GuifiNet()
 
-### Testing:
+#######################################################################
+###                                 Testing                         ###
+#######################################################################
 
+#TODO test with other small zones to check
+#TODO create dictionaries with all the working elements (like dics of CNMLParser)
 
-def test1():
+def testWZone():
         #reload(test);
-        g = GuifiNet(50962);
+        #g = GuifiNet(50962);
+        g = GuifiNet(23918);
         #zone = g.cnml.getZones()[0];
         for zone in g.cnml.getZones():
             g.getZoneElements(zone);
-            print "Working"
+            logger.debug("Working Elements:")
             zo = g.getZoneWorking(zone);
             g.getZoneElements(zo);
         return (zone,zo)
+        #return g
        # linksZone = g.getZoneLinks(zone);
         #linksZo = g.getZoneLinks(zo);
         #linksZoneNW = [l.id for l in linksZone if l.status != libcnml.Status.WORKING]
@@ -364,7 +299,87 @@ def test1():
         #print len(set(linksZoneW))
         #print len(set(linksZoneNW))
 
-
-
 ## Select Working Objects:
 #reload(test); g = test.GuifiNet(23918); zone = g.cnml.getZones()[0]; zo = g.getZoneWorking(zone); g.getZoneElements(zone); g.getZoneElements(zo); linksZone = g.getZoneLinks(zone); linksZo = g.getZoneLinks(zo);
+
+
+###############################################################
+####                 HELPERS                                ###   
+###############################################################    
+
+def authenticate():
+    """
+    Authenticate to the test server (using pyGuififAPI library)
+    """
+    conn = pyGuifiAPI.GuifiAPI('edimoger', '100105a',secure=False)
+    logger.info("Going to authenticate")
+    try:
+        conn.auth()
+    except GuifiApiError, e:
+        print e.reason
+    #logger.info(conn.is_authenticated())
+    #logger.info(conn.authToken)
+    logger.info("Authenticated succesfully")
+    return conn
+
+def parseZoneCNML(zoneId,conn):
+    """
+    Return a zone parced by libcnml
+    """
+    zonefile = os.path.join(os.getcwd(),'cnml',str(zoneId))
+    if not os.path.isfile(zonefile):
+        logger.info('Cannot find zone %s locally. Will download',zoneId)
+        zonefile = getZoneCNML(zoneId,conn)
+    try:
+        return libcnml.CNMLParser(zonefile)
+    except  IOError:
+        print _('Error opening CNML file: ' ), zonefile
+
+def getZoneCNML(zoneId,conn):
+    """
+    Return unparsed detail CNML of zone
+    Search for file locally, if not found Download zone cnml
+    """
+    logger.info('Downloading Zone %s detailed CNML ',zoneId)
+    try:
+        fp = conn.downloadCNML(int(zoneId), 'detail')
+        filename = os.path.join(os.getcwd(),'cnml',str(zoneId))
+        with open(filename, 'w') as zonefile:
+            zonefile.write(fp.read())
+        logger.info('Zone saved successfully to', filename)
+        return filename
+    except URLError, e:
+        print _('Error accessing to the Internet:'), str(e.reason)
+
+def nodeToDict(node):
+    """
+    Convert a CNMLNode object to a dictionary with accessable properties:
+
+    """
+    result = {}
+    for device in node.getDevices():
+        result[('device',device)] = {}
+        for interface in device.getInterfaces():
+            result[('device',device)][('interface',interface)]  = {}
+            for link in interface.getLinks():
+                result[('device',device)][('interface',interface)]['link',link] = {}
+        for radio in device.getRadios():
+            result[('device',device)]['radio',radio] = {}
+            for interface in radio.getInterfaces():
+                result[('device',device)]['radio',radio][('interface',interface)] = {}
+                for link in interface.getLinks():
+                    result[('device',device)]['radio',radio][('interface',interface)]['link',link] = {}
+    return result
+
+def dump(obj):
+    for attr in dir(obj):
+        print "obj.%s = %s" % (attr, getattr(obj, attr))
+
+def print_dict(dictionary, ident = '\t', braces=0):
+    """ Recursively prints nested dictionaries."""
+    for key, value in dictionary.iteritems():
+        if isinstance(value, dict):
+            print '%s%s%s%s%s' %(ident,braces*'[',key[0],key[1],braces*']')
+            self.print_dict(value, ident+ident, braces+0)
+        else:
+            print ident+'%s \t %s : %s' %(key[0], key[1], str(value))
