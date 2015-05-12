@@ -49,8 +49,8 @@ class GuifiNet(object):
         self.workingZone = self.getCNMLZoneWorking(self.zone)
         #for n in self.cnml.nodes:
         #    print self.cnml.nodes[n].status
-        temp = self.getZoneElements1(self.workingZone)
-        self.nodes = {temp['nodes']}
+        temp = self.getZoneElements(self.workingZone)
+        #self.nodes = {temp['nodes']}
         #TODO the rest
         self.devices = {}
         self.services = {}
@@ -143,7 +143,30 @@ class GuifiNet(object):
         # Fix counters
         return zone
 
-    
+    def getZoneElements(self, zone):
+        """
+        Returns a dictionary of lists that contain the 'devices' the 'services' the 'radios' the 'ifaces' and the 'links'
+        contained in the zone
+        """
+        #if not zoneId:
+        #    zoneId = self.rootZoneId
+        #root = self.cnml.zones[zoneId]
+        #zones = [root] +
+        print _('Zone Id: '), zone.id
+        result = {}
+        for node in zone.getNodes():
+            elements  = self.getNodeElements(node)
+            #print "\tNode: %d Devices: %d Services: %d Radios: %d Ifaces: %d Links: %d  " % (node.id, \
+            #    len(elements['devices']), len(elements['services']), len(elements['radios']), len(elements['ifaces']),\
+            #    len(elements['links']))
+            result[node.id] = {'devices':elements['devices'],'services':elements['services'],\
+                'radios':elements['radios'],'ifaces':elements['ifaces'], 'links':elements['links']}
+
+        return result
+         # PRoblem??? One node is not parsed. The planned one...
+
+
+
 
     #def getNodeLinks
 
@@ -196,7 +219,7 @@ class GuifiNet(object):
         ifaces = {}
         links = {}
         for node in zone.getNodes():
-            elements  = self.getNodeElements(node)
+            elements  = self.getNodeElements1(node)
             #print "\tNode: %d Devices: %d Services: %d Radios: %d Ifaces: %d Links: %d  " % (node.id, \
             #    len(elements['devices']), len(elements['services']), len(elements['radios']), len(elements['ifaces']),\
             #    len(elements['links']))
@@ -206,7 +229,7 @@ class GuifiNet(object):
             radios.update(elements['radios'])
             ifaces.update(elements['ifaces'])
             links.update(elements['links'])
- 
+
         return {'devices':devices,'services':services,'radios':radios,'ifaces':ifaces, 'links':links}
          # PRoblem??? One node is not parsed. The planned one...
 
@@ -238,7 +261,7 @@ class GuifiNet(object):
                     temp = [l for l in iface.links if l not in linkIds]
                     linkIds = linkIds + temp
                     for link in temp:
-                        links.update(iface.links[link]) 
+                        links.update(iface.links[link])
             for iface in device.getInterfaces():
                 temp = [l for l in iface.links if l not in linkIds]
                 linkIds = linkIds + temp
