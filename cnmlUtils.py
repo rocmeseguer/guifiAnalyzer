@@ -66,7 +66,7 @@ def getCNMLZone(zoneId,conn):
         filename = os.path.join(os.getcwd(),'cnml',str(zoneId))
         with open(filename, 'w') as zonefile:
             zonefile.write(fp.read())
-        logger.info('Zone saved successfully to', filename)
+        logger.info('Zone saved successfully to', str(filename))
         return filename
     except URLError, e:
         print _('Error accessing to the Internet:'), str(e.reason)
@@ -112,7 +112,7 @@ def cnmlNodeToDict(node):
 
 def dump(obj):
 	"""
-	Dump objects attributes	
+	Dump objects attributes
 	"""
 	for attr in dir(obj) :
 		print "obj.%s = %s" % (attr, getattr(obj, attr))
