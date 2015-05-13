@@ -2,6 +2,8 @@
 #
 #test.py
 
+#TODO make dictionary list of tuples
+
 import os
 import sys
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -31,10 +33,102 @@ _ = gettext.gettext
 import json
 import operator
 import copy
+# increasy recursion limit for deepcopy function
+sys.setrecursionlimit(10000)
+
 
 from cnmlUtils import *
 
-class GuifiNet(object):
+def mydeepcopy(org):
+    '''
+    much, much faster than deepcopy, for a dict of the simple python types.
+    '''
+    out = dict().fromkeys(org)
+    for k,v in org.iteritems():
+        try:
+            out[k] = v.copy()   # dicts, sets
+        except AttributeError:
+            try:
+                out[k] = v[:]   # lists, tuples, strings, unicode
+            except TypeError:
+                out[k] = v      # ints
+
+    return out
+
+def cnmlObjectCopy(obj):
+    if isinstance(obj, libcnml.libcnml.CNMLZone):
+        new = libcnml.libcnml.CNMLZone(obj.id,obj.parentzone,obj.totalAPs,obj.box,obj.totalClients,obj.totalDevices,
+                    obj.totalLinks, obj.totalServices, obj.totalNodes, obj.title)
+        new.subzones = obj.subzones.copy()
+        new.nodes = obj.nodes.copy()
+    elif isinstance(obj, libcnml.libcnml.CNMLNode):
+        new = libcnml.libcnml.CNMLNode(obj.id,obj.title,obj.latitude,obj.longitude,obj.totalLinks,obj.status)
+        new.devices = obj.devices.copy()
+        new.services = obj.services.copy()
+    elif isinstance(obj, libcnml.libcnml.CNMLService):
+        new = libcnml.libcnml.CNMLService(obj.id, obj.title,obj.type,obj.status, obj.created,obj.parent)
+    elif isinstance(obj, libcnml.libcnml.CNMLDevice):
+        new = libcnml.libcnml.CNMLDevice(obj.id,obj.name,obj.firmware, obj.status, obj.title, obj.type,
+                    obj.parentNode)
+        new.radios = obj.radios.copy()
+        new.interfaces = obj.interfaces.copy()
+    elif isinstance(obj, libcnml.libcnml.CNMLRadio):
+        new = libcnml.libcnml.CNMLRadio(obj.id, obj.protocol, obj.snmp_name, obj.ssid,obj.mode, obj.antenna_gain,
+                    obj.antenna_angle, obj.channel, obj.clients_accepted, obj.parentDevice)
+        new.interfaces = obj.interfaces.copy()
+    elif isinstance(obj, libcnml.libcnml.CNMLInterface):
+        new = libcnml.libcnml.CNMLInterface(obj.id, obj.ipv4, obj.mask, obj.mac, obj.type, obj.parentRadio)
+        new.links = obj.links.copy()
+    elif isinstance(obj, libcnml.libcnml.CNMLLink):
+        new = libcnml.libcnml.CNMLLink(obj.id, obj.status, obj.type, obj.deviceA, obj.interfaceA, obj.nodeA, obj.parentInterface)
+        new.nodeB = obj.nodeB
+        new.deviceB = obj.deviceB
+        new.interfaceB = obj.interfaceB
+    else:
+        new = obj
+    return new
+
+
+class GuifiZones(object):
+    def __init__(self,guifizones):
+        self.zones = {}
+        self.nodes = {}
+        self.devices = {}
+        self.services = {}
+        self.radios = {}
+        self.ifaces = {}
+        self.links = {}
+        self.totalnodes = {}
+        self.totaldevices = {}
+        self.totalservices = {}
+        self.totalradios = {}
+        self.totalifaces = {}
+        self.totallinks = {}
+        for zone in zones:
+            self.zones.update({zone.id:zone})
+            self.nodes.update(zone.nodes)
+            self.devices.update(zone.devices)
+            self.services.update(zone.services)
+            self.radios.update(zone.radios)
+            self.ifaces.update(zone.ifaces)
+            self.links.update(zone.links)
+            self.totalnodes.update(zone.totalnodes)
+            self.totaldevices.update(zone.totaldevices)
+            self.totalservices.update(zone.totalservices)
+            self.totalradios.update(zone.totalradios)
+            self.totalifaces.update(zone.totalifaces)
+            self.totallinks.update(zone.totallinks)
+
+        logger.info('Total nodes:  %s',len(self.totalnodes))
+        logger.info('Total links:  %s',len(self.totallinks))
+        logger.info('Working nodes:  %s',len(self.nodes))
+        logger.info('Working links:  %s',len(self.links))
+        #Todo Fix broken links? The ones not recognized cause node in other zone
+
+
+
+
+class GuifiZone(object):
     def __init__(self, rootZoneId=None):
         # GuifiAPI
         self.conn = authenticate()
@@ -49,23 +143,39 @@ class GuifiNet(object):
         self.workingZone = self.getCNMLZoneWorking(self.zone)
         #for n in self.cnml.nodes:
         #    print self.cnml.nodes[n].status
-        temp = self.getZoneElements(self.workingZone)
-        #self.nodes = {temp['nodes']}
-        #TODO the rest
+        self.nodes = {}
         self.devices = {}
         self.services = {}
         self.radios = {}
         self.ifaces = {}
         self.links = {}
-        logger.info('Zone nodes:  %s',len(self.cnml.nodes))
-        logger.info('Zone devices:  %s', len(self.cnml.devices))
-        logger.info('Zone links:  %s',len(self.cnml.links))
+        self.totalnodes = {}
+        self.totaldevices = {}
+        self.totalservices = {}
+        self.totalradios = {}
+        self.totalifaces = {}
+        self.totallinks = {}
+        # Set all the empty dictionaries
+        self.setZoneElements()
+        logger.info('Total %s nodes:  %s',self.rootZoneId,len(self.totalnodes))
+        logger.info('Total %s links:  %s',self.rootZoneId,len(self.totallinks))
+        logger.info('Working %s nodes:  %s',self.rootZoneId,len(self.nodes))
+        logger.info('Working %s links:  %s',self.rootZoneId,len(self.links))
+
+        self.subzones = {}
+        self.setAllSubZones()
         #TODO fix using only working nodes
        # self.cnml.nodes =  {i: self.cnml.nodes[i] for i in self.cnml.nodes if self.cnml.nodes[i].status == libcnml.Status.WORKING}
         #print "After keeping only working nodes"
         #print _('Total nodes: '),  len(self.cnml.nodes)
         #print _('Total devices: '),  len(self.cnml.getDevices())
         #print _('Total links: '),  len(self.cnml.getLinks())
+
+
+    def setAllSubZones(self):
+        for zone in self.zone.subzones:
+            self.subzones.update({zone:GuifiZone(zone)})
+
 
     def findAttributeTypes(self):
         """
@@ -113,28 +223,28 @@ class GuifiNet(object):
         # we just have to deepcopy the zone object
         # If we were modifying the attributes of other objects linked
         # to zone (like nodes) we should deepcopy them also
-        zone = copy.deepcopy(zoneIn)
+        zone = cnmlObjectCopy(zoneIn)
         # Discard non-working nodes
-        nodes = {node.id:copy.deepcopy(node) for node in zone.getNodes() if node.status==libcnml.Status.WORKING}
+        nodes = {node.id:cnmlObjectCopy(node) for node in zone.getNodes() if node.status==libcnml.Status.WORKING}
         zone.nodes = nodes
         # From the nodes left discard non-working Devices and Services
         for node in zone.getNodes():
-            node.devices = {device.id:copy.deepcopy(device) for device in node.getDevices() if device.status==libcnml.Status.WORKING}
-            node.services = {service.id:copy.deepcopy(service) for service in node.getServices() if service.status==libcnml.Status.WORKING}
+            node.devices = {device.id:cnmlObjectCopy(device) for device in node.getDevices() if device.status==libcnml.Status.WORKING}
+            node.services = {service.id:cnmlObjectCopy(service) for service in node.getServices() if service.status==libcnml.Status.WORKING}
             # From the nodes and devices left discard non-working Links
             for device in node.getDevices():
-                device.interfaces = {iface.id:copy.deepcopy(iface) for iface in device.getInterfaces()}
-                device.radios = {(device.id,radio.id):copy.deepcopy(radio) for radio in device.getRadios()}
+                device.interfaces = {iface.id:cnmlObjectCopy(iface) for iface in device.getInterfaces()}
+                device.radios = {(device.id,radio.id):cnmlObjectCopy(radio) for radio in device.getRadios()}
                 for interface in device.getInterfaces():
-                    interface.links = {link.id:copy.deepcopy(link) for link in interface.getLinks() if link.status==libcnml.Status.WORKING}
+                    interface.links = {link.id:cnmlObjectCopy(link) for link in interface.getLinks() if link.status==libcnml.Status.WORKING}
                     # Remove links that reach outside the zone
                     interface.links = {link.id:link for link in  interface.getLinks()  if isinstance(link.nodeB, libcnml.libcnml.CNMLNode)}
                     # Remove self-links
                     interface.links = {link.id:link for link in  interface.getLinks()  if link.nodeB.id != link.nodeA.id}
                 for radio in device.getRadios():
-                    radio.interfaces = {iface.id:copy.deepcopy(iface) for iface in radio.getInterfaces()}
+                    radio.interfaces = {iface.id:cnmlObjectCopy(iface) for iface in radio.getInterfaces()}
                     for interface in radio.getInterfaces():
-                        interface.links = {link.id:copy.deepcopy(link) for link in interface.getLinks() if link.status==libcnml.Status.WORKING}
+                        interface.links = {link.id:cnmlObjectCopy(link) for link in interface.getLinks() if link.status==libcnml.Status.WORKING}
                         # Remove links that reach outside the zone
                         interface.links = {link.id:link for link in  interface.getLinks()  if isinstance(link.nodeB, libcnml.libcnml.CNMLNode)}
                         # Remove self-links
@@ -202,6 +312,26 @@ class GuifiNet(object):
         print _('\t\tLinks: '), linkStats
         return {'devices':deviceIds,'services':serviceIds,'radios':radioIds,'ifaces':ifaceIds, 'links':linkIds}
 
+
+    def setZoneElements(self):
+        """
+        Set local dictionaries containing all total elements and all working elements
+        """
+        zone = self.getZoneElements1(self.zone)
+        wzone = self.getZoneElements1(self.workingZone)
+        self.nodes = wzone['nodes']
+        self.devices = wzone['devices']
+        self.services = wzone['services']
+        self.radios = wzone['radios']
+        self.ifaces = wzone['ifaces']
+        self.links = wzone['links']
+        self.totalnodes = zone['nodes']
+        self.totaldevices = zone['devices']
+        self.totalservices = zone['services']
+        self.totalradios = zone['radios']
+        self.totalifaces = zone['ifaces']
+        self.totallinks = zone['links']
+
     def getZoneElements1(self, zone):
         """
         Returns a dictionary of lists that contain the 'devices' the 'services' the 'radios' the 'ifaces' and the 'links'
@@ -229,8 +359,9 @@ class GuifiNet(object):
             radios.update(elements['radios'])
             ifaces.update(elements['ifaces'])
             links.update(elements['links'])
+        #return {'devices':devices,'services':services,'radios':radios,'ifaces':ifaces, 'links':links}
 
-        return {'devices':devices,'services':services,'radios':radios,'ifaces':ifaces, 'links':links}
+        return {'nodes':nodes,'devices':devices,'services':services,'radios':radios,'ifaces':ifaces, 'links':links}
          # PRoblem??? One node is not parsed. The planned one...
 
     def getNodeElements1(self,node):
@@ -261,22 +392,22 @@ class GuifiNet(object):
                     temp = [l for l in iface.links if l not in linkIds]
                     linkIds = linkIds + temp
                     for link in temp:
-                        links.update(iface.links[link])
+                        links.update({link:iface.links[link]})
             for iface in device.getInterfaces():
                 temp = [l for l in iface.links if l not in linkIds]
                 linkIds = linkIds + temp
                 for link in temp:
-                        links.update(iface.links[link])
-        print "\t(Node: %d | Status: %s) \tDevices: %d Services: %d Radios: %d Ifaces: %d Links: %d  " % (node.id, node.status, len(deviceIds),\
-           len(serviceIds), len(radioIds), len(ifaceIds), len(linkIds))
+                        links.update({link:iface.links[link]})
+        #print "\t(Node: %d | Status: %s) \tDevices: %d Services: %d Radios: %d Ifaces: %d Links: %d  " % (node.id, node.status, len(deviceIds),\
+        #   len(serviceIds), len(radioIds), len(ifaceIds), len(linkIds))
         devStats = [ (i,(self.cnml.devices[i]).status) for i in deviceIds ]
-        print _('\t\tDevices: '), devStats
+        #print _('\t\tDevices: '), devStats
         servStats = [ (i,(self.cnml.services[i]).status) for i in serviceIds ]
-        print _('\t\tServices: '), servStats
-        print _('\t\tRadios: '), radioIds
-        print _('\t\tInterfaces: '), ifaceIds
+        #print _('\t\tServices: '), servStats
+        #print _('\t\tRadios: '), radioIds
+        #print _('\t\tInterfaces: '), ifaceIds
         linkStats = [ (i,(self.cnml.links[i]).status) for i in linkIds ]
-        print _('\t\tLinks: '), linkStats
+        #print _('\t\tLinks: '), linkStats
         #return {'devices':deviceIds,'services':serviceIds,'radios':radioIds,'ifaces':ifaceIds, 'links':linkIds}
         return {'devices':devices,'services':services,'radios':radios,'ifaces':ifaces, 'links':links}
 
@@ -348,16 +479,19 @@ if __name__ == "__main__":
 
 def testWZone():
         #reload(test);
-        g = GuifiNet(50962);
+        g = GuifiZone(3671);
+        zones = (g.subzones).values()
+        zones.extend(g)
+        return GuifiZones(zones)
         #g = GuifiNet(23918);
         #zone = g.cnml.getZones()[0];
-        for zone in g.cnml.getZones():
-            g.getZoneElements(zone);
-            logger.debug("Working Elements:")
-            zo = g.getCNMLZoneWorking(zone);
-            g.getZoneElements(zo);
+        #for zone in g.cnml.getZones():
+         #   g.getZoneElements(zone);
+            #logger.debug("Working Elements:")
+            #zo = g.getCNMLZoneWorking(zone);
+            #g.getZoneElements(zo);
         #return (zone,zo)
-        return g
+        #return g
        # linksZone = g.getZoneLinks(zone);
         #linksZo = g.getZoneLinks(zo);
         #linksZoneNW = [l.id for l in linksZone if l.status != libcnml.Status.WORKING]
