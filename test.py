@@ -34,7 +34,7 @@ import json
 import operator
 import copy
 # increasy recursion limit for deepcopy function
-sys.setrecursionlimit(10000)
+#sys.setrecursionlimit(10000)
 
 
 from cnmlUtils import *
@@ -61,7 +61,7 @@ def cnmlObjectCopy(obj):
         new.subzones = obj.subzones.copy()
         new.nodes = obj.nodes.copy()
     elif isinstance(obj, libcnml.libcnml.CNMLNode):
-        new = libcnml.libcnml.CNMLNode(obj.id,obj.title,obj.latitude,obj.longitude,obj.totalLinks,obj.status)
+        new = libcnml.libcnml.CNMLNode(obj.id,obj.title,obj.latitude,obj.longitude,obj.totalLinks,obj.status,obj.parentZone)
         new.devices = obj.devices.copy()
         new.services = obj.services.copy()
     elif isinstance(obj, libcnml.libcnml.CNMLService):
@@ -132,6 +132,18 @@ def getAllSubZones(guifizone):
             #print subzones
             return subzones + [getAllSubZones(x) for x in subzones]
 
+class CNMLWrapper(object):
+    def __init__(self, rootZoneId=None):
+        # GuifiAPI
+        self.conn = authenticate()
+        if rootZoneId:
+            self.rootZoneId = int(rootZoneId)
+        else:
+            self.rootZoneId = int(raw_input("Select a zone: "))
+        print _('Parsing:'), rootZoneId
+        #self.world = getCNMLZone(3671)
+        self.cnml = parseCNMLZone(rootZoneId,self.conn)
+
 
 class GuifiZone(object):
     def __init__(self, rootZoneId=None):
@@ -167,9 +179,17 @@ class GuifiZone(object):
         logger.info('Working %s (%s) nodes:  %s',self.rootZoneId,self.zone.title,len(self.nodes))
         logger.info('Working %s (%s) links:  %s',self.rootZoneId,self.zone.title,len(self.links))
 
-        self.subzones = {}
-        self.setSubZones()
-        #self.allsubzones = getAllSubZones(self)
+        self.subzones = self.zone.subzones
+        #self.setSubZones()
+        self.allsubzones = getAllSubZones(self)
+        self.allworkingsubzones = map(self.getCNMLZoneWorking,self.allsubzones)
+        logger.info('=== Subzones Info ===')
+        for zone in self.allworkingsubzones:
+            logger.info('Total %s (%s) nodes:  %s',self.rootZoneId,self.zone.title,len(self.totalnodes))
+            logger.info('Total %s (%s) links:  %s',self.rootZoneId,self.zone.title,len(self.totallinks))
+            logger.info('Working %s (%s) nodes:  %s',self.rootZoneId,self.zone.title,len(self.nodes))
+            logger.info('Working %s (%s) links:  %s',self.rootZoneId,self.zone.title,len(self.links))
+
         #for s in self.allsubzones:
         #    logger.info(' %s (%s)',s.rootZoneId,s.zone.title)
         #TODO fix using only working nodes
@@ -180,9 +200,9 @@ class GuifiZone(object):
         #print _('Total links: '),  len(self.cnml.getLinks())
 
 
-    def setSubZones(self):
-        for zone in self.zone.subzones:
-            self.subzones.update({zone:GuifiZone(zone)})
+    #def setSubZones(self):
+    #   for zone in self.zone.subzones:
+    #        self.subzones.update({zone:GuifiZone(zone)})
 
 
     def findAttributeTypes(self):
@@ -497,13 +517,16 @@ def flatten(lis):
 
 def testWZone():
         #reload(test);
-        g = GuifiZone(2436);
+        root = 2436
+        g = GuifiZone(root);
         zones = (g.subzones).values()
         zones.append(g)
-        for s in flatten(getAllSubZones(g)):
-            logger.info(' %s (%s)',s.rootZoneId,s.zone.title)
+        #for s in flatten(getAllSubZones(g)):
+            #logger.info(' %s (%s)',s.rootZoneId,s.zone.title)
+        for s in g.cnml.getSubzonesFromZone(root):
+            logger.info(' %s (%s)',s.id,s.title)
         return GuifiZones(zones),g
-        
+
         #g = GuifiNet(23918);
         #zone = g.cnml.getZones()[0];
         #for zone in g.cnml.getZones():
