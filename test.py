@@ -89,6 +89,22 @@ class CNMLWrapper(object):
         logger.info('Total links:  %s',len(self.totallinks))
         logger.info('Working nodes:  %s',len(self.nodes))
         logger.info('Working links:  %s',len(self.links))
+        if self.totallinks:
+            logger.info('Working nodes per total nodes: %s ',float(len(self.nodes))/float(len(self.totalnodes)))
+            logger.info('Total links per total nodes: %s ',float(len(self.totallinks))/float(len(self.totalnodes)))
+            logger.info('Working links per working nodes: %s ',float(len(self.links))/float(len(self.nodes)))
+            logger.info('Working links per total links : %s ',float(len(self.links))/float(len(self.totallinks)))
+            nonworklinks= [i for i in self.totallinks.values() if i.status != libcnml.Status.WORKING]
+            logger.info('Non Working (status) links: %s (%s percent of total links)',len(nonworklinks),float(len(nonworklinks))/float(len(self.totallinks)) )
+            unparsedlinks= [i for i in self.totallinks.values() if (not i.nodeB) and i.status == libcnml.Status.WORKING]
+            logger.info('Unparsed Working links: %s (%s percent of total links)',len(unparsedlinks),float(len(unparsedlinks))/float(len(self.totallinks)) )
+            selflinks= [i for i in self.totallinks.values() if i.nodeA == i.nodeB and i.status==libcnml.Status.WORKING]
+            logger.info('Self links: %s (%s percent of total links)',len(selflinks),float(len(selflinks))/float(len(self.totallinks)) )
+            cablelinks= [i for i in self.totallinks.values() if i.type == "cable" and i.status==libcnml.Status.WORKING]
+            logger.info('Cable links: %s (%s percent of total links)',len(cablelinks),float(len(cablelinks))/float(len(self.totallinks)) )
+        #TODO check if there can be a working link inside non-working node or devices(should be prohibited in 
+        #    links but not in totallinks)
+
         #Todo Fix broken links? The ones not recognized cause node in other zone
     def findAttributeTypes(self):
         """
@@ -148,6 +164,19 @@ class GuifiZone(object):
         logger.info('Total %s (%s) links:  %s',self.zone.id,self.zone.title,len(self.totallinks))
         logger.info('Working %s (%s) nodes:  %s',self.zone.id,self.zone.title,len(self.nodes))
         logger.info('Working %s (%s) links:  %s',self.zone.id,self.zone.title,len(self.links))
+        if self.totallinks:
+            logger.info('Working nodes per total nodes: %s ',float(len(self.nodes))/float(len(self.totalnodes)))
+            logger.info('Total links per total node: %s ',float(len(self.totallinks))/float(len(self.totalnodes)))
+            logger.info('Working links per working nodes: %s ',float(len(self.links))/float(len(self.nodes)))
+            logger.info('Working links per total links : %s ',float(len(self.links))/float(len(self.totallinks)))
+            nonworklinks= [i for i in self.totallinks.values() if i.status != libcnml.Status.WORKING]
+            logger.info('Non Working (status) links: %s (%s percent of total links)',len(nonworklinks),float(len(nonworklinks))/float(len(self.totallinks)) )
+            unparsedlinks= [i for i in self.totallinks.values() if (not i.nodeB) and i.status == libcnml.Status.WORKING]
+            logger.info('Unparsed Working links: %s (%s percent of total links)',len(unparsedlinks),float(len(unparsedlinks))/float(len(self.totallinks)) )
+            selflinks= [i for i in self.totallinks.values() if i.nodeA == i.nodeB and i.status==libcnml.Status.WORKING]
+            logger.info('Self links: %s (%s percent of total links)',len(selflinks),float(len(selflinks))/float(len(self.totallinks)) )
+            cablelinks= [i for i in self.totallinks.values() if i.type == "cable" and i.status==libcnml.Status.WORKING]
+            logger.info('Cable links: %s (%s percent of total links)',len(cablelinks),float(len(cablelinks))/float(len(self.totallinks)))
 
         #self.subzones = self.zone.subzones
         self.subzones = {}
