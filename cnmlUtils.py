@@ -90,6 +90,40 @@ def getParentCNMLNode(comp):
     else :
         return None
 
+def cnmlObjectCopy(obj):
+    if isinstance(obj, libcnml.libcnml.CNMLZone):
+        new = libcnml.libcnml.CNMLZone(obj.id,obj.parentzone,obj.totalAPs,obj.box,obj.totalClients,obj.totalDevices,
+                    obj.totalLinks, obj.totalServices, obj.totalNodes, obj.title)
+        new.subzones = obj.subzones.copy()
+        new.nodes = obj.nodes.copy()
+    elif isinstance(obj, libcnml.libcnml.CNMLNode):
+        new = libcnml.libcnml.CNMLNode(obj.id,obj.title,obj.latitude,obj.longitude,obj.totalLinks,obj.status,obj.parentZone)
+        new.devices = obj.devices.copy()
+        new.services = obj.services.copy()
+    elif isinstance(obj, libcnml.libcnml.CNMLService):
+        new = libcnml.libcnml.CNMLService(obj.id, obj.title,obj.type,obj.status, obj.created,obj.parentNode)
+    elif isinstance(obj, libcnml.libcnml.CNMLDevice):
+        new = libcnml.libcnml.CNMLDevice(obj.id,obj.name,obj.firmware, obj.status, obj.title, obj.type,
+                    obj.parentNode)
+        new.radios = obj.radios.copy()
+        new.interfaces = obj.interfaces.copy()
+    elif isinstance(obj, libcnml.libcnml.CNMLRadio):
+        new = libcnml.libcnml.CNMLRadio(obj.id, obj.protocol, obj.snmp_name, obj.ssid,obj.mode, obj.antenna_gain,
+                    obj.antenna_angle, obj.channel, obj.clients_accepted, obj.parentDevice)
+        new.interfaces = obj.interfaces.copy()
+    elif isinstance(obj, libcnml.libcnml.CNMLInterface):
+        new = libcnml.libcnml.CNMLInterface(obj.id, obj.ipv4, obj.mask, obj.mac, obj.type, obj.parentRadio)
+        new.links = obj.links.copy()
+    elif isinstance(obj, libcnml.libcnml.CNMLLink):
+        new = libcnml.libcnml.CNMLLink(obj.id, obj.status, obj.type, obj.deviceA, obj.interfaceA, obj.nodeA, obj.parentInterface)
+        new.nodeB = obj.nodeB
+        new.deviceB = obj.deviceB
+        new.interfaceB = obj.interfaceB
+    else:
+        logger.warning('No CNML object to copy. Found object of type %s',type(obj))
+        new = obj
+    return new
+
 def cnmlNodeToDict(node):
     """
     Convert a CNMLNode object to a dictionary with accessable properties:

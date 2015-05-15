@@ -39,57 +39,23 @@ import copy
 
 from cnmlUtils import *
 
-def mydeepcopy(org):
-    '''
-    much, much faster than deepcopy, for a dict of the simple python types.
-    '''
-    out = dict().fromkeys(org)
-    for k,v in org.iteritems():
-        try:
-            out[k] = v.copy()   # dicts, sets
-        except AttributeError:
-            try:
-                out[k] = v[:]   # lists, tuples, strings, unicode
-            except TypeError:
-                out[k] = v      # ints
-    return out
-
-def cnmlObjectCopy(obj):
-    if isinstance(obj, libcnml.libcnml.CNMLZone):
-        new = libcnml.libcnml.CNMLZone(obj.id,obj.parentzone,obj.totalAPs,obj.box,obj.totalClients,obj.totalDevices,
-                    obj.totalLinks, obj.totalServices, obj.totalNodes, obj.title)
-        new.subzones = obj.subzones.copy()
-        new.nodes = obj.nodes.copy()
-    elif isinstance(obj, libcnml.libcnml.CNMLNode):
-        new = libcnml.libcnml.CNMLNode(obj.id,obj.title,obj.latitude,obj.longitude,obj.totalLinks,obj.status,obj.parentZone)
-        new.devices = obj.devices.copy()
-        new.services = obj.services.copy()
-    elif isinstance(obj, libcnml.libcnml.CNMLService):
-        new = libcnml.libcnml.CNMLService(obj.id, obj.title,obj.type,obj.status, obj.created,obj.parentNode)
-    elif isinstance(obj, libcnml.libcnml.CNMLDevice):
-        new = libcnml.libcnml.CNMLDevice(obj.id,obj.name,obj.firmware, obj.status, obj.title, obj.type,
-                    obj.parentNode)
-        new.radios = obj.radios.copy()
-        new.interfaces = obj.interfaces.copy()
-    elif isinstance(obj, libcnml.libcnml.CNMLRadio):
-        new = libcnml.libcnml.CNMLRadio(obj.id, obj.protocol, obj.snmp_name, obj.ssid,obj.mode, obj.antenna_gain,
-                    obj.antenna_angle, obj.channel, obj.clients_accepted, obj.parentDevice)
-        new.interfaces = obj.interfaces.copy()
-    elif isinstance(obj, libcnml.libcnml.CNMLInterface):
-        new = libcnml.libcnml.CNMLInterface(obj.id, obj.ipv4, obj.mask, obj.mac, obj.type, obj.parentRadio)
-        new.links = obj.links.copy()
-    elif isinstance(obj, libcnml.libcnml.CNMLLink):
-        new = libcnml.libcnml.CNMLLink(obj.id, obj.status, obj.type, obj.deviceA, obj.interfaceA, obj.nodeA, obj.parentInterface)
-        new.nodeB = obj.nodeB
-        new.deviceB = obj.deviceB
-        new.interfaceB = obj.interfaceB
-    else:
-        new = obj
-    return new
 
 
-class GuifiZones(object):
-    def __init__(self,guifizones):
+
+class CNMLWrapper(object):
+    def __init__(self, rootZoneId=None):
+        # GuifiAPI
+        self.conn = authenticate()
+        if rootZoneId:
+            self.rootZoneId = int(rootZoneId)
+        else:
+            self.rootZoneId = int(raw_input("Select a zone: "))
+        print _('Parsing:'), rootZoneId
+        #self.world = getCNMLZone(3671)
+        self.cnml = parseCNMLZone(rootZoneId,self.conn)
+        self.zone = self.cnml.zones[rootZoneId]
+        self.guifizone = GuifiZone(self.zone)
+
         self.zones = {}
         self.nodes = {}
         self.devices = {}
@@ -103,8 +69,9 @@ class GuifiZones(object):
         self.totalradios = {}
         self.totalifaces = {}
         self.totallinks = {}
-        for zone in guifizones:
-            self.zones.update({zone.rootZoneId:zone})
+        temp = flatten((self.guifizone.allsubzones).values() + [self.guifizone])
+        for zone in temp:
+            self.zones.update({zone.zone.id:zone})
             self.nodes.update(zone.nodes)
             self.devices.update(zone.devices)
             self.services.update(zone.services)
@@ -123,88 +90,6 @@ class GuifiZones(object):
         logger.info('Working nodes:  %s',len(self.nodes))
         logger.info('Working links:  %s',len(self.links))
         #Todo Fix broken links? The ones not recognized cause node in other zone
-
-def getAllSubZones(guifizone):
-        subzones = (guifizone.subzones).values()
-        if subzones == []:
-            return []
-        else:
-            #print subzones
-            return subzones + [getAllSubZones(x) for x in subzones]
-
-class CNMLWrapper(object):
-    def __init__(self, rootZoneId=None):
-        # GuifiAPI
-        self.conn = authenticate()
-        if rootZoneId:
-            self.rootZoneId = int(rootZoneId)
-        else:
-            self.rootZoneId = int(raw_input("Select a zone: "))
-        print _('Parsing:'), rootZoneId
-        #self.world = getCNMLZone(3671)
-        self.cnml = parseCNMLZone(rootZoneId,self.conn)
-
-
-class GuifiZone(object):
-    def __init__(self, rootZoneId=None):
-        # GuifiAPI
-        self.conn = authenticate()
-        if rootZoneId:
-            self.rootZoneId = int(rootZoneId)
-        else:
-            self.rootZoneId = int(raw_input("Select a zone: "))
-        print _('Parsing:'), rootZoneId
-        #self.world = getCNMLZone(3671)
-        self.cnml = parseCNMLZone(rootZoneId,self.conn)
-        self.zone = self.cnml.zones[rootZoneId]
-        self.workingZone = self.getCNMLZoneWorking(self.zone)
-        #for n in self.cnml.nodes:
-        #    print self.cnml.nodes[n].status
-        self.nodes = {}
-        self.devices = {}
-        self.services = {}
-        self.radios = {}
-        self.ifaces = {}
-        self.links = {}
-        self.totalnodes = {}
-        self.totaldevices = {}
-        self.totalservices = {}
-        self.totalradios = {}
-        self.totalifaces = {}
-        self.totallinks = {}
-        # Set all the empty dictionaries
-        self.setZoneElements()
-        logger.info('Total %s (%s) nodes:  %s',self.rootZoneId,self.zone.title,len(self.totalnodes))
-        logger.info('Total %s (%s) links:  %s',self.rootZoneId,self.zone.title,len(self.totallinks))
-        logger.info('Working %s (%s) nodes:  %s',self.rootZoneId,self.zone.title,len(self.nodes))
-        logger.info('Working %s (%s) links:  %s',self.rootZoneId,self.zone.title,len(self.links))
-
-        self.subzones = self.zone.subzones
-        #self.setSubZones()
-        self.allsubzones = getAllSubZones(self)
-        self.allworkingsubzones = map(self.getCNMLZoneWorking,self.allsubzones)
-        logger.info('=== Subzones Info ===')
-        for zone in self.allworkingsubzones:
-            logger.info('Total %s (%s) nodes:  %s',self.rootZoneId,self.zone.title,len(self.totalnodes))
-            logger.info('Total %s (%s) links:  %s',self.rootZoneId,self.zone.title,len(self.totallinks))
-            logger.info('Working %s (%s) nodes:  %s',self.rootZoneId,self.zone.title,len(self.nodes))
-            logger.info('Working %s (%s) links:  %s',self.rootZoneId,self.zone.title,len(self.links))
-
-        #for s in self.allsubzones:
-        #    logger.info(' %s (%s)',s.rootZoneId,s.zone.title)
-        #TODO fix using only working nodes
-       # self.cnml.nodes =  {i: self.cnml.nodes[i] for i in self.cnml.nodes if self.cnml.nodes[i].status == libcnml.Status.WORKING}
-        #print "After keeping only working nodes"
-        #print _('Total nodes: '),  len(self.cnml.nodes)
-        #print _('Total devices: '),  len(self.cnml.getDevices())
-        #print _('Total links: '),  len(self.cnml.getLinks())
-
-
-    #def setSubZones(self):
-    #   for zone in self.zone.subzones:
-    #        self.subzones.update({zone:GuifiZone(zone)})
-
-
     def findAttributeTypes(self):
         """
         List different types of components in the loaded CNML
@@ -238,6 +123,59 @@ class GuifiZone(object):
         sortedTypes = sorted(types.iteritems(), key=operator.itemgetter(1))
         print _('Types: '), sortedTypes
         print _('Total Number: '), len(objects)
+
+
+
+class GuifiZone(object):
+    def __init__(self, zone):
+        self.zone = zone
+        self.workingZone = self.getCNMLZoneWorking(self.zone)
+        self.nodes = {}
+        self.devices = {}
+        self.services = {}
+        self.radios = {}
+        self.ifaces = {}
+        self.links = {}
+        self.totalnodes = {}
+        self.totaldevices = {}
+        self.totalservices = {}
+        self.totalradios = {}
+        self.totalifaces = {}
+        self.totallinks = {}
+        # Set all the empty dictionaries
+        self.setZoneElements()
+        logger.info('Total %s (%s) nodes:  %s',self.zone.id,self.zone.title,len(self.totalnodes))
+        logger.info('Total %s (%s) links:  %s',self.zone.id,self.zone.title,len(self.totallinks))
+        logger.info('Working %s (%s) nodes:  %s',self.zone.id,self.zone.title,len(self.nodes))
+        logger.info('Working %s (%s) links:  %s',self.zone.id,self.zone.title,len(self.links))
+
+        #self.subzones = self.zone.subzones
+        self.subzones = {}
+        self.setSubZones()
+        self.allsubzones = self.getAllSubZones()
+
+        logger.info('%s subzones of %s (%s): %s',len(self.allsubzones),self.zone.id,self.zone.title,self.allsubzones)
+        #self.allworkingsubzones = map(self.getCNMLZoneWorking,self.allsubzones)
+        #logger.info('=== Subzones Info ===')
+        #for zone in self.allworkingsubzones:
+        #    logger.info('Total %s (%s) nodes:  %s',self.zone.id,self.zone.title,len(self.totalnodes))
+        #    logger.info('Total %s (%s) links:  %s',self.zone.id,self.zone.title,len(self.totallinks))
+        #    logger.info('Working %s (%s) nodes:  %s',self.zone.id,self.zone.title,len(self.nodes))
+        #    logger.info('Working %s (%s) links:  %s',self.zone.id,self.zone.title,len(self.links))   
+
+    def getAllSubZones(self):
+        temp = flatten(self.getAllSubZonesHelper(self))
+        return {x.zone.id:x for x in temp if x != []}
+        
+    @staticmethod
+    def getAllSubZonesHelper(guifizone):
+        subzones = guifizone.subzones.values()
+        if subzones == []:
+            return []
+        else:
+            #print subzones
+            #return subzones.update({x.getAllSubZones() for x in subzones.values()})
+            return subzones+[x.getAllSubZonesHelper(x) for x in subzones]
 
     def getCNMLZoneWorking(self,zoneIn):
         """
@@ -281,72 +219,12 @@ class GuifiZone(object):
         # Fix counters
         return zone
 
-    def getZoneElements(self, zone):
-        """
-        Returns a dictionary of lists that contain the 'devices' the 'services' the 'radios' the 'ifaces' and the 'links'
-        contained in the zone
-        """
-        #if not zoneId:
-        #    zoneId = self.rootZoneId
-        #root = self.cnml.zones[zoneId]
-        #zones = [root] +
-        print _('Zone Id: '), zone.id
-        result = {}
-        for node in zone.getNodes():
-            elements  = self.getNodeElements(node)
-            #print "\tNode: %d Devices: %d Services: %d Radios: %d Ifaces: %d Links: %d  " % (node.id, \
-            #    len(elements['devices']), len(elements['services']), len(elements['radios']), len(elements['ifaces']),\
-            #    len(elements['links']))
-            result[node.id] = {'devices':elements['devices'],'services':elements['services'],\
-                'radios':elements['radios'],'ifaces':elements['ifaces'], 'links':elements['links']}
-
-        return result
-         # PRoblem??? One node is not parsed. The planned one...
-
-
-
-
-    #def getNodeLinks
-
-    def getNodeElements(self,node):
-        """
-        Get all the elements of a node
-        """
-        node = self.getNode(node)
-        deviceIds = [d for d in node.devices]
-        serviceIds = [s for s in node.services]
-        radioIds = []
-        ifaceIds = []
-        linkIds = []
-        for device in node.getDevices():
-            radioIds = radioIds + [r for r in device.radios]
-            ifaceIds = ifaceIds + [i for i in device.interfaces]
-            for radio in device.getRadios():
-                ifaceIds = ifaceIds + [i for i in radio.interfaces]
-                for iface in radio.getInterfaces():
-                    # Add new links (ignoring duplicates)
-                    linkIds = linkIds + [l for l in iface.links if l not in linkIds]
-            for iface in device.getInterfaces():
-                linkIds = linkIds + [l for l in iface.links if l not in linkIds]
-        print "\t(Node: %d | Status: %s) \tDevices: %d Services: %d Radios: %d Ifaces: %d Links: %d  " % (node.id, node.status, len(deviceIds),\
-           len(serviceIds), len(radioIds), len(ifaceIds), len(linkIds))
-        devStats = [ (i,(self.cnml.devices[i]).status) for i in deviceIds ]
-        print _('\t\tDevices: '), devStats
-        servStats = [ (i,(self.cnml.services[i]).status) for i in serviceIds ]
-        print _('\t\tServices: '), servStats
-        print _('\t\tRadios: '), radioIds
-        print _('\t\tInterfaces: '), ifaceIds
-        linkStats = [ (i,(self.cnml.links[i]).status) for i in linkIds ]
-        print _('\t\tLinks: '), linkStats
-        return {'devices':deviceIds,'services':serviceIds,'radios':radioIds,'ifaces':ifaceIds, 'links':linkIds}
-
-
     def setZoneElements(self):
         """
         Set local dictionaries containing all total elements and all working elements
         """
-        zone = self.getZoneElements1(self.zone)
-        wzone = self.getZoneElements1(self.workingZone)
+        zone = self.getZoneElements(self.zone)
+        wzone = self.getZoneElements(self.workingZone)
         self.nodes = wzone['nodes']
         self.devices = wzone['devices']
         self.services = wzone['services']
@@ -360,15 +238,14 @@ class GuifiZone(object):
         self.totalifaces = zone['ifaces']
         self.totallinks = zone['links']
 
-    def getZoneElements1(self, zone):
+
+
+
+    def getZoneElements(self, zone):
         """
         Returns a dictionary of lists that contain the 'devices' the 'services' the 'radios' the 'ifaces' and the 'links'
         contained in the zone
         """
-        #if not zoneId:
-        #    zoneId = self.rootZoneId
-        #root = self.cnml.zones[zoneId]
-        #zones = [root] +
         print _('Zone Id: '), zone.id
         nodes = {}
         devices = {}
@@ -377,7 +254,7 @@ class GuifiZone(object):
         ifaces = {}
         links = {}
         for node in zone.getNodes():
-            elements  = self.getNodeElements1(node)
+            elements  = self.getNodeElements(node)
             #print "\tNode: %d Devices: %d Services: %d Radios: %d Ifaces: %d Links: %d  " % (node.id, \
             #    len(elements['devices']), len(elements['services']), len(elements['radios']), len(elements['ifaces']),\
             #    len(elements['links']))
@@ -392,7 +269,7 @@ class GuifiZone(object):
         return {'nodes':nodes,'devices':devices,'services':services,'radios':radios,'ifaces':ifaces, 'links':links}
          # PRoblem??? One node is not parsed. The planned one...
 
-    def getNodeElements1(self,node):
+    def getNodeElements(self,node):
         """
         Get all the elements of a node
         """
@@ -428,17 +305,20 @@ class GuifiZone(object):
                         links.update({link:iface.links[link]})
         #print "\t(Node: %d | Status: %s) \tDevices: %d Services: %d Radios: %d Ifaces: %d Links: %d  " % (node.id, node.status, len(deviceIds),\
         #   len(serviceIds), len(radioIds), len(ifaceIds), len(linkIds))
-        devStats = [ (i,(self.cnml.devices[i]).status) for i in deviceIds ]
+        devStats = [ (i,devices[i].status) for i in deviceIds ]
         #print _('\t\tDevices: '), devStats
-        servStats = [ (i,(self.cnml.services[i]).status) for i in serviceIds ]
+        servStats = [ (i,services[i].status) for i in serviceIds ]
         #print _('\t\tServices: '), servStats
         #print _('\t\tRadios: '), radioIds
         #print _('\t\tInterfaces: '), ifaceIds
-        linkStats = [ (i,(self.cnml.links[i]).status) for i in linkIds ]
+        linkStats = [ (i,links[i].status) for i in linkIds ]
         #print _('\t\tLinks: '), linkStats
         #return {'devices':deviceIds,'services':serviceIds,'radios':radioIds,'ifaces':ifaceIds, 'links':linkIds}
         return {'devices':devices,'services':services,'radios':radios,'ifaces':ifaces, 'links':links}
 
+    def setSubZones(self):
+       for zone in self.zone.subzones.values():
+            self.subzones.update({zone.id:GuifiZone(zone)})
 
     def getZoneLinks(self,zone):
         links = []
@@ -458,7 +338,7 @@ class GuifiZone(object):
         Return CNMLNode object
         """
         if node is int :
-            return self.cnml.nodes[node]
+            return self.nodes[node]
         return node
 
     # ToDo  Check why not working properly
@@ -466,12 +346,12 @@ class GuifiZone(object):
         nodesFile = os.path.join(os.getcwd(),"topo.js")
         fpTopo = open(nodesFile,"w")
         print>> fpTopo, "var nodes = ["
-        for node in self.cnml.getNodes():
+        for node in self.nodes.values():
             entry = {"id": node.id}
             fpTopo.write("%s,\n" % json.dumps(entry))
         print>> fpTopo, "];\n"
         print>> fpTopo, "var edges = ["
-        for link in self.cnml.getLinks():
+        for link in self.nodes.values():
             #if link.link_status == "Working" and
             parent = getParentCNMLNode(link) # ERROR not working cause of logical error descired down
             print ('Link of node:'), parent.id
@@ -518,14 +398,14 @@ def flatten(lis):
 def testWZone():
         #reload(test);
         root = 2436
-        g = GuifiZone(root);
-        zones = (g.subzones).values()
-        zones.append(g)
+        g = CNMLWrapper(root)
+        #zones = (g.subzones).values()
+        #zones.append(g)
         #for s in flatten(getAllSubZones(g)):
             #logger.info(' %s (%s)',s.rootZoneId,s.zone.title)
-        for s in g.cnml.getSubzonesFromZone(root):
-            logger.info(' %s (%s)',s.id,s.title)
-        return GuifiZones(zones),g
+        for s in g.zones.values():
+            logger.info(' %s (%s)',s.zone.id,s.zone.title)
+        return g
 
         #g = GuifiNet(23918);
         #zone = g.cnml.getZones()[0];
