@@ -158,6 +158,7 @@ class GuifiZone(object):
         self.totalradios = {}
         self.totalifaces = {}
         self.totallinks = {}
+        self.unparsedlinks = []
         # Set all the empty dictionaries
         self.setZoneElements()
         logger.info('Total %s (%s) nodes:  %s',self.zone.id,self.zone.title,len(self.totalnodes))
@@ -171,8 +172,8 @@ class GuifiZone(object):
             logger.info('Working links per total links : %s ',float(len(self.links))/float(len(self.totallinks)))
             nonworklinks= [i for i in self.totallinks.values() if i.status != libcnml.Status.WORKING]
             logger.info('Non Working (status) links: %s (%s percent of total links)',len(nonworklinks),float(len(nonworklinks))/float(len(self.totallinks)) )
-            unparsedlinks= [i for i in self.totallinks.values() if (not i.nodeB) and i.status == libcnml.Status.WORKING]
-            logger.info('Unparsed Working links: %s (%s percent of total links)',len(unparsedlinks),float(len(unparsedlinks))/float(len(self.totallinks)) )
+            self.unparsedlinks= [i for i in self.totallinks.values() if (not i.nodeB) and i.status == libcnml.Status.WORKING]
+            logger.info('Unparsed Working links: %s (%s percent of total links)',len(self.unparsedlinks),float(len(self.unparsedlinks))/float(len(self.totallinks)) )
             selflinks= [i for i in self.totallinks.values() if i.nodeA == i.nodeB and i.status==libcnml.Status.WORKING]
             logger.info('Self links: %s (%s percent of total links)',len(selflinks),float(len(selflinks))/float(len(self.totallinks)) )
             cablelinks= [i for i in self.totallinks.values() if i.type == "cable" and i.status==libcnml.Status.WORKING]
@@ -434,6 +435,12 @@ def testWZone():
             #logger.info(' %s (%s)',s.rootZoneId,s.zone.title)
         for s in g.zones.values():
             logger.info(' %s (%s)',s.zone.id,s.zone.title)
+        #u = (g.zones[38445]).unparsedlinks
+        for z in g.zones.values():
+            logger.info('Zone Unparsed Links %s %s',z.zone.id,z.zone.title)
+            u = z.unparsedlinks
+            for link in u:
+                logger.info('Unparsed link %s Status: %s Type: %s Link.nodeA: %s Link parent Node: %s',link.id, link.status, link.type, link.nodeA, getParentCNMLNode(link).id)
         return g
 
         #g = GuifiNet(23918);
