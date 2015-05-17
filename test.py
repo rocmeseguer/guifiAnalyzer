@@ -440,7 +440,18 @@ def testWZone():
             logger.info('Zone Unparsed Links %s %s',z.zone.id,z.zone.title)
             u = z.unparsedlinks
             for link in u:
-                logger.info('Unparsed link %s Status: %s Type: %s Link.nodeA: %s Link parent Node: %s',link.id, link.status, link.type, link.nodeA, getParentCNMLNode(link).id)
+                try:
+                    nodeA = g.nodes[link.nodeA]
+                except:
+                    try: 
+                        nodeA = g.totalnodes[link.nodeA]
+                    except:
+                        logger.warning('Link %s : NodeA: %s is in another zone', link.id, link.nodeA)
+                        continue
+                    logger.warning('Link %s : NodeA: %s is in not in WORKING mode', link.id, link.nodeA)         
+                    continue
+                logger.info('Unparsed link %s Status: %s Type: %s Link.nodeA: %s NodeA Zone: %s Link parent Node: %s Parent Node Zone %s',
+                            link.id, link.status, link.type, link.nodeA, (g.nodes[link.nodeA]).parentZone.id, getParentCNMLNode(link).id, (g.nodes[getParentCNMLNode(link).id]).parentZone.id)
         return g
 
         #g = GuifiNet(23918);
