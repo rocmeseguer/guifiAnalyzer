@@ -4,12 +4,37 @@
 from networkx import *
 import matplotlib.pyplot as plt
 
+import functools
+
+from test import *
+
+import json
+from networkx.readwrite import json_graph
+import http_server
+
+def node2Gnode(graph,node):
+	graph.add_node(node.id,{'name':node.title, 'group':node.status})
+
+def link2Gedge(graph,link):
+	graph.add_edge(link.nodeA.id,link.nodeB.id,{'id':link.id, 'type':link.type})
+
+#root = 2436
+root = 2604
+g = CNMLWrapper(root)
 G=Graph()
-G.add_node(1, {'id':'a','type':'supernode'}, color='red')
-G.add_node(2, {'id':'b','color':'blue'}, type='node')
-G.add_node(3, {'id':'c','type':'node'}, color='blue')
-G.add_edge(1,2, {'id':'a','type':'wds'}, color='green')
-G.add_edge(3,2, {'id':'b','type':'ap'}, color='yellow')
+
+map(functools.partial(node2Gnode,G),g.nodes.values())
+map(functools.partial(link2Gedge,G),g.links.values())
+
+
+
+
+
+#G.add_node(1, {'id':'a','type':'supernode'}, color='red')
+#G.add_node(2, {'id':'b','color':'blue'}, type='node')
+#G.add_node(3, {'id':'c','type':'node'}, color='blue')
+#G.add_edge(1,2, {'id':'a','type':'wds'}, color='green')
+#G.add_edge(3,2, {'id':'b','type':'ap'}, color='yellow')
 
 
 #G.add_nodes_from([1,2,3,4,5,6])
@@ -44,15 +69,19 @@ verts=dist.keys()
 for d in sorted(verts):
     print('%s %d' % (d,dist[d]))
 
-print("radius: %d" % radius(G))
-print("diameter: %d" % diameter(G))
-print("eccentricity: %s" % eccentricity(G))
-print("center: %s" % center(G))
-print("periphery: %s" % periphery(G))
-print("density: %s" % density(G))
+#print("radius: %d" % radius(G))
+#print("diameter: %d" % diameter(G))
+#print("eccentricity: %s" % eccentricity(G))
+#print("center: %s" % center(G))
+#print("periphery: %s" % periphery(G))
+#print("density: %s" % density(G))
 
-draw(G,with_labels=True)
-plt.show()
+#draw_shell(G,with_labels=True)
+#plt.show()
 
-write_gexf(G,"test.gexf")
-write_pajek(G, "test.net")
+#write_gexf(G,"test.gexf")
+#write_pajek(G, "test.net")
+
+d = json_graph.node_link_data(G)
+json.dump(d, open('d3/test.json','w'))
+http_server.load_url('d3/test.html')
