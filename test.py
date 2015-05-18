@@ -427,7 +427,8 @@ def flatten(lis):
 
 def testWZone():
         #reload(test);
-        root = 2436
+        #root = 2436
+        root = 46433
         g = CNMLWrapper(root)
         #zones = (g.subzones).values()
         #zones.append(g)
@@ -437,21 +438,35 @@ def testWZone():
             logger.info(' %s (%s)',s.zone.id,s.zone.title)
         #u = (g.zones[38445]).unparsedlinks
         for z in g.zones.values():
-            logger.info('Zone Unparsed Links %s %s',z.zone.id,z.zone.title)
             u = z.unparsedlinks
-            for link in u:
-                try:
-                    nodeA = g.nodes[link.nodeA]
-                except:
-                    try: 
-                        nodeA = g.totalnodes[link.nodeA]
-                    except:
-                        logger.warning('Link %s : NodeA: %s is in another zone', link.id, link.nodeA)
+            if u:
+                logger.info('Zone Unparsed Links %s %s',z.zone.id,z.zone.title)
+                for link in u:
+                    if link.nodeA not in g.nodes:
+                        if link.nodeA not in g.totalnodes:
+                            logger.warning('Link: %s NodeA: %s is not in parsed CNML', link.id, link.nodeA)
+                            continue
+                        else:
+                            logger.warning('Link: %s  NodeA: %s is in not in WORKING mode !Weir since link status is %s', link.id, link.nodeA, link.status)
+                            continue
+
+                    if getParentCNMLNode(link).id not in g.nodes:
+                        logger.warning('Link: %s  ParentNode: %s is not WORKING mode !Weird since link status is %s', link.id, link.nodeA, link.status)
                         continue
-                    logger.warning('Link %s : NodeA: %s is in not in WORKING mode', link.id, link.nodeA)         
-                    continue
-                logger.info('Unparsed link %s Status: %s Type: %s Link.nodeA: %s NodeA Zone: %s Link parent Node: %s Parent Node Zone %s',
-                            link.id, link.status, link.type, link.nodeA, (g.nodes[link.nodeA]).parentZone.id, getParentCNMLNode(link).id, (g.nodes[getParentCNMLNode(link).id]).parentZone.id)
+
+                    #logger.info('PArsing link with id: %s',link.id)
+                    #try:
+                    #    nodeA = g.nodes[link.nodeA]
+                    #except:
+                    #    try: 
+                    #        nodeA = g.totalnodes[link.nodeA]
+                    #    except:
+                    #        logger.warning('Link %s : NodeA: %s is in another zone', link.id, link.nodeA)
+                    #        continue
+                    #    logger.warning('Link %s : NodeA: %s is in not in WORKING mode', link.id, link.nodeA)         
+                    #    continue
+                    logger.info('Unparsed link %s Status: %s Type: %s Link.nodeA: %s NodeAZone: %s Link parent Node: %s Parent Node Zone %s',
+                                link.id, link.status, link.type, link.nodeA, (g.nodes[link.nodeA]).parentZone.id, getParentCNMLNode(link).id, (g.nodes[getParentCNMLNode(link).id]).parentZone.id)
         return g
 
         #g = GuifiNet(23918);
