@@ -13,18 +13,19 @@ from networkx.readwrite import json_graph
 import http_server
 
 def node2Gnode(graph,node):
-	graph.add_node(node.id,{'name':node.title, 'group':node.status})
+    graph.add_node(node.id,{'name':node.id, 'group':node.status})
 
 def link2Gedge(graph,link):
-	graph.add_edge(link.nodeA.id,link.nodeB.id,{'id':link.id, 'type':link.type})
+    if link.nodeA and link.nodeB:
+        graph.add_edge(link.nodeA.id,link.nodeB.id,{'id':link.id, 'type':link.type, 'group':link.status})
 
 #root = 2436
-root = 2604
+root = 8076
 g = CNMLWrapper(root)
 G=Graph()
 
-map(functools.partial(node2Gnode,G),g.nodes.values())
-map(functools.partial(link2Gedge,G),g.links.values())
+map(functools.partial(node2Gnode,G),g.totalnodes.values())
+map(functools.partial(link2Gedge,G),g.totallinks.values())
 
 
 
