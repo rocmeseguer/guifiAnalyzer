@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 import functools
 
-from test import *
+from guifiwrapper import *
 
 import json
 from networkx.readwrite import json_graph
@@ -19,8 +19,8 @@ def link2Gedge(graph,link):
     if link.nodeA and link.nodeB:
         graph.add_edge(link.nodeA.id,link.nodeB.id,{'id':link.id, 'type':link.type, 'group':link.status})
 
-#root = 2436
 root = 8076
+#root = 3671
 g = CNMLWrapper(root)
 G=Graph()
 
@@ -49,7 +49,7 @@ pathlengths=[]
 print("source vertex {target:length, }")
 for v in G.nodes():
     spl=single_source_shortest_path_length(G,v)
-    print('%s %s' % (v,spl))
+    #print('%s %s' % (v,spl))
     for p in spl.values():
         pathlengths.append(p)
 
@@ -65,10 +65,10 @@ for p in pathlengths:
         dist[p]=1
 
 print('')
-print("length #paths")
-verts=dist.keys()
-for d in sorted(verts):
-    print('%s %d' % (d,dist[d]))
+#print("length #paths")
+#verts=dist.keys()
+#for d in sorted(verts):
+ #   print('%s %d' % (d,dist[d]))
 
 #print("radius: %d" % radius(G))
 #print("diameter: %d" % diameter(G))

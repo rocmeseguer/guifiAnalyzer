@@ -85,14 +85,16 @@ class CNMLWrapper(object):
             self.totalifaces.update(zone.totalifaces)
             self.totallinks.update(zone.totallinks)
 
+        logger.info('Total zones: %s',len(self.zones))
         logger.info('Total nodes:  %s',len(self.totalnodes))
         logger.info('Total links:  %s',len(self.totallinks))
         logger.info('Working nodes:  %s',len(self.nodes))
         logger.info('Working links:  %s',len(self.links))
-        if self.totallinks:
+        if self.totallinks and self.totalnodes:
             logger.info('Working nodes per total nodes: %s ',float(len(self.nodes))/float(len(self.totalnodes)))
             logger.info('Total links per total nodes: %s ',float(len(self.totallinks))/float(len(self.totalnodes)))
-            logger.info('Working links per working nodes: %s ',float(len(self.links))/float(len(self.nodes)))
+            if self.nodes:
+                logger.info('Working links per working nodes: %s ',float(len(self.links))/float(len(self.nodes)))
             logger.info('Working links per total links : %s ',float(len(self.links))/float(len(self.totallinks)))
             nonworklinks= [i for i in self.totallinks.values() if i.status != libcnml.Status.WORKING]
             logger.info('Non Working (status) links: %s (%s percent of total links)',len(nonworklinks),float(len(nonworklinks))/float(len(self.totallinks)) )
@@ -102,7 +104,7 @@ class CNMLWrapper(object):
             logger.info('Self links: %s (%s percent of total links)',len(selflinks),float(len(selflinks))/float(len(self.totallinks)) )
             cablelinks= [i for i in self.totallinks.values() if i.type == "cable" and i.status==libcnml.Status.WORKING]
             logger.info('Cable links: %s (%s percent of total links)',len(cablelinks),float(len(cablelinks))/float(len(self.totallinks)) )
-        #TODO check if there can be a working link inside non-working node or devices(should be prohibited in 
+        #TODO check if there can be a working link inside non-working node or devices(should be prohibited in
         #    links but not in totallinks)
 
         #Todo Fix broken links? The ones not recognized cause node in other zone
@@ -165,10 +167,11 @@ class GuifiZone(object):
         logger.info('Total %s (%s) links:  %s',self.zone.id,self.zone.title,len(self.totallinks))
         logger.info('Working %s (%s) nodes:  %s',self.zone.id,self.zone.title,len(self.nodes))
         logger.info('Working %s (%s) links:  %s',self.zone.id,self.zone.title,len(self.links))
-        if self.totallinks:
+        if self.totallinks and self.totalnodes:
             logger.info('Working nodes per total nodes: %s ',float(len(self.nodes))/float(len(self.totalnodes)))
             logger.info('Total links per total node: %s ',float(len(self.totallinks))/float(len(self.totalnodes)))
-            logger.info('Working links per working nodes: %s ',float(len(self.links))/float(len(self.nodes)))
+            if self.nodes:
+                logger.info('Working links per working nodes: %s ',float(len(self.links))/float(len(self.nodes)))
             logger.info('Working links per total links : %s ',float(len(self.links))/float(len(self.totallinks)))
             nonworklinks= [i for i in self.totallinks.values() if i.status != libcnml.Status.WORKING]
             logger.info('Non Working (status) links: %s (%s percent of total links)',len(nonworklinks),float(len(nonworklinks))/float(len(self.totallinks)) )
@@ -191,12 +194,12 @@ class GuifiZone(object):
         #    logger.info('Total %s (%s) nodes:  %s',self.zone.id,self.zone.title,len(self.totalnodes))
         #    logger.info('Total %s (%s) links:  %s',self.zone.id,self.zone.title,len(self.totallinks))
         #    logger.info('Working %s (%s) nodes:  %s',self.zone.id,self.zone.title,len(self.nodes))
-        #    logger.info('Working %s (%s) links:  %s',self.zone.id,self.zone.title,len(self.links))   
+        #    logger.info('Working %s (%s) links:  %s',self.zone.id,self.zone.title,len(self.links))
 
     def getAllSubZones(self):
         temp = flatten(self.getAllSubZonesHelper(self))
         return {x.zone.id:x for x in temp if x != []}
-        
+
     @staticmethod
     def getAllSubZonesHelper(guifizone):
         subzones = guifizone.subzones.values()
@@ -425,15 +428,16 @@ def flatten(lis):
     return new_lis
 
 
-def testWZone():
+def testWZone(root=8076):
         #reload(test);
         #root = 2436
-        root = 46433
+        #root = 8076
         g = CNMLWrapper(root)
         #zones = (g.subzones).values()
         #zones.append(g)
         #for s in flatten(getAllSubZones(g)):
             #logger.info(' %s (%s)',s.rootZoneId,s.zone.title)
+        return g
         for s in g.zones.values():
             logger.info(' %s (%s)',s.zone.id,s.zone.title)
         #u = (g.zones[38445]).unparsedlinks
@@ -458,16 +462,16 @@ def testWZone():
                     #try:
                     #    nodeA = g.nodes[link.nodeA]
                     #except:
-                    #    try: 
+                    #    try:
                     #        nodeA = g.totalnodes[link.nodeA]
                     #    except:
                     #        logger.warning('Link %s : NodeA: %s is in another zone', link.id, link.nodeA)
                     #        continue
-                    #    logger.warning('Link %s : NodeA: %s is in not in WORKING mode', link.id, link.nodeA)         
+                    #    logger.warning('Link %s : NodeA: %s is in not in WORKING mode', link.id, link.nodeA)
                     #    continue
                     logger.info('Unparsed link %s Status: %s Type: %s Link.nodeA: %s NodeAZone: %s Link parent Node: %s Parent Node Zone %s',
                                 link.id, link.status, link.type, link.nodeA, (g.nodes[link.nodeA]).parentZone.id, getParentCNMLNode(link).id, (g.nodes[getParentCNMLNode(link).id]).parentZone.id)
-        return g
+
 
         #g = GuifiNet(23918);
         #zone = g.cnml.getZones()[0];
