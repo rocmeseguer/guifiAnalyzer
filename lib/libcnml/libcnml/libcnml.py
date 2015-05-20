@@ -43,7 +43,7 @@ class CNMLZone(object):
     A zone has a title, which is the most useful for the end-users
     CNML can also provide the total amount of clients, devices, links, services... in the area
     """
-    def __init__(self, zid, parentid, aps=0, box=[], nclients=0, ndevices=0, nlinks=0, nservices=0, nnodes =0, title=''):
+    def __init__(self, zid, parentid, aps=0, box=[], nclients=0, ndevices=0, nlinks=0, nservices=0, nnodes =0, title='', graphserverId=None):
         self.id = zid
         self.parentzone = parentid
         self.totalAPs = aps
@@ -54,6 +54,7 @@ class CNMLZone(object):
         self.totalServices = nservices
         self.totalNodes = nnodes
         self.title = title
+        self.graphserverId = graphserverId
         self.subzones = dict()
         self.nodes = dict()
 
@@ -93,6 +94,8 @@ class CNMLZone(object):
         nservices = z.get('services') or 0
         nservices = int(nservices)
         title = z.get('title')
+        graphserverId = z.get('graph_server') or 0
+        graphserverId = int(graphserverId)
 #       nnodes = int(z.get('zone_nodes'))
 #       nnodes is not useful --> len(nodes)
 #     Manos: Pablo is wrong in this one, because the attribute total of the CNML contains also
@@ -100,7 +103,7 @@ class CNMLZone(object):
         nnodes = z.get('zone_nodes') or 0
         nnodes = int(nnodes)
 
-        newzone = CNMLZone(zid, zparentid, nAPs, box, nclients, ndevices, nlinks, nservices, nnodes, title)
+        newzone = CNMLZone(zid, zparentid, nAPs, box, nclients, ndevices, nlinks, nservices, nnodes, title, graphserverId)
         return newzone
 
     @staticmethod
@@ -126,6 +129,8 @@ class CNMLZone(object):
         nservices = z.getAttribute('services') or 0
         nservices = int(nservices)
         title = z.getAttribute('title')
+        graphserverId = z.getAttribute('graph_server') or 0
+        graphserverId = int(graphserverId)
 #       nnodes = int(z.getAttribute('zone_nodes'))
 #       nnodes is not useful --> len(nodes)
 #     Manos: Pablo is wrong in this one, because the attribute total of the CNML contains also
@@ -134,7 +139,7 @@ class CNMLZone(object):
         nnodes = int(nnodes)
 
 
-        newzone = CNMLZone(zid, zparentid, nAPs, box, nclients, ndevices, nlinks, nservices, nnodes, title)
+        newzone = CNMLZone(zid, zparentid, nAPs, box, nclients, ndevices, nlinks, nservices, nnodes, title, graphserverId)
         return newzone
 
     @staticmethod
@@ -158,13 +163,14 @@ class CNMLNode(object):
     A node has a title and a status, which is the most useful for the end-users
     CNML can also provide the total amount of links of this node
     """
-    def __init__(self, nid, title, lat, lon, nlinks, status,parent):
+    def __init__(self, nid, title, lat, lon, nlinks, status, parent, graphserverId=None):
         self.id = nid
         self.title = title
         self.latitude = lat
         self.longitude = lon
         self.totalLinks = nlinks
         self.status = status
+        self.graphserverId = graphserverId
         self.devices = dict()
         self.services = dict()
         self.parentZone = parent
@@ -193,8 +199,10 @@ class CNMLNode(object):
         nlinks = int(nlinks)
         status = n.getAttribute('status')
         status = Status.strToStatus(status)
+        graphserverId = n.getAttribute('graph_server') or 0
+        graphserverId = int(graphserverId)
 
-        newnode = CNMLNode(nid, title, lat, lon, nlinks, status, parent)
+        newnode = CNMLNode(nid, title, lat, lon, nlinks, status, parent, graphserverId)
         return newnode
 
     @staticmethod
@@ -209,8 +217,10 @@ class CNMLNode(object):
         nlinks = int(nlinks)
         status = n.get('status')
         status = Status.strToStatus(status)
+        graphserverId = n.get('graph_server') or 0
+        graphserverId = int(graphserverId)
 
-        newnode = CNMLNode(nid, title, lat, lon, nlinks, status, parent)
+        newnode = CNMLNode(nid, title, lat, lon, nlinks, status, parent, graphserverId)
         return newnode
 
     @staticmethod
@@ -280,13 +290,14 @@ class CNMLDevice(object):
     """
     This CNMLDevice class represents a device of a node in the network
     """
-    def __init__(self, did, name, firmware, status, title, dtype, parent):
+    def __init__(self, did, name, firmware, status, title, dtype, parent, graphserverId=None):
         self.id = did
         self.name = name
         self.firmware = firmware
         self.status = status
         self.title = title
         self.type = dtype
+        self.graphserverId = graphserverId
         self.radios = dict()
         self.interfaces = dict()
         self.parentNode = parent
@@ -312,11 +323,13 @@ class CNMLDevice(object):
         status = Status.strToStatus(status)
         title = d.get('title')
         dtype = d.get('type')
+        graphserverId = d.get('graph_server') or 0
+        graphserverId = int(graphserverId)
         #nlinks = d.getAttribute('links') or 0
         #nlinks = int(nlinks)
         #por qué no tiene un atributo radios="2" en lugar de links="2"??
 
-        newdevice = CNMLDevice(did, name, firmware, status, title, dtype, parent)
+        newdevice = CNMLDevice(did, name, firmware, status, title, dtype, parent, graphserverId)
         return newdevice
 
     @staticmethod
@@ -328,11 +341,13 @@ class CNMLDevice(object):
         status = Status.strToStatus(status)
         title = d.getAttribute("title")
         dtype = d.getAttribute("type")
+        graphserverId = d.getAttribute('graph_server') or 0
+        graphserverId = int(graphserverId)
         #nlinks = d.getAttribute('links') or 0
         #nlinks = int(nlinks)
         #por qué no tiene un atributo radios="2" en lugar de links="2"??
 
-        newdevice = CNMLDevice(did, name, firmware, status, title, dtype, parent)
+        newdevice = CNMLDevice(did, name, firmware, status, title, dtype, parent, graphserverId)
         return newdevice
 
     @staticmethod
