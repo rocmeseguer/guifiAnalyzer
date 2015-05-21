@@ -85,6 +85,8 @@ def getParentCNMLNode(comp):
         return getParentCNMLNode(comp.parentDevice)
     elif type(comp) is libcnml.libcnml.CNMLDevice :
         return getParentCNMLNode(comp.parentNode)
+    elif type(comp) is libcnml.libcnml.CNMLService:
+        return getParentCNMLNode(comp.parentNode)
     elif type(comp) is libcnml.libcnml.CNMLNode :
         return comp
     else :
