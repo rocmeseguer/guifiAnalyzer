@@ -115,16 +115,16 @@ class CNMLWrapper(object):
         print _('Select type of attribute:')
         attr = int(raw_input("Enter: 1 for devices, 2 for ifaces, 3 for links or 4 for Services: "))
         if  attr == 1 :
-            objects = self.cnml.getDevices()
+            objects = self.devices.values()
             print "Find all device types"
         elif attr == 2 :
-            objects = self.cnml.getInterfaces()
+            objects = self.ifaces.values()
             print "Find all Interface types"
         elif attr == 3 :
-            objects = self.cnml.getLinks()
+            objects = self.links.values()
             print "Find all link types"
         elif attr == 4 :
-            objects = self.cnml.getServices()
+            objects = self.services.values()
             print "Find all service types"
         else :
             print _('Wrong Input')
@@ -437,6 +437,7 @@ def testWZone(root=8076):
         #zones.append(g)
         #for s in flatten(getAllSubZones(g)):
             #logger.info(' %s (%s)',s.rootZoneId,s.zone.title)
+        #g.findAttributeTypes()
         return g
         for s in g.zones.values():
             logger.info(' %s (%s)',s.zone.id,s.zone.title)
