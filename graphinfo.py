@@ -2,18 +2,11 @@
 #
 #graphinfo.py
 
+
+# Pordria pretender que yo soy un servidor de graficas?
+
 from guifiwrapper import *
 from cnmlUtils import *
-
-root = 8076
-g = CNMLWrapper(root)
-
-linkid = 16691
-link=g.links[linkid]
-
-
-
-
 
 def getDeviceGraphServer(device,node=None):
     #Get info from device
@@ -33,6 +26,23 @@ def getDeviceGraphServer(device,node=None):
             if zone.graphserverId:
                 return zone.graphserverId
         return 0
+
+root = 8076
+g = CNMLWrapper(root)
+
+linkid = 16691
+link=g.links[linkid]
+
+
+
+serverA = getDeviceGraphServer(link.deviceA,link.nodeA)
+serverB = getDeviceGraphServer(link.deviceB,link.nodeB)
+
+print serverA
+print serverB
+
+
+
 
 
 
