@@ -225,6 +225,7 @@ class GuifiZone(object):
         zone = cnmlObjectCopy(zoneIn)
         # Discard non-working nodes
         nodes = {node.id:cnmlObjectCopy(node) for node in zone.getNodes() if node.status==libcnml.Status.WORKING}
+        zone.nodes = nodes
 
         # From the nodes left discard non-working Devices and Services
         for node in zone.getNodes():
