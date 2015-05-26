@@ -16,45 +16,56 @@ from collections import Counter
 
 from guifiwrapper import *
 
-root = 2413
+root = 3671
 g = CNMLWrapper(root)
 
 
 user = ['meteo',  'radio', 'web','VPS','tv','wol', 'Proxy', 'mail','irc',
                             'teamspeak', 'ftp' ,'asterisk', 'apt-cache','AP','IM', 'p2p',
                             'VPN','Streaming','games','cam']
-mgmtServices = ['iperf', 'LDAP','DNS','SNPgraphs','NTP','AirControl']
+mgmt = ['iperf', 'LDAP','DNS','SNPgraphs','NTP','AirControl']
 
-userServices = [s.type for s in g.services.values() if s.type in user]
-totalServices = len(userServices)
-userServices = Counter(userServices).items()
-userServicesNumber = len(userServices)
-types = [typ for (typ,values) in userServices]
-values = [float(value)/float(totalServices) for (typ,value) in userServices]
-
-
-ind = np.arange(userServicesNumber)
-width = 0.35
-
-fig = plt.figure()
-ax = fig.add_subplot(111)
-rects = ax.bar(ind,values, width, color='black')
-ax.set_xlim(-width,len(ind)+width)
-#ax.set_ylim(0,45)
-ax.set_ylabel('Frequency')
-ax.set_xlabel('Service Type')
-ax.set_title('User Services Frequency')
-xTickMarks = [str(i) for i in types]
-ax.set_xticks(ind+width)
-xtickNames = ax.set_xticklabels(xTickMarks)
-plt.setp(xtickNames, rotation=45, fontsize=10)
-
-## add a legend
-#ax.legend( (rects1[0], rects2[0]), ('Men', 'Women') )
-
-plt.show()
+# Extract user services and frequencies
+#userServices = [s.type for s in g.services.values() if s.type in user]
+#totalServices = len(userServices)
+#userServices = Counter(userServices).items()
+#userServicesNumber = len(userServices)
+#userTypes = [typ for (typ,values) in userServices]
+#userValues = [float(value)/float(totalServices) for (typ,value) in userServices]
 
 
+
+# Extract mgmt services and frequencies
+def serviceTypesFrequencies(typeset, name):
+    services = [s.type for s in g.services.values() if s.type in typeset]
+    totalServices = len(services)
+    services = Counter(services).items()
+    servicesNumber = len(services)
+    types = [typ for (typ,values) in services]
+    values = [float(value)/float(totalServices) for (typ,value) in services]
+
+    ind = np.arange(servicesNumber)
+    width = 0.35
+
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    rects = ax.bar(ind,values, width, color='black')
+    ax.set_xlim(-width,len(ind)+width)
+    #ax.set_ylim(0,45)
+    ax.set_ylabel('Frequency')
+    ax.set_xlabel('Service Type')
+    ax.set_title(name+' Services Frequency')
+    xTickMarks = [str(i) for i in types]
+    ax.set_xticks(ind+width)
+    xtickNames = ax.set_xticklabels(xTickMarks)
+    plt.setp(xtickNames, rotation=45, fontsize=10)
+    plt.show()
+    figfile = os.path.join(os.getcwd(),'fig',str(root)+"_"+name+"_services_frequency_ECDF")
+    fig.savefig(figfile, format='pdf')
+
+serviceTypesFrequencies(user, 'User')
+serviceTypesFrequencies(mgmt, 'Management')
 
 def nodeDegreeECDF():
     nodeD = [n.totalLinks for n in g.nodes.values()]
@@ -68,14 +79,15 @@ def nodeDegreeECDF():
     plt.title("Node Degree ECDF")
     plt.ylabel("Frequency")
     plt.xlabel("Node Degree")
-    plt.xlim(0,100)
+    plt.xlim(-1,50)
     plt.show()
     # Print to PDF
-    figfile = os.path.join(os.getcwd(),'fig',str(root)+"node_degree_ECDF")
+    figfile = os.path.join(os.getcwd(),'fig',str(root)+"_node_degree_ECDF")
     fig.savefig(figfile, format='pdf')
 
 
 #def plot2PDF(figure,name):
+
 
 
 
@@ -130,7 +142,7 @@ def creationDate():
     #plt.step(x, y)
     plt.show()
     # Print to PDF
-    figfile = os.path.join(os.getcwd(),'fig',str(root)+"proxy_creation")
+    figfile = os.path.join(os.getcwd(),'fig',str(root)+"_proxy_creation")
     fig.savefig(figfile, format='pdf')
 
 
@@ -193,5 +205,5 @@ def creationDate():
 
         plt.show()
 
-#nodeDegreeECDF()
-#creationDate()
+nodeDegreeECDF()
+creationDate()

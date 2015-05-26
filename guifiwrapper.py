@@ -225,9 +225,10 @@ class GuifiZone(object):
         zone = cnmlObjectCopy(zoneIn)
         # Discard non-working nodes
         nodes = {node.id:cnmlObjectCopy(node) for node in zone.getNodes() if node.status==libcnml.Status.WORKING}
-        zone.nodes = nodes
+
         # From the nodes left discard non-working Devices and Services
         for node in zone.getNodes():
+            links=0
             node.devices = {device.id:cnmlObjectCopy(device) for device in node.getDevices() if device.status==libcnml.Status.WORKING}
             node.services = {service.id:cnmlObjectCopy(service) for service in node.getServices() if service.status==libcnml.Status.WORKING}
             # From the nodes and devices left discard non-working Links
@@ -240,6 +241,7 @@ class GuifiZone(object):
                     interface.links = {link.id:link for link in  interface.getLinks()  if isinstance(link.nodeB, libcnml.libcnml.CNMLNode)}
                     # Remove self-links
                     interface.links = {link.id:link for link in  interface.getLinks()  if link.nodeB.id != link.nodeA.id}
+                    links = links + len(interface.links)
                 for radio in device.getRadios():
                     radio.interfaces = {iface.id:cnmlObjectCopy(iface) for iface in radio.getInterfaces()}
                     for interface in radio.getInterfaces():
@@ -249,6 +251,8 @@ class GuifiZone(object):
                         # Remove self-links
                         #interface.links = {link.id:link for link in  interface.getLinks()  if link.nodeB.id != node.id}
                         interface.links = {link.id:link for link in  interface.getLinks()  if link.nodeB.id != link.nodeA.id}
+                        links = links + len(interface.links)
+            node.totalLinks =links
         # Fix counters
         return zone
 
