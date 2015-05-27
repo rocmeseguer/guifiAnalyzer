@@ -822,9 +822,12 @@ class CNMLParser(object):
                 # If there's a working service in this device, it has interfaces (and it's not a son of a radio!)
                 for i in d.iterchildren('interface'):
                     iid = int(i.get('id'))
-                    newiface = CNMLInterface.parse(i, newdevice)
-                    self.ifaces[iid] = newiface
-                    self.devices[did].addInterface(newiface)
+
+                    #In case the interface does not exists already
+                    if  iid not in self.ifaces:
+                        newiface = CNMLInterface.parse(i, newdevice)
+                        self.ifaces[iid] = newiface
+                        self.devices[did].addInterface(newiface)
 
                     # --links--
                     for l in i.iterfind('link'):
@@ -834,7 +837,7 @@ class CNMLParser(object):
                             self.links[lid].parseLinkB(l)
                             self.ifaces[iid].addLink(self.links[lid])
                         else:
-                            newlink = CNMLLink.parse(l, newiface)
+                            newlink = CNMLLink.parse(l, self.ifaces[iid])
                             self.links[lid] = newlink
                             self.ifaces[iid].addLink(newlink)
 
@@ -855,9 +858,11 @@ class CNMLParser(object):
                     # --interfaces--
                     for i in r.iterfind('interface'):
                         iid = int(i.get('id'))
-                        newiface = CNMLInterface.parse(i, newradio)
-                        self.ifaces[iid] = newiface
-                        self.devices[did].radios[rid].addInterface(newiface)
+
+                        if  iid not in self.ifaces:
+                            newiface = CNMLInterface.parse(i, newradio)
+                            self.ifaces[iid] = newiface
+                            self.devices[did].radios[rid].addInterface(newiface)
 
                         # --links--
                         for l in i.iterfind('link'):
@@ -867,7 +872,7 @@ class CNMLParser(object):
                                 self.links[lid].parseLinkB(l)
                                 self.ifaces[iid].addLink(self.links[lid])
                             else:
-                                newlink = CNMLLink.parse(l, newiface)
+                                newlink = CNMLLink.parse(l, self.ifaces[iid])
                                 self.links[lid] = newlink
                                 self.ifaces[iid].addLink(newlink)
 
