@@ -20,6 +20,10 @@ root = 3671
 g = CNMLWrapper(root)
 
 
+#TODOOOOOOOOOOO
+# Experiment comaping node creation and proxy creation
+
+
 user = ['meteo',  'radio', 'web','VPS','tv','wol', 'Proxy', 'mail','irc',
                             'teamspeak', 'ftp' ,'asterisk', 'apt-cache','AP','IM', 'p2p',
                             'VPN','Streaming','games','cam']
@@ -55,35 +59,37 @@ def serviceTypesFrequencies(typeset, name):
     #ax.set_ylim(0,45)
     ax.set_ylabel('Frequency')
     ax.set_xlabel('Service Type')
-    ax.set_title(name+' Services Frequency')
+    #ax.set_title(name+' Services Frequency')
     xTickMarks = [str(i) for i in types]
     ax.set_xticks(ind+width)
     xtickNames = ax.set_xticklabels(xTickMarks)
     plt.setp(xtickNames, rotation=45, fontsize=10)
     plt.show()
     figfile = os.path.join(os.getcwd(),'fig',str(root)+"_"+name+"_services_frequency_ECDF")
-    fig.savefig(figfile, format='pdf')
+    fig.savefig(figfile, format='png')
 
 serviceTypesFrequencies(user, 'User')
 serviceTypesFrequencies(mgmt, 'Management')
 
 def nodeDegreeECDF():
     nodeD = [n.totalLinks for n in g.nodes.values()]
+    counter = Counter(nodeD).items()
+    print counter
     ecdf = ECDF(nodeD)
-
+    print ecdf
     # Initilaze figure to print later
     fig = plt.Figure()
     fig.set_canvas(plt.gcf().canvas)
     plt.plot(ecdf.x, ecdf.y)
     # Set graph parameters
-    plt.title("Node Degree ECDF")
+    #plt.title("Node Degree ECDF")
     plt.ylabel("Frequency")
     plt.xlabel("Node Degree")
     plt.xlim(-1,50)
     plt.show()
     # Print to PDF
     figfile = os.path.join(os.getcwd(),'fig',str(root)+"_node_degree_ECDF")
-    fig.savefig(figfile, format='pdf')
+    fig.savefig(figfile, format='png')
 
 
 #def plot2PDF(figure,name):
@@ -101,7 +107,7 @@ if False:
     y = [freq for (degree,freq) in data]
     #y = np.cumsum(y)
 
-    plt.title("Node Degree CDF")
+    #plt.title("Node Degree CDF")
     plt.ylabel("Frequency")
     plt.xlabel("Total Number of Proxies")
 
@@ -135,7 +141,7 @@ def creationDate():
     fig.set_canvas(plt.gcf().canvas)
     plt.plot_date(x=x, y=y)
     # Set graph parameters
-    plt.title("Evolution of proxy service creation")
+    #plt.title("Evolution of proxy service creation")
     plt.ylabel("Total Number of Proxies")
     #plt.grid(True)
     #plt.ylim((0,3))
@@ -143,7 +149,7 @@ def creationDate():
     plt.show()
     # Print to PDF
     figfile = os.path.join(os.getcwd(),'fig',str(root)+"_proxy_creation")
-    fig.savefig(figfile, format='pdf')
+    fig.savefig(figfile, format='png')
 
 
 
