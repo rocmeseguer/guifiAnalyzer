@@ -53,14 +53,15 @@ fig.set_canvas(plt.gcf().canvas)
 ax = fig.add_subplot(121)
 rects = ax.bar(ind,values, width, color='black')
 ax.set_xlim(-width,len(ind)+width)
+ax.set_ylim(0,0.7)
 #ax.set_ylim(0,45)
 ax.set_ylabel('Frequency')
-ax.set_xlabel('Service Type')
-#ax.set_title(' {User Services Frequency')
+#ax.set_xlabel('Service Type')
+ax.set_title('User Services Frequency')
 xTickMarks = [str(i) for i in types]
 ax.set_xticks(ind+width)
 xtickNames = ax.set_xticklabels(xTickMarks)
-plt.setp(xtickNames, rotation=45, fontsize=10)
+plt.setp(xtickNames, rotation=45, fontsize=13)
 
 services1 = [s.type for s in g.services.values() if s.type in mgmt]
 totalServices1 = len(services1)
@@ -75,18 +76,19 @@ ind1 = np.arange(servicesNumber1)
 ax1 = fig.add_subplot(122)
 rects = ax1.bar(ind1,values1, width, color='black')
 ax1.set_xlim(-width,len(ind1)+width)
+ax1.set_ylim(0,0.7)
 #ax.set_ylim(0,45)
-ax1.set_ylabel('Frequency')
-ax1.set_xlabel('Service Type')
-#ax1.set_title(' Management Services Frequency')
+#ax1.set_ylabel('Frequency')
+#ax1.set_xlabel('Service Type')
+ax1.set_title('Management Services Frequency')
 xTickMarks1 = [str(i) for i in types1]
 ax1.set_xticks(ind1+width)
 xtickNames1 = ax1.set_xticklabels(xTickMarks1)
-plt.setp(xtickNames1, rotation=0, fontsize=10)
+plt.setp(xtickNames1, rotation=0, fontsize=13)
 
 plt.show()
 figfile = os.path.join(os.getcwd(),'fig',str(root)+"services_frequency")
-fig.savefig(figfile, format='png', dpi=fig.dpi)
+#fig.savefig(figfile, format='png', dpi=fig.dpi)
 
 
 # Other categories
@@ -108,41 +110,42 @@ fig.set_canvas(plt.gcf().canvas)
 ax = fig.add_subplot(111)
 rects = ax.bar(ind,values, width, color='black')
 ax.set_xlim(-width,len(ind)+width)
+ax.set_ylim(0,0.7)
 #ax.set_ylim(0,45)
 ax.set_ylabel('Frequency')
-ax.set_xlabel('Service Type')
-#ax.set_title(' Service Categories Frequency')
+#ax.set_xlabel('Service Type')
+ax.set_title(' Service Categories Frequency')
 xTickMarks = [str(i) for i in types]
 ax.set_xticks(ind+width)
 xtickNames = ax.set_xticklabels(xTickMarks)
-plt.setp(xtickNames, rotation=45, fontsize=10)
+plt.setp(xtickNames, rotation=0, fontsize=12)
 plt.show()
 figfile = os.path.join(os.getcwd(),'fig',str(root)+"services_frequency_categories")
-fig.savefig(figfile, format='png', dpi=fig.dpi )
+#fig.savefig(figfile, format='png', dpi=fig.dpi )
 
 
-
-services = [s.type for s in g.devices.values()]
-totalServices = len(services)
-services = Counter(services).items()
-servicesNumber = len(services)
-types = [typ for (typ,value) in services]
-values = [float(value)/float(totalServices) for (typ,value) in services]
-ind = np.arange(servicesNumber)
-width = 0.35
-fig = plt.figure()
-fig.set_canvas(plt.gcf().canvas)
-ax = fig.add_subplot(111)
-rects = ax.bar(ind,values, width, color='black')
-ax.set_xlim(-width,len(ind)+width)
-#ax.set_ylim(0,45)
-ax.set_ylabel('Frequency')
-ax.set_xlabel('Device Type')
-ax.set_title(' Device Types Frequency')
-xTickMarks = [str(i) for i in types]
-ax.set_xticks(ind+width)
-xtickNames = ax.set_xticklabels(xTickMarks)
-plt.setp(xtickNames, rotation=45, fontsize=10)
-plt.show()
-figfile = os.path.join(os.getcwd(),'fig',str(root)+"device_types_frequency")
-fig.savefig(figfile, format='png', dpi=fig.dpi )
+if False:
+	services = [s.type for s in g.devices.values()]
+	totalServices = len(services)
+	services = Counter(services).items()
+	servicesNumber = len(services)
+	types = [typ for (typ,value) in services]
+	values = [float(value)/float(totalServices) for (typ,value) in services]
+	ind = np.arange(servicesNumber)
+	width = 0.35
+	fig = plt.figure()
+	fig.set_canvas(plt.gcf().canvas)
+	ax = fig.add_subplot(111)
+	rects = ax.bar(ind,values, width, color='black')
+	ax.set_xlim(-width,len(ind)+width)
+	#ax.set_ylim(0,45)
+	ax.set_ylabel('Frequency')
+	ax.set_xlabel('Device Type')
+	ax.set_title(' Device Types Frequency')
+	xTickMarks = [str(i) for i in types]
+	ax.set_xticks(ind+width)
+	xtickNames = ax.set_xticklabels(xTickMarks)
+	plt.setp(xtickNames, rotation=45, fontsize=13)
+	plt.show()
+	figfile = os.path.join(os.getcwd(),'fig',str(root)+"device_types_frequency")
+	fig.savefig(figfile, format='png', dpi=fig.dpi )
