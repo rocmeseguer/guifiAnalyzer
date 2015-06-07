@@ -22,6 +22,7 @@ from __future__ import absolute_import
 import os
 
 from libcnml import logger
+import datetime
 
 try:
     from lxml import etree
@@ -163,7 +164,7 @@ class CNMLNode(object):
     A node has a title and a status, which is the most useful for the end-users
     CNML can also provide the total amount of links of this node
     """
-    def __init__(self, nid, title, lat, lon, nlinks, status, parent, graphserverId=None):
+    def __init__(self, nid, title, lat, lon, nlinks, status, parent, graphserverId,created):
         self.id = nid
         self.title = title
         self.latitude = lat
@@ -171,6 +172,10 @@ class CNMLNode(object):
         self.totalLinks = nlinks
         self.status = status
         self.graphserverId = graphserverId
+        if type(created) is not datetime.datetime:
+            self.created = datetime.datetime.strptime(created, '%Y%m%d %I%M')
+        else: 
+            self.created = created
         self.devices = dict()
         self.services = dict()
         self.parentZone = parent
@@ -201,8 +206,9 @@ class CNMLNode(object):
         status = Status.strToStatus(status)
         graphserverId = n.getAttribute('graph_server') or 0
         graphserverId = int(graphserverId)
+        created = n.getAttribute('created')
 
-        newnode = CNMLNode(nid, title, lat, lon, nlinks, status, parent, graphserverId)
+        newnode = CNMLNode(nid, title, lat, lon, nlinks, status, parent, graphserverId, created)
         return newnode
 
     @staticmethod
@@ -219,8 +225,9 @@ class CNMLNode(object):
         status = Status.strToStatus(status)
         graphserverId = n.get('graph_server') or 0
         graphserverId = int(graphserverId)
+        created = n.get('created')
 
-        newnode = CNMLNode(nid, title, lat, lon, nlinks, status, parent, graphserverId)
+        newnode = CNMLNode(nid, title, lat, lon, nlinks, status, parent, graphserverId, created)
         return newnode
 
     @staticmethod
@@ -248,7 +255,10 @@ class CNMLService(object):
         self.title = title
         self.type = stype
         self.status = status
-        self.created = created
+        if type(created) is not datetime.datetime:
+            self.created = datetime.datetime.strptime(created, '%Y%m%d %I%M')
+        else: 
+            self.created = created
         self.parentNode = parent
 
     @staticmethod
