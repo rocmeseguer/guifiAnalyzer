@@ -16,7 +16,7 @@ from libcnml import logger as logger
 import logging
 
 # Change format of logger
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.CRITICAL)
 
 import pyGuifiAPI
 from pyGuifiAPI.error import GuifiApiError
