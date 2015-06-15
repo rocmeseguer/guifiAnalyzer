@@ -22,10 +22,6 @@ root = 3671
 g = CNMLWrapper(root)
 
 
-#TODOOOOOOOOOOO
-# Experiment comaping node creation and proxy creation
-
-
 user = ['meteo',  'radio', 'web','VPS','tv','wol', 'Proxy', 'mail','irc',
                             'teamspeak', 'ftp' ,'asterisk', 'apt-cache','AP','IM', 'p2p',
                             'VPN','Streaming','games','cam']
