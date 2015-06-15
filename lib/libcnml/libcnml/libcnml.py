@@ -259,7 +259,7 @@ class CNMLService(object):
             self.created = datetime.datetime.strptime(created, '%Y%m%d %I%M')
         else: 
             self.created = created
-        self.parentNode = parent
+        self.parentDevice = parent
 
     @staticmethod
     def parseLxml(s, parent):
