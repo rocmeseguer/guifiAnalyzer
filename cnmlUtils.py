@@ -103,7 +103,7 @@ def cnmlObjectCopy(obj):
         new.devices = obj.devices.copy()
         new.services = obj.services.copy()
     elif isinstance(obj, libcnml.libcnml.CNMLService):
-        new = libcnml.libcnml.CNMLService(obj.id, obj.title,obj.type,obj.status, obj.created,obj.parentNode)
+        new = libcnml.libcnml.CNMLService(obj.id, obj.title,obj.type,obj.status, obj.created,obj.parentDevice)
     elif isinstance(obj, libcnml.libcnml.CNMLDevice):
         new = libcnml.libcnml.CNMLDevice(obj.id,obj.name,obj.firmware, obj.status, obj.title, obj.type,
                     obj.parentNode)
