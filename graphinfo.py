@@ -7,16 +7,27 @@
 
 from guifiwrapper import *
 from cnmlUtils import *
+
 import urllib2
 import csv
 from netaddr import IPNetwork, IPAddress
 import sys
 
+# For storing dicts in sqlite3
+from sqlitedict import SqliteDict
 
 root = 8346
 g = CNMLWrapper(root)
 
 ipBlacklist = []
+
+
+dbName = "./"+"graphinfo"+"_"+str(root)+".sqlite"
+devices = SqliteDict(filename=dbName, tablename='devices', flag='n',autocommit=False)
+for k,v in g.devices.iteritems():
+    devices[k] = {"node":v.parentNode.id}
+devices.commit()
+devices.close()
 
 
 def getDeviceGraphService(device,node=None):
@@ -67,7 +78,7 @@ def getGraphServiceIP(graphService):
         # Ip's are not always in the same device
         # So search also other devices of same node
         # IS that correct?
-        node = device.parentNode 
+        node = device.parentNode
         for dev in node.devices.values():
             for iface in dev.interfaces.values():
                 if iface.ipv4 and checkGuifiSubnet(iface.ipv4) and \
@@ -92,7 +103,7 @@ def getGraphData(graphService,device):
     url = "http://"+str(ip)+"/snpservices/index.php?call="+service+"&devices="+str(device.id)
     logger.info("SNPServices request to graph server: %s",url)
     req = urllib2.Request(url)
-    try: 
+    try:
         response=urllib2.urlopen(req,timeout=3)
         data = response.read()
         return data
@@ -101,7 +112,7 @@ def getGraphData(graphService,device):
         logger.error(e.reason)
         return getGraphData(graphService,device)
 
-
+#def pingGraphServer(graphService):
 
 def checkGuifiSubnet(ip):
     return IPAddress(ip) in IPNetwork("10.0.0.0/8")
@@ -112,7 +123,7 @@ def graphServerNodes(serviceId):
     url = "http://snpservices.guifi.net/snpservices/graphs/cnml2mrtgcsv.php?cp&server="+str(service.id)
     logger.info("Request to guifi.net: Find nodes monitored by %s",str(service.id))
     req = urllib2.Request(url)
-    try: 
+    try:
         response=urllib2.urlopen(req)
         data = csv.reader(response)
         nodes = []
