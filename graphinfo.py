@@ -5,16 +5,25 @@
 
 # Pordria pretender que yo soy un servidor de graficas?
 
+import os
+import sys
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append('lib')
+# For storing dicts in sqlite3
+sys.path.append('lib/sqlitedict')
+from sqlitedict import SqliteDict
+
+
 from guifiwrapper import *
 from cnmlUtils import *
+from snpservicesClient import *
 
 import urllib2
 import csv
 from netaddr import IPNetwork, IPAddress
 import sys
 
-# For storing dicts in sqlite3
-from sqlitedict import SqliteDict
+
 
 root = 8346
 g = CNMLWrapper(root)
@@ -24,10 +33,10 @@ ipBlacklist = []
 
 dbName = "./"+"graphinfo"+"_"+str(root)+".sqlite"
 devices = SqliteDict(filename=dbName, tablename='devices', flag='n',autocommit=False)
-for k,v in g.devices.iteritems():
-    devices[k] = {"node":v.parentNode.id}
-devices.commit()
-devices.close()
+#for k,v in g.devices.iteritems():
+#    devices[k] = {"node":v.parentNode.id}
+#devices.commit()
+#devices.close()
 
 
 def getDeviceGraphService(device,node=None):
@@ -99,20 +108,35 @@ def getGraphData(graphService,device):
         ip = getGraphServiceIP(graphService)
     except EnvironmentError as err:
         raise EnvironmentError(err.message)
-    service = "stats"
-    url = "http://"+str(ip)+"/snpservices/index.php?call="+service+"&devices="+str(device.id)
-    logger.info("SNPServices request to graph server: %s",url)
-    req = urllib2.Request(url)
+    #service = "stats"
+    #url = "http://"+str(ip)+"/snpservices/index.php?call="+service+"&devices="+str(device.id)
+    #logger.info("SNPServices request to graph server: %s",url)
+    #req = urllib2.Request(url)
     try:
-        response=urllib2.urlopen(req,timeout=3)
-        data = response.read()
+        #response=urllib2.urlopen(req,timeout=3)
+        #data = response.read()
+        data = snpRequest(ip,command="stats",args={"devices":[device.id]},debug=False, timeout=3)
         return data
     except URLError as e:
         ipBlacklist.append(ip)
         logger.error(e.reason)
         return getGraphData(graphService,device)
 
-#def pingGraphServer(graphService):
+def pingGraphServer(graphService):
+    try:
+        ip = getGraphServiceIP(graphService)
+    except EnvironmentError as err:
+        raise EnvironmentError(err.message)
+    #service = "stats"
+    #url = "http://"+str(ip)+"/snpservices/index.php?call="+service+"&devices="+str(device.id)
+    #logger.info("SNPServices request to graph server: %s",url)
+    #req = urllib2.Request(url)
+    try:
+        snpRequest(ip,command="help",debug=False, timeout=3)
+    except URLError as e:
+        ipBlacklist.append(ip)
+        logger.error(e.reason)
+        return getGraphData(graphService,device)
 
 def checkGuifiSubnet(ip):
     return IPAddress(ip) in IPNetwork("10.0.0.0/8")
