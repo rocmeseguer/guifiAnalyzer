@@ -40,6 +40,10 @@ import copy
 from cnmlUtils import *
 
 
+# Wjere to put that?
+cnmlDirectory = "cnml"
+if not os.path.exists(cnmlDirectory):
+    os.makedirs(cnmlDirectory)
 
 
 class CNMLWrapper(object):
