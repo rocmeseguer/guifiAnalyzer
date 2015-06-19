@@ -6,7 +6,9 @@ import matplotlib.pyplot as plt
 
 import functools
 
-from guifiwrapper import *
+from ..guifiwrapper import *
+
+import os
 
 import json
 from networkx.readwrite import json_graph
@@ -19,7 +21,7 @@ def link2Gedge(graph,link):
     if link.nodeA and link.nodeB:
         graph.add_edge(link.nodeA.id,link.nodeB.id,{'id':link.id, 'type':link.type, 'group':link.status})
 
-root = 8076
+root = 8346
 #root = 3671
 g = CNMLWrapper(root)
 G=Graph()
@@ -84,5 +86,7 @@ print('')
 #write_pajek(G, "test.net")
 
 d = json_graph.node_link_data(G)
-json.dump(d, open('d3/test.json','w'))
+outputfile = os.path.join(os.path.dirname(os.path.abspath(__file__)),'d3','test.json') 
+json.dump(d, open(outputfile,'w'))
+html = os.path.join(os.path.dirname(os.path.abspath(__file__)),'d3','test.html') 
 http_server.load_url('d3/test.html')

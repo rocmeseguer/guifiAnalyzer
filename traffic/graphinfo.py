@@ -7,15 +7,18 @@
 
 import os
 import sys
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append('lib')
+#os.chdir(os.path.dirname(os.path.abspath(__file__)))
+#sys.path.append('lib')
 # For storing dicts in sqlite3
-sys.path.append('lib/sqlitedict')
-from sqlitedict import SqliteDict
+#sys.path.append('lib/sqlitedict')
+#from ..lib.sqlitedict import SqliteDict
+#from ..lib.sqlitedict import SqliteDict
+#from ..lib.sqlitedict import sqlitedict
+from ..lib.sqlitedict.sqlitedict import SqliteDict
 
 
-from guifiwrapper import *
-from cnmlUtils import *
+from ..guifiwrapper import *
+from ..cnmlUtils import *
 from snpservicesClient import *
 
 import urllib2
