@@ -6,20 +6,21 @@
 
 import os
 import sys
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append('lib')
-sys.path.append('lib/libcnml')
-sys.path.append('lib/pyGuifiAPI')
+#os.chdir(os.path.dirname(os.path.abspath(__file__)))
+#sys.path.append('lib')
+#sys.path.append('lib/libcnml')
+#sys.path.append('lib/pyGuifiAPI')
 
-import libcnml
-from libcnml import logger as logger
+#import libcnml
+from lib.libcnml import logger
+from lib import libcnml
 import logging
 
 # Change format of logger
 logger.setLevel(logging.CRITICAL)
 
-import pyGuifiAPI
-from pyGuifiAPI.error import GuifiApiError
+from lib.pyGuifiAPI import *
+from lib.pyGuifiAPI.error import GuifiApiError
 
 #from configmanager import GuifinetStudioConfig
 
@@ -33,18 +34,28 @@ _ = gettext.gettext
 import json
 import operator
 import copy
-# increasy recursion limit for deepcopy function
-#sys.setrecursionlimit(10000)
 
 
 from cnmlUtils import *
 
 
-# Wjere to put that?
+# Where to put that?
 cnmlDirectory = "cnml"
 if not os.path.exists(cnmlDirectory):
     os.makedirs(cnmlDirectory)
 
+
+# Helper function
+def flatten(lis):
+    """Given a list, possibly nested to any level, return it flattened."""
+    new_lis = []
+    for item in lis:
+        if type(item) == type([]):
+            if item == [] : pass
+            new_lis.extend(flatten(item))
+        else:
+            new_lis.append(item)
+    return new_lis
 
 class CNMLWrapper(object):
     def __init__(self, rootZoneId=None):
@@ -56,8 +67,8 @@ class CNMLWrapper(object):
             self.rootZoneId = int(raw_input("Select a zone: "))
         print _('Parsing:'), rootZoneId
         #self.world = getCNMLZone(3671)
-        self.cnml = parseCNMLZone(rootZoneId,self.conn)
-        self.zone = self.cnml.zones[rootZoneId]
+        self.cnml = parseCNMLZone(self.rootZoneId,self.conn)
+        self.zone = self.cnml.zones[self.rootZoneId]
         self.guifizone = GuifiZone(self.zone)
 
         self.zones = {}
@@ -414,9 +425,9 @@ class GuifiZone(object):
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        GuifiNet(sys.argv[1])
+        CNMLWrapper(sys.argv[1])
     else:
-        GuifiNet()
+        CNMLWrapper()
 
 #######################################################################
 ###                                 Testing                         ###
@@ -425,16 +436,6 @@ if __name__ == "__main__":
 #TODO test with other small zones to check
 #TODO create dictionaries with all the working elements (like dics of CNMLParser)
 
-def flatten(lis):
-    """Given a list, possibly nested to any level, return it flattened."""
-    new_lis = []
-    for item in lis:
-        if type(item) == type([]):
-            if item == [] : pass
-            new_lis.extend(flatten(item))
-        else:
-            new_lis.append(item)
-    return new_lis
 
 
 def testWZone(root=8076):

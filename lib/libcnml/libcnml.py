@@ -21,7 +21,7 @@
 from __future__ import absolute_import
 import os
 
-from libcnml import logger
+from ..libcnml import logger
 import datetime
 
 try:
@@ -174,7 +174,7 @@ class CNMLNode(object):
         self.graphserverId = graphserverId
         if type(created) is not datetime.datetime:
             self.created = datetime.datetime.strptime(created, '%Y%m%d %I%M')
-        else: 
+        else:
             self.created = created
         self.devices = dict()
         self.services = dict()
@@ -257,7 +257,7 @@ class CNMLService(object):
         self.status = status
         if type(created) is not datetime.datetime:
             self.created = datetime.datetime.strptime(created, '%Y%m%d %I%M')
-        else: 
+        else:
             self.created = created
         self.parentDevice = parent
 

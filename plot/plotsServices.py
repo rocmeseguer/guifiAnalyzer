@@ -14,10 +14,20 @@ from statsmodels.distributions.empirical_distribution import ECDF
 from collections import Counter
 
 
-from guifiwrapper import *
+from ..guifiwrapper import *
 
-root = 3671
+#root = 3671
+root=2444
 g = CNMLWrapper(root)
+
+
+import os
+basedir = os.path.join(os.getcwd(),'figs')
+baseservicesdir = os.path.join(basedir,'services')
+for d in [basedir,baseservicesdir]:
+    if not os.path.exists(d):
+        os.makedirs(d)
+
 
 
 user = ['meteo',  'radio', 'web','VPS','tv','wol', 'Proxy', 'mail','irc',
@@ -87,8 +97,8 @@ xtickNames1 = ax1.set_xticklabels(xTickMarks1)
 plt.setp(xtickNames1, rotation=0, fontsize=13)
 
 plt.show()
-figfile = os.path.join(os.getcwd(),'fig',str(root)+"services_frequency")
-#fig.savefig(figfile, format='png', dpi=fig.dpi)
+figfile = os.path.join(baseservicesdir,str(root)+"services_frequency")
+fig.savefig(figfile, format='png', dpi=fig.dpi)
 
 
 # Other categories
@@ -120,32 +130,6 @@ ax.set_xticks(ind+width)
 xtickNames = ax.set_xticklabels(xTickMarks)
 plt.setp(xtickNames, rotation=0, fontsize=12)
 plt.show()
-figfile = os.path.join(os.getcwd(),'fig',str(root)+"services_frequency_categories")
-#fig.savefig(figfile, format='png', dpi=fig.dpi )
+figfile = os.path.join(baseservicesdir,str(root)+"services_frequency_categories")
+fig.savefig(figfile, format='png', dpi=fig.dpi )
 
-
-if False:
-	services = [s.type for s in g.devices.values()]
-	totalServices = len(services)
-	services = Counter(services).items()
-	servicesNumber = len(services)
-	types = [typ for (typ,value) in services]
-	values = [float(value)/float(totalServices) for (typ,value) in services]
-	ind = np.arange(servicesNumber)
-	width = 0.35
-	fig = plt.figure()
-	fig.set_canvas(plt.gcf().canvas)
-	ax = fig.add_subplot(111)
-	rects = ax.bar(ind,values, width, color='black')
-	ax.set_xlim(-width,len(ind)+width)
-	#ax.set_ylim(0,45)
-	ax.set_ylabel('Frequency')
-	ax.set_xlabel('Device Type')
-	ax.set_title(' Device Types Frequency')
-	xTickMarks = [str(i) for i in types]
-	ax.set_xticks(ind+width)
-	xtickNames = ax.set_xticklabels(xTickMarks)
-	plt.setp(xtickNames, rotation=45, fontsize=13)
-	plt.show()
-	figfile = os.path.join(os.getcwd(),'fig',str(root)+"device_types_frequency")
-	fig.savefig(figfile, format='png', dpi=fig.dpi )

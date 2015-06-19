@@ -1,19 +1,19 @@
 import os
 import sys
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append('lib')
-sys.path.append('lib/libcnml')
-sys.path.append('lib/pyGuifiAPI')
+#os.chdir(os.path.dirname(os.path.abspath(__file__)))
+#sys.path.append('lib')
+#sys.path.append('lib/libcnml')
+#sys.path.append('lib/pyGuifiAPI')
 
-import libcnml
-from libcnml import logger as logger
+from lib import libcnml
+from lib.libcnml import logger as logger
 import logging
 
 # Change format of logger
 logger.setLevel(logging.DEBUG)
 
-import pyGuifiAPI
-from pyGuifiAPI.error import GuifiApiError
+from lib import pyGuifiAPI
+from lib.pyGuifiAPI.error import GuifiApiError
 
 from utils import *
 
