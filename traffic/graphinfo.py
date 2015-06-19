@@ -75,11 +75,12 @@ def getDeviceGraphService(device,node=None):
         service = g.services[serviceId]
     except KeyError as err:
         raise EnvironmentError("Graph service not working or not in the parsed CNML")
+    logger.info("Graphserver of device %s is: %s" %(device.id, serviceId))
     return service
 
 
 def getGraphServiceIP(graphService):
-    device = service.parentDevice
+    device = graphService.parentDevice
     ip = None
     for iface in device.interfaces.values():
         if iface.ipv4 and checkGuifiSubnet(iface.ipv4) and \
@@ -100,7 +101,7 @@ def getGraphServiceIP(graphService):
             if ip:
                 break
         if not ip:
-            logger.error("Could not find ip of graphserver %s with parent device %s" % (service.id,device.id))
+            logger.error("Could not find ip of graphserver %s with parent device %s" % (graphService.id,device.id))
             raise EnvironmentError("Could not find ip of graphserver")
     return ip
 
@@ -129,17 +130,18 @@ def pingGraphServer(graphService):
     try:
         ip = getGraphServiceIP(graphService)
     except EnvironmentError as err:
-        raise EnvironmentError(err.message)
+        return False
     #service = "stats"
     #url = "http://"+str(ip)+"/snpservices/index.php?call="+service+"&devices="+str(device.id)
     #logger.info("SNPServices request to graph server: %s",url)
     #req = urllib2.Request(url)
     try:
         snpRequest(ip,command="help",debug=False, timeout=3)
+        return ip
     except URLError as e:
         ipBlacklist.append(ip)
         logger.error(e.reason)
-        return getGraphData(graphService,device)
+        return pingGraphServer(graphService)
 
 def checkGuifiSubnet(ip):
     return IPAddress(ip) in IPNetwork("10.0.0.0/8")

@@ -11,7 +11,7 @@ services = ["availability","example","graph","liveping","livetraceroute","stats"
 
 
 
-def snpRequest(ip,command="help",args=None,debug=False, timeout = 3):
+def snpRequest(ip,command="help",args={},debug=False, timeout = 3):
 	"""
 	Request to snpservices server
 
