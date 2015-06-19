@@ -14,7 +14,7 @@ from statsmodels.distributions.empirical_distribution import ECDF
 from collections import Counter
 
 
-from ..guifiwrapper import *
+from ..guifiwrapper.guifiwrapper import *
 
 #root = 3671
 root=2444

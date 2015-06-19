@@ -15,7 +15,7 @@ from collections import Counter
 
 import pandas as pd
 
-from ..guifiwrapper import *
+from ..guifiwrapper.guifiwrapper import *
 
 
 #root = 3671

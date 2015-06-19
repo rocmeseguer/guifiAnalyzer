@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 import functools
 
-from ..guifiwrapper import *
+from ..guifiwrapper.guifiwrapper import *
 
 import os
 

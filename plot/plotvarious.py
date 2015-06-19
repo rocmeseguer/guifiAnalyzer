@@ -15,8 +15,7 @@ from collections import Counter
 
 import pandas as pd
 
-#import  ..GuifiAnalyzer import guifiwrapper
-from ..guifiwrapper import *
+from ..guifiwrapper.guifiwrapper import *
 
 #root = 3671
 root = 2444

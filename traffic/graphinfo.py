@@ -17,8 +17,8 @@ import sys
 from ..lib.sqlitedict.sqlitedict import SqliteDict
 
 
-from ..guifiwrapper import *
-from ..cnmlUtils import *
+from ..guifiwrapper.guifiwrapper import *
+from ..guifiwrapper.cnmlUtils import *
 from snpservicesClient import *
 
 import urllib2

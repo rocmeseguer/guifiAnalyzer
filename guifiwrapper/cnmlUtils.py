@@ -5,15 +5,15 @@ import sys
 #sys.path.append('lib/libcnml')
 #sys.path.append('lib/pyGuifiAPI')
 
-from lib import libcnml
-from lib.libcnml import logger as logger
+from ..lib import libcnml
+from ..lib.libcnml import logger as logger
 import logging
 
 # Change format of logger
 logger.setLevel(logging.DEBUG)
 
-from lib import pyGuifiAPI
-from lib.pyGuifiAPI.error import GuifiApiError
+from ..lib import pyGuifiAPI
+from ..lib.pyGuifiAPI.error import GuifiApiError
 
 from utils import *
 

@@ -12,15 +12,15 @@ import sys
 #sys.path.append('lib/pyGuifiAPI')
 
 #import libcnml
-from lib.libcnml import logger
-from lib import libcnml
+from ..lib.libcnml import logger
+from ..lib import libcnml
 import logging
 
 # Change format of logger
 logger.setLevel(logging.CRITICAL)
 
-from lib.pyGuifiAPI import *
-from lib.pyGuifiAPI.error import GuifiApiError
+from ..lib.pyGuifiAPI import *
+from ..lib.pyGuifiAPI.error import GuifiApiError
 
 #from configmanager import GuifinetStudioConfig
 
