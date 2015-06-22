@@ -7,15 +7,9 @@
 
 import os
 import sys
-# os.chdir(os.path.dirname(os.path.abspath(__file__)))
-# sys.path.append('lib')
-# For storing dicts in sqlite3
-# sys.path.append('lib/sqlitedict')
-#from ..lib.sqlitedict import SqliteDict
-#from ..lib.sqlitedict import SqliteDict
-#from ..lib.sqlitedict import sqlitedict
-from ..lib.sqlitedict.sqlitedict import SqliteDict
 
+# For storing dicts in sqlite3
+from ..lib.sqlitedict.sqlitedict import SqliteDict
 
 from ..guifiwrapper.guifiwrapper import *
 from ..guifiwrapper.cnmlUtils import *
@@ -33,12 +27,15 @@ g = CNMLWrapper(root)
 ipBlacklist = []
 
 
-dbName = "./" + "graphinfo" + "_" + str(root) + ".sqlite"
-devices = SqliteDict(
-    filename=dbName,
-    tablename='devices',
-    flag='n',
-    autocommit=False)
+#  Example usage of sqlitedict:
+#
+#dbName = "./" + "graphinfo" + "_" + str(root) + ".sqlite"
+#tableName = 'links'
+#devices = SqliteDict(
+#    filename=dbName,
+#    tablename='devices',
+#    flag='n',
+#    autocommit=False)
 # for k,v in g.devices.iteritems():
 #    devices[k] = {"node":v.parentNode.id}
 # devices.commit()
@@ -190,22 +187,76 @@ def graphServerNodes(serviceId):
 # print data
 
 if __name__ == "__main__":
+    if False:
+        for link in g.links.values():
+            logger.info("LINK: %s" % link.id)
+            for device in [link.deviceA, link.deviceB]:
+                logger.info("\tDEVICE: %s" % (device.id))
+                try:
+                    service = getDeviceGraphService(device)
+                except EnvironmentError as error:
+                    logger.error(error)
+                    sys.exit(1)
+                try:
+                    stats = getGraphData(service, device)
+                except EnvironmentError as error:
+                    logger.error(error)
+                    sys.exit(1)
+                logger.info("\tSTATS: %s " % (stats))
+    links = {}
+    graphServers = {}
     for link in g.links.values():
-        logger.info("LINK: %s" % link.id)
-        for device in [link.deviceA, link.deviceB]:
-            logger.info("\tDEVICE: %s" % (device.id))
-            try:
-                service = getDeviceGraphService(device)
-            except EnvironmentError as error:
-                logger.error(error)
-                sys.exit(1)
-            try:
-                stats = getGraphData(service, device)
-            except EnvironmentError as error:
-                logger.error(error)
-                sys.exit(1)
-            logger.info("\tSTATS: %s " % (stats))
+            logger.info("LINK: %s" % link.id)
+            for device in [link.deviceA, link.deviceB]:
+                logger.info("\tDEVICE: %s" % (device.id))
+                try:
+                    service = getDeviceGraphService(device)
+                    links[link.id][device.id]=
+                except EnvironmentError as error:
+                    # corresponding GraphService  not found
+                    logger.error(error)
+                    links[link.id][device.id]= False
+                    break
+                try:
+                    # We want to check the following stuff:
+                    # 1)Working IP (maybe also log non-working ones)
+                    # 2)that node is monitored by this server
+                    # 3)maybe store info for graph servers already checked ;-)
+                    stats = checkGraphServer(service, device)
+                except EnvironmentError as error:
+                    logger.error(error)
+                    sys.exit(1)
+                logger.info("\tSTATS: %s " % (stats))
+    # Whats stored in  dictionaries now copy to sqlitedict
+    # Initialize db and links table
+    db = "./" + "graphinfo" + "_" + str(root) + ".sqlite"
+    linksTable = SqliteDict(
+        filename=db,
+        tablename='links',
+        flag='n',
+        autocommit=False)
+    # Initialize Graphservers table
+    dbGraphServers = "./" + "graphservers" + "_" + str(root) + ".sqlite"
+    graphServersTable = SqliteDict(
+        filename=dbGraphServers,
+        tablename='links',
+        flag='w',
+        autocommit=False)
+    # Copy data from dictionaries
+    for k,v in links.iteritems():
+        linksTable[k] = v
+    linksTable.commit()
+    linksTable.close()
+    for k,v in graphServers.iteritems():
+        graphServersTable[k] = v
+    graphServersTable.commit()
+    graphServersTable.close()
 
+
+# for k,v in g.devices.iteritems():
+#    devices[k] = {"node":v.parentNode.id}
+# devices.commit()
+# devices.close()
 
 # Get list of nodes
 # associate links with couples of devices
