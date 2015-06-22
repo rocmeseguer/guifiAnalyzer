@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-#network.py
+# network.py
 from networkx import *
 import matplotlib.pyplot as plt
 
@@ -14,23 +14,24 @@ import json
 from networkx.readwrite import json_graph
 import http_server
 
-def node2Gnode(graph,node):
-    graph.add_node(node.id,{'name':node.id, 'group':node.status})
 
-def link2Gedge(graph,link):
+def node2Gnode(graph, node):
+    graph.add_node(node.id, {'name': node.id, 'group': node.status})
+
+
+def link2Gedge(graph, link):
     if link.nodeA and link.nodeB:
-        graph.add_edge(link.nodeA.id,link.nodeB.id,{'id':link.id, 'type':link.type, 'group':link.status})
+        graph.add_edge(
+            link.nodeA.id, link.nodeB.id, {
+                'id': link.id, 'type': link.type, 'group': link.status})
 
 root = 8346
 #root = 3671
 g = CNMLWrapper(root)
-G=Graph()
+G = Graph()
 
-map(functools.partial(node2Gnode,G),g.totalnodes.values())
-map(functools.partial(link2Gedge,G),g.totallinks.values())
-
-
-
+map(functools.partial(node2Gnode, G), g.totalnodes.values())
+map(functools.partial(link2Gedge, G), g.totallinks.values())
 
 
 #G.add_node(1, {'id':'a','type':'supernode'}, color='red')
@@ -40,37 +41,39 @@ map(functools.partial(link2Gedge,G),g.totallinks.values())
 #G.add_edge(3,2, {'id':'b','type':'ap'}, color='yellow')
 
 
-#G.add_nodes_from([1,2,3,4,5,6])
-#G.add_edges_from([(1,2),(3,4),(5,6),(1,6),(4,5)])
-#A=to_agraph(G)        # convert to a graphviz graph
-#A.layout()            # neato layout
-#A.draw("k5.ps")       # write postscript in k5.ps with neato layout
+# G.add_nodes_from([1,2,3,4,5,6])
+# G.add_edges_from([(1,2),(3,4),(5,6),(1,6),(4,5)])
+# A=to_agraph(G)        # convert to a graphviz graph
+# A.layout()            # neato layout
+# A.draw("k5.ps")       # write postscript in k5.ps with neato layout
 
-pathlengths=[]
+pathlengths = []
 
 print("source vertex {target:length, }")
 for v in G.nodes():
-    spl=single_source_shortest_path_length(G,v)
+    spl = single_source_shortest_path_length(G, v)
     #print('%s %s' % (v,spl))
     for p in spl.values():
         pathlengths.append(p)
 
 print('')
-print("average shortest path length %s" % (sum(pathlengths)/len(pathlengths)))
+print(
+    "average shortest path length %s" %
+     (sum(pathlengths) / len(pathlengths)))
 
 # histogram of path lengths
-dist={}
+dist = {}
 for p in pathlengths:
     if p in dist:
-        dist[p]+=1
+        dist[p] += 1
     else:
-        dist[p]=1
+        dist[p] = 1
 
 print('')
-#print("length #paths")
-#verts=dist.keys()
-#for d in sorted(verts):
- #   print('%s %d' % (d,dist[d]))
+# print("length #paths")
+# verts=dist.keys()
+# for d in sorted(verts):
+#   print('%s %d' % (d,dist[d]))
 
 #print("radius: %d" % radius(G))
 #print("diameter: %d" % diameter(G))
@@ -79,14 +82,22 @@ print('')
 #print("periphery: %s" % periphery(G))
 #print("density: %s" % density(G))
 
-#draw_shell(G,with_labels=True)
-#plt.show()
+# draw_shell(G,with_labels=True)
+# plt.show()
 
-#write_gexf(G,"test.gexf")
+# write_gexf(G,"test.gexf")
 #write_pajek(G, "test.net")
 
 d = json_graph.node_link_data(G)
-outputfile = os.path.join(os.path.dirname(os.path.abspath(__file__)),'d3','test.json') 
-json.dump(d, open(outputfile,'w'))
-html = os.path.join(os.path.dirname(os.path.abspath(__file__)),'d3','test.html') 
+outputfile = os.path.join(
+    os.path.dirname(
+        os.path.abspath(__file__)),
+    'd3',
+    'test.json')
+json.dump(d, open(outputfile, 'w'))
+html = os.path.join(
+    os.path.dirname(
+        os.path.abspath(__file__)),
+    'd3',
+    'test.html')
 http_server.load_url('d3/test.html')

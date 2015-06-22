@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 #
-#graphinfo.py
+# graphinfo.py
 
 
 # Pordria pretender que yo soy un servidor de graficas?
 
 import os
 import sys
-#os.chdir(os.path.dirname(os.path.abspath(__file__)))
-#sys.path.append('lib')
+# os.chdir(os.path.dirname(os.path.abspath(__file__)))
+# sys.path.append('lib')
 # For storing dicts in sqlite3
-#sys.path.append('lib/sqlitedict')
+# sys.path.append('lib/sqlitedict')
 #from ..lib.sqlitedict import SqliteDict
 #from ..lib.sqlitedict import SqliteDict
 #from ..lib.sqlitedict import sqlitedict
@@ -27,24 +27,27 @@ from netaddr import IPNetwork, IPAddress
 import sys
 
 
-
 root = 8346
 g = CNMLWrapper(root)
 
 ipBlacklist = []
 
 
-dbName = "./"+"graphinfo"+"_"+str(root)+".sqlite"
-devices = SqliteDict(filename=dbName, tablename='devices', flag='n',autocommit=False)
-#for k,v in g.devices.iteritems():
+dbName = "./" + "graphinfo" + "_" + str(root) + ".sqlite"
+devices = SqliteDict(
+    filename=dbName,
+    tablename='devices',
+    flag='n',
+    autocommit=False)
+# for k,v in g.devices.iteritems():
 #    devices[k] = {"node":v.parentNode.id}
-#devices.commit()
-#devices.close()
+# devices.commit()
+# devices.close()
 
 
-def getDeviceGraphService(device,node=None):
+def getDeviceGraphService(device, node=None):
 
-    #Get info from device
+    # Get info from device
     if device.graphserverId:
         serviceId = device.graphserverId
     else:
@@ -68,14 +71,16 @@ def getDeviceGraphService(device,node=None):
                 if zone.zone.graphserverId:
                     serviceId = zone.zone.graphserverId
                     break
-            #Nothing found
-                raise EnvironmentError("CNML Error: Graphserver of node not found")
-            #return None
+            # Nothing found
+                raise EnvironmentError(
+                    "CNML Error: Graphserver of node not found")
+            # return None
     try:
         service = g.services[serviceId]
     except KeyError as err:
-        raise EnvironmentError("Graph service not working or not in the parsed CNML")
-    logger.info("Graphserver of device %s is: %s" %(device.id, serviceId))
+        raise EnvironmentError(
+            "Graph service not working or not in the parsed CNML")
+    logger.info("Graphserver of device %s is: %s" % (device.id, serviceId))
     return service
 
 
@@ -84,7 +89,7 @@ def getGraphServiceIP(graphService):
     ip = None
     for iface in device.interfaces.values():
         if iface.ipv4 and checkGuifiSubnet(iface.ipv4) and \
-        iface.ipv4 not in ipBlacklist:
+                iface.ipv4 not in ipBlacklist:
             ip = iface.ipv4
             break
     if not ip:
@@ -95,19 +100,20 @@ def getGraphServiceIP(graphService):
         for dev in node.devices.values():
             for iface in dev.interfaces.values():
                 if iface.ipv4 and checkGuifiSubnet(iface.ipv4) and \
-                iface.ipv4 not in ipBlacklist:
+                        iface.ipv4 not in ipBlacklist:
                     ip = iface.ipv4
                     break
             if ip:
                 break
         if not ip:
-            logger.error("Could not find ip of graphserver %s with parent device %s" % (graphService.id,device.id))
+            logger.error(
+                "Could not find ip of graphserver %s with parent device %s" %
+                (graphService.id, device.id))
             raise EnvironmentError("Could not find ip of graphserver")
     return ip
 
 
-
-def getGraphData(graphService,device):
+def getGraphData(graphService, device):
     try:
         ip = getGraphServiceIP(graphService)
     except EnvironmentError as err:
@@ -117,14 +123,22 @@ def getGraphData(graphService,device):
     #logger.info("SNPServices request to graph server: %s",url)
     #req = urllib2.Request(url)
     try:
-        #response=urllib2.urlopen(req,timeout=3)
+        # response=urllib2.urlopen(req,timeout=3)
         #data = response.read()
-        data = snpRequest(ip,command="stats",args={"devices":[device.id]},debug=False, timeout=3)
+        data = snpRequest(
+            ip,
+            command="stats",
+            args={
+                "devices": [
+                    device.id]},
+            debug=False,
+            timeout=3)
         return data
     except URLError as e:
         ipBlacklist.append(ip)
         logger.error(e.reason)
-        return getGraphData(graphService,device)
+        return getGraphData(graphService, device)
+
 
 def pingGraphServer(graphService):
     try:
@@ -136,24 +150,27 @@ def pingGraphServer(graphService):
     #logger.info("SNPServices request to graph server: %s",url)
     #req = urllib2.Request(url)
     try:
-        snpRequest(ip,command="help",debug=False, timeout=3)
+        snpRequest(ip, command="help", debug=False, timeout=3)
         return ip
     except URLError as e:
         ipBlacklist.append(ip)
         logger.error(e.reason)
         return pingGraphServer(graphService)
 
+
 def checkGuifiSubnet(ip):
     return IPAddress(ip) in IPNetwork("10.0.0.0/8")
 
 
-
 def graphServerNodes(serviceId):
-    url = "http://snpservices.guifi.net/snpservices/graphs/cnml2mrtgcsv.php?cp&server="+str(service.id)
-    logger.info("Request to guifi.net: Find nodes monitored by %s",str(service.id))
+    url = "http://snpservices.guifi.net/snpservices/graphs/cnml2mrtgcsv.php?cp&server=" + \
+        str(service.id)
+    logger.info(
+        "Request to guifi.net: Find nodes monitored by %s", str(
+            service.id))
     req = urllib2.Request(url)
     try:
-        response=urllib2.urlopen(req)
+        response = urllib2.urlopen(req)
         data = csv.reader(response)
         nodes = []
         for line in data:
@@ -163,19 +180,19 @@ def graphServerNodes(serviceId):
     return nodes
 
 
-#device=g.devices[2737]
+# device=g.devices[2737]
 #service = getDeviceGraphService(device)
 #nodes = graphServerNodes(service)
-#print nodes
+# print nodes
 #service = getDeviceGraphService(device)
-#print service
+# print service
 #data = getGraphData(service,device)
-#print data
+# print data
 
 if __name__ == "__main__":
     for link in g.links.values():
         logger.info("LINK: %s" % link.id)
-        for device in [link.deviceA,link.deviceB]:
+        for device in [link.deviceA, link.deviceB]:
             logger.info("\tDEVICE: %s" % (device.id))
             try:
                 service = getDeviceGraphService(device)
@@ -183,14 +200,11 @@ if __name__ == "__main__":
                 logger.error(error)
                 sys.exit(1)
             try:
-                stats = getGraphData(service,device)
+                stats = getGraphData(service, device)
             except EnvironmentError as error:
                 logger.error(error)
                 sys.exit(1)
             logger.info("\tSTATS: %s " % (stats))
-
-
-
 
 
 # Get list of nodes
@@ -198,5 +212,5 @@ if __name__ == "__main__":
 # find how to get link info from devices
 # for each device:
 #   ask info from his graph server
-#parse and store the info (find a proper way to do that)
+# parse and store the info (find a proper way to do that)
 # test if that works in
