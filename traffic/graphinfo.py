@@ -20,11 +20,13 @@ import csv
 from netaddr import IPNetwork, IPAddress
 import sys
 
+from enum import Enum
 
 root = 8346
 g = CNMLWrapper(root)
 
-ipBlacklist = []
+misDevices = []
+wtfDevices = []
 
 
 #  Example usage of sqlitedict:
@@ -42,7 +44,7 @@ ipBlacklist = []
 # devices.close()
 
 
-def getDeviceGraphService(device, node=None):
+def getDeviceGraphService(device, node=None,blacklist=[]):
 
     # Get info from device
     if device.graphserverId:
@@ -158,7 +160,14 @@ def checkGraphServer(graphService, device, ipBlacklist):
             #Server does not handle the node
             #pass # Do something
             #raise EnvironmentError("GraphServer does not contain node stats")
-            return checkGraphServer(graphService, device, ipBlacklist)
+            devices = graphServerDevices(graphService)
+            if device.id in devices:
+                logger.error("Misconfigured device %s" % (device.id))
+                misDevices.append(device)
+            else:
+                logger.error("VAYA PUTA MIERDA device %s" % (device.id))
+                wtfDevices.append(device)
+            return None
         return ip
     except URLError as e:
         ipBlacklist.append(ip)
@@ -183,7 +192,7 @@ def checkGuifiSubnet(ip):
     return IPAddress(ip) in IPNetwork("10.0.0.0/8")
 
 
-def graphServerNodes(serviceId):
+def graphServerDevices(service):
     url = "http://snpservices.guifi.net/snpservices/graphs/cnml2mrtgcsv.php?cp&server=" + \
         str(service.id)
     #logger.info(
@@ -193,13 +202,13 @@ def graphServerNodes(serviceId):
     try:
         response = urllib2.urlopen(req)
         data = csv.reader(response)
-        nodes = []
+        devices = []
         for line in data:
-            nodes.append(int(line[0]))
+            devices.append(int(line[0]))
     except URLError as e:
         pass
         #print e.reason
-    return nodes
+    return devices
 
 
 # device=g.devices[2737]
@@ -211,26 +220,76 @@ def graphServerNodes(serviceId):
 #data = getGraphData(service,device)
 # print data
 
+
+def  storeDict2Table(dictionary,table):
+    for k,v in dictionary.iteritems():
+        table[k] = v
+    table.commit()
+
 if __name__ == "__main__":
     if True:
+        enumNode = {0:'nodeA',1:'nodeB'}
+        enumDevice = {0:'deviceA',1:'deviceB'}
+        enumGraphServer = {0:'graphServerA',1:'graphServerB'}
+        links = {}
+        devices = {}
+        graphServers = {}
         for link in g.links.values():
             #logger.info("LINK: %s" % link.id)
-            for device in [link.deviceA, link.deviceB]:
-                #logger.info("\tDEVICE: %s" % (device.id))
-                try:
-                    service = getDeviceGraphService(device)
-                except EnvironmentError as error:
-                    #logger.error("\tCould not find graphserver of device %s" % (device.id))
-                    continue
-                    #sys.exit(1)
-                try:
-                    ipBlacklist = []
-                    ip = checkGraphServer(service,device, ipBlacklist)
-                except EnvironmentError as error:
-                    logger.error("\tCould not find working IP of graphserver %s of device %s\n Error: %s" % (service.id,device.id,error))   
-                    continue
-                    #sys.exit(1)
-                #logger.info("\tThe ip %s of graphserver %s is correct for the device %s" % (ip,service.id,device.id))
+            links[link.id]= {'nodeA':link.nodeA.id,
+                            'nodeB':link.nodeB.id}
+            for index,device in enumerate([link.deviceA, link.deviceB]):
+                if device.id not in devices:
+                    #logger.info("\tDEVICE: %s" % (device.id))
+                    devices[device.id] = {'link':link.id}
+                    try:
+                        service = getDeviceGraphService(device)
+                        # Using enum to avoid if else
+                        links[link.id][enumDevice[index]] = device.id
+                        links[link.id][enumGraphServer[index]] = service.id
+                        #if device == link.deviceA:
+                        #    links[link.id]['deviceA'] = device.id
+                        #    links[link.id]['graphServerA'] = service.id
+                        #else:
+                        #    links[link.id]['deviceB'] = device.id
+                        #    links[link.id]['graphServerB'] = service.id
+                        devices[device.id]['graphServer'] = service.id
+                    except EnvironmentError as error:
+                        #logger.error("\tCould not find graphserver of device %s" % (device.id))
+                        # Using enum to avoid if else
+                        links[link.id][enumDevice[index]] = device.id
+                        links[link.id][enumGraphServer[index]] = service.id
+                        #if device == link.deviceA:
+                        #    links[link.id]['deviceA'] = device.id
+                        #    links[link.id]['graphServerA'] = None
+                        #else:
+                        #    links[link.id]['deviceB'] = device.id
+                        #    links[link.id]['graphServerB'] = None
+                        devices[device.id]['graphServer'] = None
+                        continue
+                        #sys.exit(1)
+                    if service.id not in graphServers:
+                        try:
+                            ipBlacklist = []
+                            ip = checkGraphServer(service,device, ipBlacklist)
+                            if ip:
+                                graphServers[service.id] = ip
+                            else:
+                                # Anyway ip value here is None
+                                # Just writting explicitly for clarity
+                                graphServers[service.id] = None
+                            #if not ip:
+                                # The ip was found but no data for this device on this graphserver
+                        except EnvironmentError as error:
+                            #logger.error("\tCould not find working IP of graphserver %s of device %s\n Error: %s" % (service.id,device.id,error))
+                            continue
+                            #sys.exit(1)
+                        #logger.info("\tThe ip %s of graphserver %s is correct for the device %s" % (ip,service.id,device.id))
+        logger.info("# of Misconfigured Devices:%s" % (len(misDevices)))
+        logger.info("# of Fucked Devices:%s" % (len(wtfDevices)))
+
+
+
     if False:
         # Normal use
         for link in g.links.values():
@@ -248,7 +307,7 @@ if __name__ == "__main__":
                     logger.error(error)
                     sys.exit(1)
                 logger.info("\tSTATS: %s " % (stats))
-                #ip = checkGraphServer(g.services[25337],)  
+                #ip = checkGraphServer(g.services[25337],)
     if False:
         links = {}
         devices = {}
