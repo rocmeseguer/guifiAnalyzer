@@ -44,7 +44,7 @@ def snpRequest(ip, command="help", args={}, debug=False, timeout=3):
                         arguments += str(i) + ","
         # Make request
         url = base + arguments
-        print("SNPServices request to graph server: %s" % url)
+        #print("SNPServices request to graph server: %s" % url)
         req = urllib2.Request(url)
         response = urllib2.urlopen(req, timeout=timeout)
         data = response.read()

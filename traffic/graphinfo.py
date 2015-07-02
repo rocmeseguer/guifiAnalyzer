@@ -54,16 +54,16 @@ def getDeviceGraphService(device, node=None):
         zone = node.parentZone
         # Get info from node
         if node.graphserverId:
-            logger.debug("In 1")
+            #logger.debug("In 1")
             serviceId = node.graphserverId
         # Get info from zone
         elif zone.graphserverId:
-            logger.debug("In 2")
+            #logger.debug("In 2")
             serviceId = zone.graphserverId
         # search in parentzones
         else:
             while zone.parentzone:
-                logger.debug("In 3")
+                #logger.debug("In 3")
                 zone = g.zones[zone.parentzone]
                 if zone.zone.graphserverId:
                     serviceId = zone.zone.graphserverId
@@ -77,11 +77,11 @@ def getDeviceGraphService(device, node=None):
     except KeyError as err:
         raise EnvironmentError(
             "Graph service not working or not in the parsed CNML")
-    logger.info("Graphserver of device %s is: %s" % (device.id, serviceId))
+    #logger.info("Graphserver of device %s is: %s" % (device.id, serviceId))
     return service
 
 
-def getGraphServiceIP(graphService):
+def getGraphServiceIP(graphService, ipBlacklist=[]):
     device = graphService.parentDevice
     ip = None
     for iface in device.interfaces.values():
@@ -103,9 +103,9 @@ def getGraphServiceIP(graphService):
             if ip:
                 break
         if not ip:
-            logger.error(
-                "Could not find ip of graphserver %s with parent device %s" %
-                (graphService.id, device.id))
+            #logger.error(
+            #    "Could not find ip of graphserver %s with parent device %s" %
+            #    (graphService.id, device.id))
             raise EnvironmentError("Could not find ip of graphserver")
     return ip
 
@@ -133,14 +133,14 @@ def getGraphData(graphService, device):
         return data
     except URLError as e:
         ipBlacklist.append(ip)
-        logger.error(e.reason)
+        #logger.error(e.reason)
         return getGraphData(graphService, device)
 
 
 # Want a blaclist to return or not?
-def checkGraphServer(graphService, device, IPblacklist=[]):
+def checkGraphServer(graphService, device, ipBlacklist):
     try:
-        ip = getGraphServiceIP(graphService)
+        ip = getGraphServiceIP(graphService,ipBlacklist)
     except EnvironmentError as err:
         # No more IPs
         raise EnvironmentError(err.message)
@@ -153,11 +153,17 @@ def checkGraphServer(graphService, device, IPblacklist=[]):
                     device.id]},
             debug=False,
             timeout=3)
-        return data
+        data = data.rstrip()
+        if data == str(device.id)+"|0,0,0.00,0,,,0":
+            #Server does not handle the node
+            #pass # Do something
+            #raise EnvironmentError("GraphServer does not contain node stats")
+            return checkGraphServer(graphService, device, ipBlacklist)
+        return ip
     except URLError as e:
         ipBlacklist.append(ip)
         logger.error(e.reason)
-        return checkGraphServer(graphService, device)
+        return checkGraphServer(graphService, device, ipBlacklist)
 
 def pingGraphServer(graphService):
     try:
@@ -180,9 +186,9 @@ def checkGuifiSubnet(ip):
 def graphServerNodes(serviceId):
     url = "http://snpservices.guifi.net/snpservices/graphs/cnml2mrtgcsv.php?cp&server=" + \
         str(service.id)
-    logger.info(
-        "Request to guifi.net: Find nodes monitored by %s", str(
-            service.id))
+    #logger.info(
+    #    "Request to guifi.net: Find nodes monitored by %s", str(
+    #        service.id))
     req = urllib2.Request(url)
     try:
         response = urllib2.urlopen(req)
@@ -191,7 +197,8 @@ def graphServerNodes(serviceId):
         for line in data:
             nodes.append(int(line[0]))
     except URLError as e:
-        print e.reason
+        pass
+        #print e.reason
     return nodes
 
 
@@ -205,7 +212,27 @@ def graphServerNodes(serviceId):
 # print data
 
 if __name__ == "__main__":
+    if True:
+        for link in g.links.values():
+            #logger.info("LINK: %s" % link.id)
+            for device in [link.deviceA, link.deviceB]:
+                #logger.info("\tDEVICE: %s" % (device.id))
+                try:
+                    service = getDeviceGraphService(device)
+                except EnvironmentError as error:
+                    #logger.error("\tCould not find graphserver of device %s" % (device.id))
+                    continue
+                    #sys.exit(1)
+                try:
+                    ipBlacklist = []
+                    ip = checkGraphServer(service,device, ipBlacklist)
+                except EnvironmentError as error:
+                    logger.error("\tCould not find working IP of graphserver %s of device %s\n Error: %s" % (service.id,device.id,error))   
+                    continue
+                    #sys.exit(1)
+                #logger.info("\tThe ip %s of graphserver %s is correct for the device %s" % (ip,service.id,device.id))
     if False:
+        # Normal use
         for link in g.links.values():
             logger.info("LINK: %s" % link.id)
             for device in [link.deviceA, link.deviceB]:
@@ -221,83 +248,85 @@ if __name__ == "__main__":
                     logger.error(error)
                     sys.exit(1)
                 logger.info("\tSTATS: %s " % (stats))
-    links = {}
-    devices = {}
-    graphServers = {}
-    for link in g.links.values():
-            logger.info("LINK: %s" % link.id)
-            links[link.id]= {'nodeA':link.nodeA.id,
-                        'nodeB':link.nodeB.id}
-            for device in [link.deviceA, link.deviceB]:
-                logger.info("\tDEVICE: %s" % (device.id))
-                devices[device.id] = {'link':link.id}
-                # Get GraphServer
-                try:
-                    service = getDeviceGraphService(device)
-                    if device == link.deviceA:
-                        links[link.id]['deviceA'] = device.id
-                        links[link.id]['graphServerA'] = service.id
-                    else:
-                        links[link.id]['deviceB'] = device.id
-                        links[link.id]['graphServerB'] = service.id
-                    devices[device.id]['graphServer'] = service.id
-                except EnvironmentError as error:
-                    # corresponding GraphService  not found
-                    logger.error(error)
-                    if device == link.deviceA:
-                        links[link.id]['deviceA'] = device.id
-                        links[link.id]['graphServerA'] = None
-                    else:
-                        links[link.id]['deviceB'] = device.id
-                        links[link.id]['graphServerB'] = None
-                    devices[device.id]['graphServer'] = None
-                    break
-                # Check GraphServer is working and correct
-                try:
-                    # We want to check the following stuff:
-                    # 1)Working IP (maybe also log non-working ones)
-                    # 2)that node is monitored by this server
-                    # 3)maybe store info for graph servers already checked ;-)
-                    stats = checkGraphServer(service, device)
-                except EnvironmentError as error:
-                    # IP of graphservice not found
-                    logger.error(error)
-                    sys.exit(1)
-                logger.info("\tSTATS: %s " % (stats))
-    # Whats stored in  dictionaries now copy to sqlitedict
-    # Initialize db and tables
-    db = "./" + "graphinfo" + "_" + str(root) + ".sqlite"
-    linksTable = SqliteDict(
-        filename=db,
-        tablename='links',
-        # create new db file if not exists and rewrite if exists
-        flag='n',
-        autocommit=False)
-    devicesTable = SqliteDict(
-        filename=db,
-        tablename='devices',
-        # rewrite only table
-        flag='w',
-        autocommit=False)
-    graphServersTable = SqliteDict(
-        filename=db,
-        tablename='graphServers',
-        # rewrite only table
-        flag='w',
-        autocommit=False)
-    # Copy data from dictionaries
-    for k,v in links.iteritems():
-        linksTable[k] = v
-    linksTable.commit()
-    linksTable.close()
-     for k,v in devices.iteritems():
-        devicesTable[k] = v
-    devicesTable.commit()
-    devicesTable.close()
-    for k,v in graphServers.iteritems():
-        graphServersTable[k] = v
-    graphServersTable.commit()
-    graphServersTable.close()
+                #ip = checkGraphServer(g.services[25337],)  
+    if False:
+        links = {}
+        devices = {}
+        graphServers = {}
+        for link in g.links.values():
+                logger.info("LINK: %s" % link.id)
+                links[link.id]= {'nodeA':link.nodeA.id,
+                            'nodeB':link.nodeB.id}
+                for device in [link.deviceA, link.deviceB]:
+                    logger.info("\tDEVICE: %s" % (device.id))
+                    devices[device.id] = {'link':link.id}
+                    # Get GraphServer
+                    try:
+                        service = getDeviceGraphService(device)
+                        if device == link.deviceA:
+                            links[link.id]['deviceA'] = device.id
+                            links[link.id]['graphServerA'] = service.id
+                        else:
+                            links[link.id]['deviceB'] = device.id
+                            links[link.id]['graphServerB'] = service.id
+                        devices[device.id]['graphServer'] = service.id
+                    except EnvironmentError as error:
+                        # corresponding GraphService  not found
+                        logger.error(error)
+                        if device == link.deviceA:
+                            links[link.id]['deviceA'] = device.id
+                            links[link.id]['graphServerA'] = None
+                        else:
+                            links[link.id]['deviceB'] = device.id
+                            links[link.id]['graphServerB'] = None
+                        devices[device.id]['graphServer'] = None
+                        continue
+                    # Check GraphServer is working and correct
+                    try:
+                        # We want to check the following stuff:
+                        # 1)Working IP (maybe also log non-working ones)
+                        # 2)that node is monitored by this server
+                        # 3)maybe store info for graph servers already checked ;-)
+                        stats = checkGraphServer(service, device)
+                    except EnvironmentError as error:
+                        # IP of graphservice not found
+                        logger.error(error)
+                        sys.exit(1)
+                    logger.info("\tSTATS: %s " % (stats))
+        # Whats stored in  dictionaries now copy to sqlitedict
+        # Initialize db and tables
+        db = "./" + "graphinfo" + "_" + str(root) + ".sqlite"
+        linksTable = SqliteDict(
+            filename=db,
+            tablename='links',
+            # create new db file if not exists and rewrite if exists
+            flag='n',
+            autocommit=False)
+        devicesTable = SqliteDict(
+            filename=db,
+            tablename='devices',
+            # rewrite only table
+            flag='w',
+            autocommit=False)
+        graphServersTable = SqliteDict(
+            filename=db,
+            tablename='graphServers',
+            # rewrite only table
+            flag='w',
+            autocommit=False)
+        # Copy data from dictionaries
+        for k,v in links.iteritems():
+            linksTable[k] = v
+        linksTable.commit()
+        linksTable.close()
+        for k,v in devices.iteritems():
+            devicesTable[k] = v
+        devicesTable.commit()
+        devicesTable.close()
+        for k,v in graphServers.iteritems():
+            graphServersTable[k] = v
+        graphServersTable.commit()
+        graphServersTable.close()
 
 
 # In the next file of getting graph info store separately device data
