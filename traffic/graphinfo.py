@@ -23,7 +23,15 @@ import sys
 from collections import Counter
 
 
-#root = 8346 #Lucanes
+from ..lib.pyGuifiAPI import *
+from ..lib.pyGuifiAPI.error import GuifiApiError
+import urllib
+import re
+
+#prepare regular expresion
+r = re.compile('http:\/\/([^\/]*).*')
+
+root = 8346 #Lucanes
 #root = 2444 #Osona
 #root = 18668 #Castello
 g = CNMLWrapper(root)
@@ -178,6 +186,47 @@ def checkGraphServer(graphService, device, ipBlacklist):
         ipBlacklist.append(ip)
         logger.error(e.reason)
         return checkGraphServer(graphService, device, ipBlacklist)
+
+
+def checkGraphServer2(graphService, device):
+    try:
+        data = {'command':'guifi.service.get','service_id':sid}
+        params = urllib.urlencode(data)
+        (codenum, response) = conn.sendRequest(params)
+        if codenum == constants.ANSWER_GOOD:
+           url = response['service']['var']['url']
+           tmp = r.match("")
+        else:
+            extra = response['extra'] if 'extra' in response else None
+            raise GuifiApiError(response['str'], response['code'], extra)
+    try:
+        data = snpRequest(
+            ip,
+            command="stats",
+            args={
+                "devices": [
+                    device.id]},
+            debug=False,
+            timeout=3)
+        data = data.rstrip()
+        if data == str(device.id)+"|0,0,0.00,0,,,0":
+            #Server does not handle the node
+            #pass # Do something
+            #raise EnvironmentError("GraphServer does not contain node stats")
+            devices = graphServerDevices(graphService)
+            if device.id in devices:
+                logger.error("Misconfigured device %s" % (device.id))
+                misDevices.append(device)
+            else:
+                logger.error("VAYA PUTA MIERDA device %s" % (device.id))
+                wtfDevices.append(device)
+            return None
+        return ip
+    except URLError as e:
+        ipBlacklist.append(ip)
+        logger.error(e.reason)
+        return checkGraphServer(graphService, device, ipBlacklist)
+
 
 def pingGraphServer(graphService):
     try:
