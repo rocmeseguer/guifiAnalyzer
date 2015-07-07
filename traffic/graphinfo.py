@@ -31,10 +31,12 @@ import re
 #prepare regular expresion
 r = re.compile('http:\/\/([^\/]*).*')
 
-root = 8346 #Lucanes
+#root = 8346 #Lucanes
 #root = 2444 #Osona
-#root = 18668 #Castello
+root = 18668 #Castello
 g = CNMLWrapper(root)
+#Get connection object form guifiwrapper
+conn = g.conn
 
 misDevices = []
 wtfDevices = []
@@ -187,21 +189,26 @@ def checkGraphServer(graphService, device, ipBlacklist):
         logger.error(e.reason)
         return checkGraphServer(graphService, device, ipBlacklist)
 
-
-def checkGraphServer2(graphService, device):
+def getServiceUrlApi(graphService):
     try:
-        data = {'command':'guifi.service.get','service_id':sid}
+        data = {'command':'guifi.service.get','service_id':graphService.id}
         params = urllib.urlencode(data)
         (codenum, response) = conn.sendRequest(params)
         if codenum == constants.ANSWER_GOOD:
            url = response['service']['var']['url']
-           tmp = r.match("")
+           return r.match(url).group(1)
         else:
             extra = response['extra'] if 'extra' in response else None
             raise GuifiApiError(response['str'], response['code'], extra)
+    except URLError as e:
+        raise EnvironmentError("Guifi web not replying, %s" % e)
+
+
+def checkGraphServer2(graphService, device):
+    url = getServiceUrlApi(graphService)
     try:
         data = snpRequest(
-            ip,
+            url,
             command="stats",
             args={
                 "devices": [
@@ -221,11 +228,9 @@ def checkGraphServer2(graphService, device):
                 logger.error("VAYA PUTA MIERDA device %s" % (device.id))
                 wtfDevices.append(device)
             return None
-        return ip
+        return url
     except URLError as e:
-        ipBlacklist.append(ip)
-        logger.error(e.reason)
-        return checkGraphServer(graphService, device, ipBlacklist)
+        raise EnvironmentError("Guifi web not replying, %s" % e)
 
 
 def pingGraphServer(graphService):
@@ -380,8 +385,15 @@ for link in g.links.values():
                 graphServers[service.id] = {}
                 graphServers[service.id]['devices'] = []
                 try:
-                    ipBlacklist = []
-                    ip = checkGraphServer(service,device, ipBlacklist)
+
+                    # Approach with IPs from CNML
+                    #ipBlacklist = []
+                    #ip = checkGraphServer(service,device, ipBlacklist)
+                    
+                    # Approach with Guifi Web
+                    ip = checkGraphServer2(service,device)
+
+                    # Approach with URLs from Guifi WEB
                     if ip:
                         graphServers[service.id]['ip'] = ip
                     else:
