@@ -20,16 +20,19 @@ import csv
 from netaddr import IPNetwork, IPAddress
 import sys
 
-from enum import Enum
+from collections import Counter
 
-root = 8346
+
+#root = 8346 #Lucanes
+#root = 2444 #Osona
+#root = 18668 #Castello
 g = CNMLWrapper(root)
 
 misDevices = []
 wtfDevices = []
 
 
-#  Example usage of sqlitedict:
+#  Store Example usage of sqlitedict:
 #
 #dbName = "./" + "graphinfo" + "_" + str(root) + ".sqlite"
 #tableName = 'links'
@@ -42,6 +45,8 @@ wtfDevices = []
 #    devices[k] = {"node":v.parentNode.id}
 # devices.commit()
 # devices.close()
+
+#  Read Example usages of sqlitedict
 
 
 def getDeviceGraphService(device, node=None,blacklist=[]):
@@ -211,6 +216,7 @@ def graphServerDevices(service):
     return devices
 
 
+
 # device=g.devices[2737]
 #service = getDeviceGraphService(device)
 #nodes = graphServerNodes(service)
@@ -221,74 +227,194 @@ def graphServerDevices(service):
 # print data
 
 
+def prepareDirs():
+    """
+    Create result dirs
+    """
+    dirs = []
+    basedir = os.path.join(os.getcwd(), 'guifiAnalyzerOut')
+    dirs.append(basedir)
+    packagedir = os.path.join(basedir, 'traffic')
+    dirs.append(packagedir)
+    zonedir = os.path.join(packagedir, str(root))
+    dirs.append(zonedir)
+    for d in dirs:
+        if not os.path.exists(d):
+            os.makedirs(d)
+    return zonedir
+
+def initStorage(directory):
+    """
+    Initialize db and tables
+    """
+    #db = "./" + "graphinfo" + "_" + str(root) + ".sqlite"
+    db = os.path.join(directory,"data.sqld")
+    linksTable = SqliteDict(
+        filename=db,
+        tablename='links',
+        # create new db file if not exists and rewrite if exists
+        flag='n',
+        autocommit=False)
+    devicesTable = SqliteDict(
+        filename=db,
+        tablename='devices',
+        # rewrite only table
+        flag='w',
+        autocommit=False)
+    graphServersTable = SqliteDict(
+        filename=db,
+        tablename='graphServers',
+        # rewrite only table
+        flag='w',
+        autocommit=False)
+    return (linksTable,devicesTable,graphServersTable)
+
+def closeStorage(tables):
+    for t in tables:
+        t.close()
+
 def  storeDict2Table(dictionary,table):
     for k,v in dictionary.iteritems():
         table[k] = v
     table.commit()
 
+#def main():
+enumDevice = {0:'deviceA',1:'deviceB'}
+enumGraphServer = {0:'graphServerA',1:'graphServerB'}
+links = {}
+devices = {}
+graphServers = {}
+for link in g.links.values():
+    logger.info("LINK: %s" % link.id)
+    links[link.id]= {'nodeA':link.nodeA.id,
+                    'nodeB':link.nodeB.id}
+    for index,device in enumerate([link.deviceA, link.deviceB]):
+        logger.info("\tDEVICE: %s" % (device.id))
+        if device.id in devices:
+            logger.warning("\tAlready analyzed device: %s" % device.id)
+            # Complete link information
+            links[link.id][enumDevice[index]] = device.id
+            links[link.id][enumGraphServer[index]] = devices[device.id]['graphServer']
+        else:
+            devices[device.id] = {'link':link.id}
+            try:
+                service = getDeviceGraphService(device)
+                # Using enum to avoid if else
+                links[link.id][enumDevice[index]] = device.id
+                links[link.id][enumGraphServer[index]] = service.id
+                #if device == link.deviceA:
+                #    links[link.id]['deviceA'] = device.id
+                #    links[link.id]['graphServerA'] = service.id
+                #else:
+                #    links[link.id]['deviceB'] = device.id
+                #    links[link.id]['graphServerB'] = service.id
+                logger.info("\t\tGraphserver %s" % (service.id))
+                devices[device.id]['graphServer'] = service.id
+            except EnvironmentError as error:
+                logger.error("\t\tCould not find graphserver of device %s" % (device.id))
+                # Using enum to avoid if else
+                links[link.id][enumDevice[index]] = device.id
+                links[link.id][enumGraphServer[index]] = service.id
+                #if device == link.deviceA:
+                #    links[link.id]['deviceA'] = device.id
+                #    links[link.id]['graphServerA'] = None
+                #else:
+                #    links[link.id]['deviceB'] = device.id
+                #    links[link.id]['graphServerB'] = None
+                devices[device.id]['graphServer'] = None
+                continue
+                #sys.exit(1)
+            if service.id in graphServers:
+                logger.warning("\t\tAlready analyzed graphserver: %s" % service.id)
+            else:
+                #Initialize devices list
+                graphServers[service.id] = {}
+                graphServers[service.id]['devices'] = []
+                try:
+                    ipBlacklist = []
+                    ip = checkGraphServer(service,device, ipBlacklist)
+                    if ip:
+                        graphServers[service.id]['ip'] = ip
+                    else:
+                        # Anyway ip value here is None
+                        # Just writting explicitly for clarity
+                        graphServers[service.id]['ip'] = None
+                    #if not ip:
+                        # The ip was found but no data for this device on this graphserver
+                        # In this case should I ask with snmp?
+                except EnvironmentError as error:
+                    logger.error("\t\tCould not find working IP of graphserver %s of device %s\n Error: %s" % (service.id,device.id,error))
+                    graphServers[service.id]['ip'] = None
+                    ip = None
+                    #continue
+                    #sys.exit(1)
+                #logger.info("\tThe ip %s of graphserver %s is correct for the device %s" % (ip,service.id,device.id))
+                logger.info("\t\t IP %s" % ip)
+#Assign devices to graphServers
+graphServers['None'] = {}
+graphServers['None']['ip'] = None
+graphServers['None']['devices'] = []
+print graphServers
+for key,d in devices.iteritems():
+    if d['graphServer']:
+        (graphServers[d['graphServer']]['devices']).append(key)
+    else:
+        (graphServers['None']['devices']).append(key)
+
+# Store results
+storeDir = prepareDirs()
+linksTable,devicesTable,graphServersTable = initStorage(storeDir)
+storeDict2Table(links,linksTable)
+storeDict2Table(devices,devicesTable)
+storeDict2Table(graphServers,graphServersTable)
+closeStorage([linksTable,devicesTable,graphServersTable])
+
+
+# Print statistics
+logger.info("DEVICES STATS")
+logger.info("\t# of Total Devices in Links:%s" % len(devices))
+logger.info("\t# of Devices without GraphServer:%s\t%s" % (len(graphServers['None']['devices']),len(graphServers['None']['devices'])/float(len(devices))))
+temp = 0
+for key,gr in graphServers.iteritems():
+    if not gr['ip'] and key != 'None':
+        temp += len(gr['devices'])
+logger.info("\t#{ of Devices with GraphServer without working IP:%s\t%s" % (temp,temp/float(len(devices))))
+logger.info("\t\t# of Locally Misconfigured Devices:%s\t%s" % (len(misDevices),len(misDevices)/float(len(devices))))
+logger.info("\t\t# of WTF Devices:%s\t%s" % (len(wtfDevices),len(wtfDevices)/float(len(devices))))
+logger.info("\t# devs to be graphed: %s\t%s" % ((len(devices)-len(graphServers['None']['devices'])-temp),(len(devices)-len(graphServers['None']['devices'])-temp)/float(len(devices))))
+
+workingGraphServers = {g:graphServers[g] for g in graphServers if graphServers[g]['ip']}
+graphedDevices = {d:devices[d] for d in devices if devices[d]['graphServer'] in workingGraphServers}
+#print links
+# Can find the graphed links it in a better way fixing the above code
+# Also, due to if some deviceA or deviceB are missing
+graphedLinks = {l:links[l] for l in links if (links[l]['deviceA'] in graphedDevices) and (links[l]['deviceB'] in graphedDevices)}
+semiGraphedLinks = {l:links[l] for l in links if (links[l]['deviceA'] in graphedDevices) != (links[l]['deviceB'] in graphedDevices)}
+
+logger.info("LINKS STATS")
+logger.info("\t# of Total Links:%s" % len(links))
+logger.info("\t# of Totally Graphed Links:%s\t%s" % (len(graphedLinks),len(graphedLinks)/float(len(links))))
+logger.info("\t# of Partially Graphed Links:%s\t%s" % (len(semiGraphedLinks),len(semiGraphedLinks)/float(len(links))))
+logger.info("GRAPHSERVER STATS")
+for key,s in graphServers.iteritems():
+    logger.info("Server %s : %s devices, Working: %s" % (key,len(s['devices']),('Yes' if s['ip'] else 'No')  ))
+#logger.info(len(workingGraphServers))
+logger.info("\t# of Total Graphservers:%s" % (len(graphServers)-1))
+logger.info("\t# of Working GraphServers:%s\t%s" % (len(workingGraphServers),len(workingGraphServers)/float(len(graphServers)-1)))
+
+
+
+
+
+
+#main()
+
+
+
+
 if __name__ == "__main__":
-    if True:
-        enumNode = {0:'nodeA',1:'nodeB'}
-        enumDevice = {0:'deviceA',1:'deviceB'}
-        enumGraphServer = {0:'graphServerA',1:'graphServerB'}
-        links = {}
-        devices = {}
-        graphServers = {}
-        for link in g.links.values():
-            #logger.info("LINK: %s" % link.id)
-            links[link.id]= {'nodeA':link.nodeA.id,
-                            'nodeB':link.nodeB.id}
-            for index,device in enumerate([link.deviceA, link.deviceB]):
-                if device.id not in devices:
-                    #logger.info("\tDEVICE: %s" % (device.id))
-                    devices[device.id] = {'link':link.id}
-                    try:
-                        service = getDeviceGraphService(device)
-                        # Using enum to avoid if else
-                        links[link.id][enumDevice[index]] = device.id
-                        links[link.id][enumGraphServer[index]] = service.id
-                        #if device == link.deviceA:
-                        #    links[link.id]['deviceA'] = device.id
-                        #    links[link.id]['graphServerA'] = service.id
-                        #else:
-                        #    links[link.id]['deviceB'] = device.id
-                        #    links[link.id]['graphServerB'] = service.id
-                        devices[device.id]['graphServer'] = service.id
-                    except EnvironmentError as error:
-                        #logger.error("\tCould not find graphserver of device %s" % (device.id))
-                        # Using enum to avoid if else
-                        links[link.id][enumDevice[index]] = device.id
-                        links[link.id][enumGraphServer[index]] = service.id
-                        #if device == link.deviceA:
-                        #    links[link.id]['deviceA'] = device.id
-                        #    links[link.id]['graphServerA'] = None
-                        #else:
-                        #    links[link.id]['deviceB'] = device.id
-                        #    links[link.id]['graphServerB'] = None
-                        devices[device.id]['graphServer'] = None
-                        continue
-                        #sys.exit(1)
-                    if service.id not in graphServers:
-                        try:
-                            ipBlacklist = []
-                            ip = checkGraphServer(service,device, ipBlacklist)
-                            if ip:
-                                graphServers[service.id] = ip
-                            else:
-                                # Anyway ip value here is None
-                                # Just writting explicitly for clarity
-                                graphServers[service.id] = None
-                            #if not ip:
-                                # The ip was found but no data for this device on this graphserver
-                        except EnvironmentError as error:
-                            #logger.error("\tCould not find working IP of graphserver %s of device %s\n Error: %s" % (service.id,device.id,error))
-                            continue
-                            #sys.exit(1)
-                        #logger.info("\tThe ip %s of graphserver %s is correct for the device %s" % (ip,service.id,device.id))
-        logger.info("# of Misconfigured Devices:%s" % (len(misDevices)))
-        logger.info("# of Fucked Devices:%s" % (len(wtfDevices)))
-
-
+    if False:
+        main()
 
     if False:
         # Normal use
