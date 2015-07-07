@@ -4,7 +4,8 @@
 from ..lib.pyGuifiAPI import *
 from ..lib.pyGuifiAPI.error import GuifiApiError
 import urllib
-
+import re
+r = re.compile('http:\/\/([^\/]*).*')
 
 from ..guifiwrapper.cnmlUtils import *
 
@@ -15,8 +16,11 @@ data = {'command':'guifi.service.get','service_id':sid}
 params = urllib.urlencode(data)
 (codenum, response) = conn.sendRequest(params)
 if codenum == constants.ANSWER_GOOD:
-   print response['service']['var']['url']
+   result =  response['service']['var']['url']
+   print result
+   print r.match(result).group(1)
 else:
     extra = response['extra'] if 'extra' in response else None
     raise GuifiApiError(response['str'], response['code'], extra)
+
 #print data
