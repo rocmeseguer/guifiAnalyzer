@@ -127,34 +127,35 @@ def getGraphServiceIP(graphService, ipBlacklist=[]):
     return ip
 
 
-def getGraphData(graphService, device):
-    try:
-        ip = getGraphServiceIP(graphService)
-    except EnvironmentError as err:
-        raise EnvironmentError(err.message)
-    #service = "stats"
-    #url = "http://"+str(ip)+"/snpservices/index.php?call="+service+"&devices="+str(device.id)
-    #logger.info("SNPServices request to graph server: %s",url)
-    #req = urllib2.Request(url)
-    try:
-        # response=urllib2.urlopen(req,timeout=3)
-        #data = response.read()
-        data = snpRequest(
-            ip,
-            command="stats",
-            args={
-                "devices": [
-                    device.id]},
-            debug=False,
-            timeout=3)
-        return data
-    except URLError as e:
-        ipBlacklist.append(ip)
-        #logger.error(e.reason)
-        return getGraphData(graphService, device)
+# def getGraphData(url, device):
+#     data = snpRequest(
+#         url,
+#         command="stats",
+#         args={
+#             "devices": [
+#                 device.id]},
+#         debug=False,
+#         timeout=3)
+#     data = data.rstrip()
+#     #return data
+#     if data == str(device.id)+"|0,0,0.00,0,,,0":
+#         #Check if server is responsible for the nodes
+#         devices = graphServerDevices(graphService)
+#         if device.id in devices:
+#             # If yes, then it means that the node locally is misconfigured
+#             logger.error("Misconfigured device %s" % (device.id))
+#             misDevices.append(device)
+#         else:
+#             logger.error("VAYA PUTA MIERDA device %s" % (device.id))
+#             wtfDevices.append(device)
+#         return None
+#     return
+
+#def checkGraphData(data,device)
 
 
-# Want a blaclist to return or not?
+
+# Want a blacklist to return or not?
 def checkGraphServer(graphService, device, ipBlacklist):
     try:
         ip = getGraphServiceIP(graphService,ipBlacklist)
@@ -186,7 +187,13 @@ def checkGraphServer(graphService, device, ipBlacklist):
         return ip
     except URLError as e:
         ipBlacklist.append(ip)
-        logger.error(e.reason)
+        if hasattr(e, 'reason'):
+            logger.error('Failed to reach server')
+            logger.error(e.reason)
+            #global counters here
+        elif hasattr(e,'code'):
+            logger.error('Server not configure correctly')
+            logger.error('Error code:', e.code)
         return checkGraphServer(graphService, device, ipBlacklist)
 
 def getServiceUrlApi(graphService):
@@ -356,12 +363,6 @@ for link in g.links.values():
                 # Using enum to avoid if else
                 links[link.id][enumDevice[index]] = device.id
                 links[link.id][enumGraphServer[index]] = service.id
-                #if device == link.deviceA:
-                #    links[link.id]['deviceA'] = device.id
-                #    links[link.id]['graphServerA'] = service.id
-                #else:
-                #    links[link.id]['deviceB'] = device.id
-                #    links[link.id]['graphServerB'] = service.id
                 logger.info("\t\tGraphserver %s" % (service.id))
                 devices[device.id]['graphServer'] = service.id
             except EnvironmentError as error:
@@ -369,12 +370,6 @@ for link in g.links.values():
                 # Using enum to avoid if else
                 links[link.id][enumDevice[index]] = device.id
                 links[link.id][enumGraphServer[index]] = service.id
-                #if device == link.deviceA:
-                #    links[link.id]['deviceA'] = device.id
-                #    links[link.id]['graphServerA'] = None
-                #else:
-                #    links[link.id]['deviceB'] = device.id
-                #    links[link.id]['graphServerB'] = None
                 devices[device.id]['graphServer'] = None
                 continue
                 #sys.exit(1)
@@ -387,11 +382,11 @@ for link in g.links.values():
                 try:
 
                     # Approach with IPs from CNML
-                    #ipBlacklist = []
-                    #ip = checkGraphServer(service,device, ipBlacklist)
-                    
+                    ipBlacklist = []
+                    ip = checkGraphServer(service,device, ipBlacklist)
+
                     # Approach with Guifi Web
-                    ip = checkGraphServer2(service,device)
+                    #ip = checkGraphServer2(service,device)
 
                     # Approach with URLs from Guifi WEB
                     if ip:

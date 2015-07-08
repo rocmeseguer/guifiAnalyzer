@@ -10,6 +10,7 @@ r = re.compile('http:\/\/([^\/]*).*')
 from ..guifiwrapper.cnmlUtils import *
 
 # https://guifi.net/api?command=guifi.service.get&service_id=37668
+# https://github.com/guifi/drupal-guifi/commit/c155cb310144a849adec03a73ded0f67b71f6850
 conn = authenticate()
 sid  = 37668
 data = {'command':'guifi.service.get','service_id':sid}
