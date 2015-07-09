@@ -107,7 +107,9 @@ def cnmlObjectCopy(obj):
             obj.totalLinks,
             obj.totalServices,
             obj.totalNodes,
-            obj.title)
+            obj.title,
+            obj.graphserverId
+            )
         new.subzones = obj.subzones.copy()
         new.nodes = obj.nodes.copy()
     elif isinstance(obj, libcnml.libcnml.CNMLNode):
