@@ -147,7 +147,7 @@ def getServiceUrlApi(graphService):
 
 
 
-# def getGraphData(url, device):
+# def checkDeviceGraph(url, device):
 #     data = snpRequest(
 #         url,
 #         command="stats",
@@ -181,8 +181,7 @@ def checkGraphServer(graphService, device, ipBlacklist, checkedUrl=False):
         ip = getGraphServiceIP(graphService,ipBlacklist)
         print ip
     except EnvironmentError as e:
-        # No more IPs from CNML
-        # Try to get url from web
+        # No more IPs from CNML, try to get url from Guifi web
         try:
             # If not already check url
             if not checkedUrl:
@@ -203,26 +202,14 @@ def checkGraphServer(graphService, device, ipBlacklist, checkedUrl=False):
             debug=False,
             timeout=3)
         data = data.rstrip()
-        if data == str(device.id)+"|0,0,0.00,0,,,0":
-            #Server does not handle the node
-            #pass # Do something
-            #raise EnvironmentError("GraphServer does not contain node stats")
-            devices = graphServerDevices(graphService)
-            if device.id in devices:
-                logger.error("Misconfigured device %s" % (device.id))
-                misDevices.append(device)
-            else:
-                logger.error("VAYA PUTA MIERDA device %s" % (device.id))
-                wtfDevices.append(device)
-            #return None
-        return ip
+        if data:
+            return ip
     except URLError as e:
         if hasattr(e, 'reason'):
             ipBlacklist.append(ip)
             logger.error('Failed to reach server')
             logger.error(e.reason)
             #global counters here
-
         elif hasattr(e,'code'):
             logger.error('Server not configured correctly')
             logger.error('Error code:', e.code)
@@ -231,37 +218,6 @@ def checkGraphServer(graphService, device, ipBlacklist, checkedUrl=False):
     except socket.timeout:
         ipBlacklist.append(ip)
         return checkGraphServer(graphService, device, ipBlacklist, checkedUrl)
-
-
-
-
-def checkGraphServer2(graphService, device):
-    url = getServiceUrlApi(graphService)
-    try:
-        data = snpRequest(
-            url,
-            command="stats",
-            args={
-                "devices": [
-                    device.id]},
-            debug=False,
-            timeout=3)
-        data = data.rstrip()
-        if data == str(device.id)+"|0,0,0.00,0,,,0":
-            #Server does not handle the node
-            #pass # Do something
-            #raise EnvironmentError("GraphServer does not contain node stats")
-            devices = graphServerDevices(graphService)
-            if device.id in devices:
-                logger.error("Misconfigured device %s" % (device.id))
-                misDevices.append(device)
-            else:
-                logger.error("VAYA PUTA MIERDA device %s" % (device.id))
-                wtfDevices.append(device)
-            return None
-        return url
-    except URLError as e:
-        raise EnvironmentError("Guifi web not replying, %s" % e)
 
 
 def pingGraphServer(graphService):
@@ -396,7 +352,6 @@ for link in g.links.values():
                 links[link.id][enumGraphServer[index]] = None
                 devices[device.id]['graphServer'] = None
                 continue
-                #sys.exit(1)
             if service.id in graphServers:
                 logger.warning("\t\tAlready analyzed graphserver: %s" % service.id)
             else:
@@ -404,15 +359,8 @@ for link in g.links.values():
                 graphServers[service.id] = {}
                 graphServers[service.id]['devices'] = []
                 try:
-
-                    # Approach with IPs from CNML
                     ipBlacklist = []
                     ip = checkGraphServer(service,device, ipBlacklist)
-
-                    # Approach with Guifi Web
-                    #ip = checkGraphServer2(service,device)
-
-                    # Approach with URLs from Guifi WEB
                     if ip:
                         graphServers[service.id]['ip'] = ip
                     else:
@@ -466,8 +414,8 @@ for key,gr in graphServers.iteritems():
     if not gr['ip'] and key != 'None':
         temp += len(gr['devices'])
 logger.info("\t#{ of Devices with GraphServer without working IP:%s\t%s" % (temp,temp/float(len(devices))))
-logger.info("\t\t# of Locally Misconfigured Devices:%s\t%s" % (len(misDevices),len(misDevices)/float(len(devices))))
-logger.info("\t\t# of WTF Devices:%s\t%s" % (len(wtfDevices),len(wtfDevices)/float(len(devices))))
+#logger.info("\t\t# of Locally Misconfigured Devices:%s\t%s" % (len(misDevices),len(misDevices)/float(len(devices))))
+#logger.info("\t\t# of WTF Devices:%s\t%s" % (len(wtfDevices),len(wtfDevices)/float(len(devices))))
 logger.info("\t# devs to be graphed: %s\t%s" % ((len(devices)-len(graphServers['None']['devices'])-temp),(len(devices)-len(graphServers['None']['devices'])-temp)/float(len(devices))))
 
 workingGraphServers = {g:graphServers[g] for g in graphServers if graphServers[g]['ip']}
@@ -493,8 +441,13 @@ logger.info("\t# of Working GraphServers:%s\t%s" % (len(workingGraphServers),len
 #   same graphserver etc
 # SOS -Change libcnml to add mainipv4 attribute to devices
 # - Print with the ips the code or that it didn;t reply
-# - Cannot find all locally misconfigured devices in the first run. Need to 
-#   remove the existing code for that and do it in a second run 
+# - Cannot find all locally misconfigured devices in the first run. Need to
+#   do it in a second run
+# - Mirrar si es core lo que no funciona o no
+# - Some nodes may be graphed from more than one server. There is some
+#   kind of hierarchy, i.e. server that graphs whole Osona, another server that grahps
+#   only Vic etc.
+#  - Admin in Guifi Web can see latest stats. maybe we should get info from there
 
 #main()
 
