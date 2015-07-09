@@ -181,6 +181,7 @@ class CNMLWrapper(object):
 class GuifiZone(object):
 
     def __init__(self, zone):
+        self.id = zone.id
         self.zone = zone
         self.workingZone = self.getCNMLZoneWorking(self.zone)
         self.nodes = {}
