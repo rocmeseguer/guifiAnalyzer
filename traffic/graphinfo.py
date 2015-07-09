@@ -16,6 +16,7 @@ from ..guifiwrapper.cnmlUtils import *
 from snpservicesClient import *
 
 import urllib2
+import socket
 import csv
 from netaddr import IPNetwork, IPAddress
 import sys
@@ -27,6 +28,8 @@ from ..lib.pyGuifiAPI import *
 from ..lib.pyGuifiAPI.error import GuifiApiError
 import urllib
 import re
+
+from exceptions import *
 
 #prepare regular expresion
 r = re.compile('http:\/\/([^\/]*).*')
@@ -86,14 +89,13 @@ def getDeviceGraphService(device, node=None,blacklist=[]):
                     serviceId = zone.zone.graphserverId
                     break
             # Nothing found
-                raise EnvironmentError(
-                    "CNML Error: Graphserver of node not found")
+                raise NoCNMLServerError(device)
             # return None
     try:
         service = g.services[serviceId]
     except KeyError as err:
-        raise EnvironmentError(
-            "Graph service not working or not in the parsed CNML")
+        #Graph service not working or not in the parsed CNML
+        raise NoCNMLServerError(device)
     #logger.info("Graphserver of device %s is: %s" % (device.id, serviceId))
     return service
 
@@ -127,6 +129,24 @@ def getGraphServiceIP(graphService, ipBlacklist=[]):
     return ip
 
 
+def getServiceUrlApi(graphService):
+    try:
+        # Detect if a url already has been checked
+        data = {'command':'guifi.service.get','service_id':graphService.id}
+        params = urllib.urlencode(data)
+        (codenum, response) = conn.sendRequest(params)
+        if codenum == constants.ANSWER_GOOD:
+           url = response['service']['var']['url']
+           url = r.match(url).group(1)
+           return url
+        else:
+            extra = response['extra'] if 'extra' in response else None
+            raise GuifiApiError(response['str'], response['code'], extra)
+    except URLError as e:
+        raise EnvironmentError("Guifi web not replying, %s" % e)
+
+
+
 # def getGraphData(url, device):
 #     data = snpRequest(
 #         url,
@@ -156,12 +176,23 @@ def getGraphServiceIP(graphService, ipBlacklist=[]):
 
 
 # Want a blacklist to return or not?
-def checkGraphServer(graphService, device, ipBlacklist):
+def checkGraphServer(graphService, device, ipBlacklist, checkedUrl=False):
     try:
         ip = getGraphServiceIP(graphService,ipBlacklist)
-    except EnvironmentError as err:
-        # No more IPs
-        raise EnvironmentError(err.message)
+        print ip
+    except EnvironmentError as e:
+        # No more IPs from CNML
+        # Try to get url from web
+        try:
+            # If not already check url
+            if not checkedUrl:
+                checkedUrl = True
+                ip = getServiceUrlApi(graphService)
+            # Else no IP, no URL -> raise the error
+            else :
+                raise NoWorkingIPError(graphService, ipBlacklist)
+        except EnvironmentError as e:
+            raise NoWorkingIPError(graphService, ipBlacklist)
     try:
         data = snpRequest(
             ip,
@@ -183,32 +214,25 @@ def checkGraphServer(graphService, device, ipBlacklist):
             else:
                 logger.error("VAYA PUTA MIERDA device %s" % (device.id))
                 wtfDevices.append(device)
-            return None
+            #return None
         return ip
     except URLError as e:
-        ipBlacklist.append(ip)
         if hasattr(e, 'reason'):
+            ipBlacklist.append(ip)
             logger.error('Failed to reach server')
             logger.error(e.reason)
             #global counters here
-        elif hasattr(e,'code'):
-            logger.error('Server not configure correctly')
-            logger.error('Error code:', e.code)
-        return checkGraphServer(graphService, device, ipBlacklist)
 
-def getServiceUrlApi(graphService):
-    try:
-        data = {'command':'guifi.service.get','service_id':graphService.id}
-        params = urllib.urlencode(data)
-        (codenum, response) = conn.sendRequest(params)
-        if codenum == constants.ANSWER_GOOD:
-           url = response['service']['var']['url']
-           return r.match(url).group(1)
-        else:
-            extra = response['extra'] if 'extra' in response else None
-            raise GuifiApiError(response['str'], response['code'], extra)
-    except URLError as e:
-        raise EnvironmentError("Guifi web not replying, %s" % e)
+        elif hasattr(e,'code'):
+            logger.error('Server not configured correctly')
+            logger.error('Error code:', e.code)
+            raise ServerMisconfiguredError(graphService)
+        return checkGraphServer(graphService, device, ipBlacklist, checkedUrl)
+    except socket.timeout:
+        ipBlacklist.append(ip)
+        return checkGraphServer(graphService, device, ipBlacklist, checkedUrl)
+
+
 
 
 def checkGraphServer2(graphService, device):
@@ -365,11 +389,11 @@ for link in g.links.values():
                 links[link.id][enumGraphServer[index]] = service.id
                 logger.info("\t\tGraphserver %s" % (service.id))
                 devices[device.id]['graphServer'] = service.id
-            except EnvironmentError as error:
-                logger.error("\t\tCould not find graphserver of device %s" % (device.id))
+            except NoCNMLServerError as error:
+                logger.error(error)
                 # Using enum to avoid if else
-                links[link.id][enumDevice[index]] = device.id
-                links[link.id][enumGraphServer[index]] = service.id
+                links[link.id][enumDevice[index]] = error.device.id
+                links[link.id][enumGraphServer[index]] = None
                 devices[device.id]['graphServer'] = None
                 continue
                 #sys.exit(1)
@@ -398,10 +422,17 @@ for link in g.links.values():
                     #if not ip:
                         # The ip was found but no data for this device on this graphserver
                         # In this case should I ask with snmp?
-                except EnvironmentError as error:
-                    logger.error("\t\tCould not find working IP of graphserver %s of device %s\n Error: %s" % (service.id,device.id,error))
+                #except EnvironmentError as error:
+                #    logger.error("\t\tCould not find working IP of graphserver %s of device %s\n Error: %s" % (service.id,device.id,error))
+                #    ip = None
+                except NoWorkingIPError as e:
+                    logger.error(e)
                     graphServers[service.id]['ip'] = None
+                    graphServers[service.id]['ipBlackList'] = e.ipBlackList
                     ip = None
+                except ServerMisconfiguredError as e:
+                    logger.error(e)
+                    graphServers[service.id]['misconfigured'] = True
                     #continue
                     #sys.exit(1)
                 #logger.info("\tThe ip %s of graphserver %s is correct for the device %s" % (ip,service.id,device.id))
@@ -458,10 +489,12 @@ for key,s in graphServers.iteritems():
 logger.info("\t# of Total Graphservers:%s" % (len(graphServers)-1))
 logger.info("\t# of Working GraphServers:%s\t%s" % (len(workingGraphServers),len(workingGraphServers)/float(len(graphServers)-1)))
 
-
-
-
-
+# - Add stats about how many of the devices on the same link have the
+#   same graphserver etc
+# SOS -Change libcnml to add mainipv4 attribute to devices
+# - Print with the ips the code or that it didn;t reply
+# - Cannot find all locally misconfigured devices in the first run. Need to 
+#   remove the existing code for that and do it in a second run 
 
 #main()
 
