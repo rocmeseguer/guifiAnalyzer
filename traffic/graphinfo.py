@@ -19,7 +19,6 @@ import urllib2
 import socket
 import csv
 from netaddr import IPNetwork, IPAddress
-import sys
 
 from collections import Counter
 
@@ -34,9 +33,9 @@ from exceptions import *
 #prepare regular expresion
 r = re.compile('http:\/\/([^\/]*).*')
 
-#root = 8346 #Lucanes
+root = 8346 #Lucanes
 #root = 2444 #Osona
-root = 18668 #Castello
+#root = 18668 #Castello
 g = CNMLWrapper(root)
 #Get connection object form guifiwrapper
 conn = g.conn
@@ -67,6 +66,7 @@ def getDeviceGraphService(device, node=None,blacklist=[]):
     # Get info from device
     if device.graphserverId:
         serviceId = device.graphserverId
+        found = {'device':device.id}
     else:
         # Prepare to search in other locations
         if not node:
@@ -76,10 +76,12 @@ def getDeviceGraphService(device, node=None,blacklist=[]):
         if node.graphserverId:
             #logger.debug("In 1")
             serviceId = node.graphserverId
+            found = {'node':node.id}
         # Get info from zone
         elif zone.graphserverId:
             #logger.debug("In 2")
             serviceId = zone.graphserverId
+            found = {'zone':zone.id}
         # search in parentzones
         else:
             while zone.parentzone:
@@ -87,6 +89,7 @@ def getDeviceGraphService(device, node=None,blacklist=[]):
                 zone = g.zones[zone.parentzone]
                 if zone.zone.graphserverId:
                     serviceId = zone.zone.graphserverId
+                    found = {'zone':zone.id}
                     break
             # Nothing found
                 raise NoCNMLServerError(device)
@@ -97,7 +100,7 @@ def getDeviceGraphService(device, node=None,blacklist=[]):
         #Graph service not working or not in the parsed CNML
         raise NoCNMLServerError(device)
     #logger.info("Graphserver of device %s is: %s" % (device.id, serviceId))
-    return service
+    return service, found
 
 
 def getGraphServiceIP(graphService, ipBlacklist=[]):
@@ -339,7 +342,7 @@ for link in g.links.values():
         else:
             devices[device.id] = {'link':link.id}
             try:
-                service = getDeviceGraphService(device)
+                service, found = getDeviceGraphService(device)
                 # Using enum to avoid if else
                 links[link.id][enumDevice[index]] = device.id
                 links[link.id][enumGraphServer[index]] = service.id
@@ -357,6 +360,7 @@ for link in g.links.values():
             else:
                 #Initialize devices list
                 graphServers[service.id] = {}
+                graphServers[service.id]['found'] = found
                 graphServers[service.id]['devices'] = []
                 try:
                     ipBlacklist = []
@@ -389,7 +393,23 @@ for link in g.links.values():
 graphServers['None'] = {}
 graphServers['None']['ip'] = None
 graphServers['None']['devices'] = []
-print graphServers
+#print graphServers
+def zonesGraphServers(zone, depth=0, counter=0):
+    tabs = "\t"*depth
+    gr = zone.workingZone.graphserverId
+    if gr :
+        if gr in graphServers:
+            counter += 1
+            logger.info("%sZone: %s Graphserver: %s, %s" % (tabs,str(zone.id),str(gr),graphServers[gr]))
+        else:
+            logger.info("%sZone: %s Graphserver: %s, %s" % (tabs,str(zone.id),str(gr),"Not found in CNML"))
+    else:
+        logger.info("%sZone: %s Graphserver: %s" % (tabs,str(zone.id),"No server found"))
+    for z in zone.subzones.values():
+        zonesGraphServers(z, (depth+1),counter) 
+
+return zonesGraphServers(g.guifizone)
+
 for key,d in devices.iteritems():
     if d['graphServer']:
         (graphServers[d['graphServer']]['devices']).append(key)
@@ -436,6 +456,18 @@ for key,s in graphServers.iteritems():
 #logger.info(len(workingGraphServers))
 logger.info("\t# of Total Graphservers:%s" % (len(graphServers)-1))
 logger.info("\t# of Working GraphServers:%s\t%s" % (len(workingGraphServers),len(workingGraphServers)/float(len(graphServers)-1)))
+
+
+
+#for z in {g.zone.id:g.zone,g.zone.subzones}:
+#g = g.zone.zone.graphServer.id
+#logger.info("Zone: %s Graphserver: %s, %s" % (g.zone.id,g,graphServers[g])
+#while g.zone.subzones:
+
+
+
+
+
 
 # - Add stats about how many of the devices on the same link have the
 #   same graphserver etc
