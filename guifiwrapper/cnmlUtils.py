@@ -141,7 +141,8 @@ def cnmlObjectCopy(obj):
             obj.status,
             obj.title,
             obj.type,
-            obj.parentNode)
+            obj.parentNode,
+            obj.graphserverId)
         new.radios = obj.radios.copy()
         new.interfaces = obj.interfaces.copy()
     elif isinstance(obj, libcnml.libcnml.CNMLRadio):
