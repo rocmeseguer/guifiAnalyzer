@@ -27,8 +27,8 @@ from exceptions import *
 #prepare regular expresion
 r = re.compile('http:\/\/([^\/]*).*')
 
-#root = 8346 #Lucanes
-root = 2444 #Osona
+root = 8346 #Lucanes
+#root = 2444 #Osona
 #root = 18668 #Castello
 #g = CNMLWrapper(root)
 #Get connection object form guifiwrapper
@@ -96,40 +96,41 @@ def getDevicesGraphData(url, devices):
             return getAllDevicesGraphData(url)
         else:
             raise EnvironmentError("Server misconfigured")
-	except urllib2.URLError as e:
-		logger.error('Failed to reach server')
-		logger.error(e.reason),
-	except socket.timeout:
-		logger.error('Server could not be reached')
+    except urllib2.URLError as e:
+        logger.error('Failed to reach server')
+        logger.error(e.reason),
+    except socket.timeout:
+        logger.error('Server could not be reached')
 
-def processDevicesGraphData(data):
-    data = csv.reader(data,delimiter="|")
+def processDevicesGraphData(result):
+    data = csv.reader(result,delimiter='|')
     for row in data:
         if len(row) == 2:
             #No Data for this node
             deviceId = row[0]
+            if deviceId in devicesTable:
+                devicesTable[deviceId]['noData'] = True
         elif len(row) == 3:
             # check from here:
-    		# https://github.com/guifi/snpservices/blob/master/services/stats.php
+            # https://github.com/guifi/snpservices/blob/master/services/stats.php
             deviceId = row[0]
-            availability = row[1].strip(',')
-            traffic = row[2].strip(',')
+            availability = row[1].split(',')
+            traffic = row[2].split(',')
             if deviceId in devicesTable:
                 devicesTable[deviceId]['data']={}
                 devicesTable[deviceId]['data']['availability'] = {}
-            	devicesTable[deviceId]['data']['availability']['max_latency'] = availability[0]
-            	devicesTable[deviceId]['data']['availability']['avg_latency'] = availability[1]
-            	devicesTable[deviceId]['data']['availability']['succeed'] = availability[2]
-            	devicesTable[deviceId]['data']['availability']['last_online'] = availability[3]
-            	devicesTable[deviceId]['data']['availability']['last_sample_date'] = availability[4]
-            	devicesTable[deviceId]['data']['availability']['last_sample'] = availability[5]
-            	devicesTable[deviceId]['data']['availability']['last_succeed'] = availability[6]
-            	devicesTable[deviceId]['data']['traffic']['snmp_key'] = traffic[0]
-            	devicesTable[deviceId]['data']['traffic']['traffic_in'] = traffic[1]
-            	devicesTable[deviceId]['data']['traffic']['traffic_out'] = traffic[2]
-            else:
-                pass
+                devicesTable[deviceId]['data']['availability']['max_latency'] = availability[0]
+                devicesTable[deviceId]['data']['availability']['avg_latency'] = availability[1]
+                devicesTable[deviceId]['data']['availability']['succeed'] = availability[2]
+                devicesTable[deviceId]['data']['availability']['last_online'] = availability[3]
+                devicesTable[deviceId]['data']['availability']['last_sample_date'] = availability[4]
+                devicesTable[deviceId]['data']['availability']['last_sample'] = availability[5]
+                devicesTable[deviceId]['data']['availability']['last_succeed'] = availability[6]
+                devicesTable[deviceId]['data']['traffic']['snmp_key'] = traffic[0]
+                devicesTable[deviceId]['data']['traffic']['traffic_in'] = traffic[1]
+                devicesTable[deviceId]['data']['traffic']['traffic_out'] = traffic[2]
         else:
+            print row
             logger.error("Server Data Incorrect")
     devicesTable.commit()
 
@@ -153,9 +154,12 @@ def processDevicesGraphData(data):
 for g, data in graphServersTable.iteritems():
 	# If there is a working IP
     if data['ip']:
-        logger.info("GrahpServer: %s" % str(g))
+        logger.info("GraphServer: %s" % str(g))
         try:
             result = getDevicesGraphData(data["ip"],data['devices'])
+            file = open(os.path.join(os.getcwd(),'guifiAnalyzerOut','traffic',str(root),'snprequest_'+str(g)),'w')
+            file.write(result)
+            file.close()
             processDevicesGraphData(result)
         except EnvironmentError as e:
             logger.error(e)
@@ -167,4 +171,6 @@ for g, data in graphServersTable.iteritems():
 for d, data in devicesTable.iteritems():
     print("%s : %s" % (str(d),data))
 
-
+noDataDevices = {d:data for d,data in devicesTable.iteritems() if 'noData' in data }
+logger.info("Total Devices: %s" % len(devicesTable))
+logger.info("No data devices: %s" % len(noDataDevices))
