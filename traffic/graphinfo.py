@@ -33,8 +33,8 @@ from exceptions import *
 #prepare regular expresion
 r = re.compile('http:\/\/([^\/]*).*')
 
-root = 8346 #Lucanes
-#root = 2444 #Osona
+#root = 8346 #Lucanes
+root = 2444 #Osona
 #root = 18668 #Castello
 g = CNMLWrapper(root)
 #Get connection object form guifiwrapper
@@ -149,7 +149,6 @@ def getServiceUrlApi(graphService):
         raise EnvironmentError("Guifi web not replying, %s" % e)
 
 
-
 # def checkDeviceGraph(url, device):
 #     data = snpRequest(
 #         url,
@@ -206,6 +205,7 @@ def checkGraphServer(graphService, device, ipBlacklist, checkedUrl=False):
             timeout=3)
         data = data.rstrip()
         if data:
+            
             return ip
     except URLError as e:
         if hasattr(e, 'reason'):
@@ -215,8 +215,8 @@ def checkGraphServer(graphService, device, ipBlacklist, checkedUrl=False):
             #global counters here
         elif hasattr(e,'code'):
             logger.error('Server not configured correctly')
-            logger.error('Error code:', e.code)
-            raise ServerMisconfiguredError(graphService)
+            logger.error('Error code: %s' % e.code)
+            raise ServerMisconfiguredError(graphService, ip, e.code)
         return checkGraphServer(graphService, device, ipBlacklist, checkedUrl)
     except socket.timeout:
         ipBlacklist.append(ip)
@@ -384,7 +384,8 @@ for link in g.links.values():
                     ip = None
                 except ServerMisconfiguredError as e:
                     logger.error(e)
-                    graphServers[service.id]['misconfigured'] = True
+                    graphServers[service.id]['ip'] = e.url
+                    graphServers[service.id]['misconfigured'] = e.code
                     #continue
                     #sys.exit(1)
                 #logger.info("\tThe ip %s of graphserver %s is correct for the device %s" % (ip,service.id,device.id))
@@ -393,7 +394,7 @@ for link in g.links.values():
 graphServers['None'] = {}
 graphServers['None']['ip'] = None
 graphServers['None']['devices'] = []
-#print graphServers
+print graphServers
 def zonesGraphServers(zone, depth=0, counter=0):
     tabs = "\t"*depth
     gr = zone.workingZone.graphserverId
@@ -408,7 +409,7 @@ def zonesGraphServers(zone, depth=0, counter=0):
     for z in zone.subzones.values():
         zonesGraphServers(z, (depth+1),counter) 
 
-return zonesGraphServers(g.guifizone)
+zonesGraphServers(g.guifizone)
 
 for key,d in devices.iteritems():
     if d['graphServer']:
@@ -476,116 +477,16 @@ logger.info("\t# of Working GraphServers:%s\t%s" % (len(workingGraphServers),len
 # - Cannot find all locally misconfigured devices in the first run. Need to
 #   do it in a second run
 # - Mirrar si es core lo que no funciona o no
+
+
+
 # - Some nodes may be graphed from more than one server. There is some
 #   kind of hierarchy, i.e. server that graphs whole Osona, another server that grahps
 #   only Vic etc.
+#   Reply: Using grahpServersInfo it seems that there is not a clear hierarchy as proposed
+#          but it remains a fact that a node can be graphed by more than one servers
 #  - Admin in Guifi Web can see latest stats. maybe we should get info from there
 
-#main()
-
-
-
-
-if __name__ == "__main__":
-    if False:
-        main()
-
-    if False:
-        # Normal use
-        for link in g.links.values():
-            logger.info("LINK: %s" % link.id)
-            for device in [link.deviceA, link.deviceB]:
-                logger.info("\tDEVICE: %s" % (device.id))
-                try:
-                    service = getDeviceGraphService(device)
-                except EnvironmentError as error:
-                    logger.error(error)
-                    sys.exit(1)
-                try:
-                    stats = getGraphData(service, device)
-                except EnvironmentError as error:
-                    logger.error(error)
-                    sys.exit(1)
-                logger.info("\tSTATS: %s " % (stats))
-                #ip = checkGraphServer(g.services[25337],)
-    if False:
-        links = {}
-        devices = {}
-        graphServers = {}
-        for link in g.links.values():
-                logger.info("LINK: %s" % link.id)
-                links[link.id]= {'nodeA':link.nodeA.id,
-                            'nodeB':link.nodeB.id}
-                for device in [link.deviceA, link.deviceB]:
-                    logger.info("\tDEVICE: %s" % (device.id))
-                    devices[device.id] = {'link':link.id}
-                    # Get GraphServer
-                    try:
-                        service = getDeviceGraphService(device)
-                        if device == link.deviceA:
-                            links[link.id]['deviceA'] = device.id
-                            links[link.id]['graphServerA'] = service.id
-                        else:
-                            links[link.id]['deviceB'] = device.id
-                            links[link.id]['graphServerB'] = service.id
-                        devices[device.id]['graphServer'] = service.id
-                    except EnvironmentError as error:
-                        # corresponding GraphService  not found
-                        logger.error(error)
-                        if device == link.deviceA:
-                            links[link.id]['deviceA'] = device.id
-                            links[link.id]['graphServerA'] = None
-                        else:
-                            links[link.id]['deviceB'] = device.id
-                            links[link.id]['graphServerB'] = None
-                        devices[device.id]['graphServer'] = None
-                        continue
-                    # Check GraphServer is working and correct
-                    try:
-                        # We want to check the following stuff:
-                        # 1)Working IP (maybe also log non-working ones)
-                        # 2)that node is monitored by this server
-                        # 3)maybe store info for graph servers already checked ;-)
-                        stats = checkGraphServer(service, device)
-                    except EnvironmentError as error:
-                        # IP of graphservice not found
-                        logger.error(error)
-                        sys.exit(1)
-                    logger.info("\tSTATS: %s " % (stats))
-        # Whats stored in  dictionaries now copy to sqlitedict
-        # Initialize db and tables
-        db = "./" + "graphinfo" + "_" + str(root) + ".sqlite"
-        linksTable = SqliteDict(
-            filename=db,
-            tablename='links',
-            # create new db file if not exists and rewrite if exists
-            flag='n',
-            autocommit=False)
-        devicesTable = SqliteDict(
-            filename=db,
-            tablename='devices',
-            # rewrite only table
-            flag='w',
-            autocommit=False)
-        graphServersTable = SqliteDict(
-            filename=db,
-            tablename='graphServers',
-            # rewrite only table
-            flag='w',
-            autocommit=False)
-        # Copy data from dictionaries
-        for k,v in links.iteritems():
-            linksTable[k] = v
-        linksTable.commit()
-        linksTable.close()
-        for k,v in devices.iteritems():
-            devicesTable[k] = v
-        devicesTable.commit()
-        devicesTable.close()
-        for k,v in graphServers.iteritems():
-            graphServersTable[k] = v
-        graphServersTable.commit()
-        graphServersTable.close()
 
 
 # In the next file of getting graph info store separately device data

@@ -10,10 +10,12 @@ class NoWorkingIPError(Exception):
 
 
 class ServerMisconfiguredError(Exception):
-	def __init__(self, service):
+	def __init__(self, service, url, code):
 		self.service = service
+		self.url = url
+		self.code = code
 	def __str__(self):
-		msg = "Service " + str(self.service.id) + " is misconfigured!"
+		msg = "Service " + str(self.service.id) + " is misconfigured! Returns code: "  + str(code)
 		return repr(msg)
 
 

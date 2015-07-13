@@ -20,14 +20,21 @@ import urllib
 
 from exceptions import *
 
+import re
 
-root = 8346 #Lucanes
-#root = 2444 #Osona
+#prepare regular expresion
+r = re.compile('http:\/\/([^\/]*).*')
+
+#root = 8346 #Lucanes
+root = 2444 #Osona
 #root = 18668 #Castello
 g = CNMLWrapper(root)
 #Get connection object form guifiwrapper
 conn = g.conn
 
+
+def checkGuifiSubnet(ip):
+    return IPAddress(ip) in IPNetwork("10.0.0.0/8")
 
 def getGraphServiceIP(graphService, ipBlacklist=[]):
     device = graphService.parentDevice
@@ -74,7 +81,7 @@ def getServiceUrlApi(graphService):
     except URLError as e:
         raise EnvironmentError("Guifi web not replying, %s" % e)
 
-def checkGraphServer(graphService, device, ipBlacklist, checkedUrl=False):
+def checkGraphServer(graphService, ipBlacklist, checkedUrl=False):
     try:
         ip = getGraphServiceIP(graphService,ipBlacklist)
         print ip
@@ -109,93 +116,62 @@ def checkGraphServer(graphService, device, ipBlacklist, checkedUrl=False):
             logger.error('Server not configured correctly')
             logger.error('Error code:', e.code)
             raise ServerMisconfiguredError(graphService)
-        return checkGraphServer(graphService, device, ipBlacklist, checkedUrl)
+        return checkGraphServer(graphService, ipBlacklist, checkedUrl)
     except socket.timeout:
         ipBlacklist.append(ip)
-        return checkGraphServer(graphService, device, ipBlacklist, checkedUrl)
+        return checkGraphServer(graphService, ipBlacklist, checkedUrl)
 
-for link in g.links.values():
-    logger.info("LINK: %s" % link.id)
-    links[link.id]= {'nodeA':link.nodeA.id,
-                    'nodeB':link.nodeB.id}
-    for index,device in enumerate([link.deviceA, link.deviceB]):
-        logger.info("\tDEVICE: %s" % (device.id))
-        if device.id in devices:
-            logger.warning("\tAlready analyzed device: %s" % device.id)
-            # Complete link information
-            links[link.id][enumDevice[index]] = device.id
-            links[link.id][enumGraphServer[index]] = devices[device.id]['graphServer']
-        else:
-            devices[device.id] = {'link':link.id}
-            try:
-                service, found = getDeviceGraphService(device)
-                # Using enum to avoid if else
-                links[link.id][enumDevice[index]] = device.id
-                links[link.id][enumGraphServer[index]] = service.id
-                logger.info("\t\tGraphserver %s" % (service.id))
-                devices[device.id]['graphServer'] = service.id
-            except NoCNMLServerError as error:
-                logger.error(error)
-                # Using enum to avoid if else
-                links[link.id][enumDevice[index]] = error.device.id
-                links[link.id][enumGraphServer[index]] = None
-                devices[device.id]['graphServer'] = None
-                continue
-            if service.id in graphServers:
-                logger.warning("\t\tAlready analyzed graphserver: %s" % service.id)
-            else:
-                #Initialize devices list
-                graphServers[service.id] = {}
-                graphServers[service.id]['found'] = found
-                graphServers[service.id]['devices'] = []
-                try:
-                    ipBlacklist = []
-                    ip = checkGraphServer(service,device, ipBlacklist)
-                    if ip:
-                        graphServers[service.id]['ip'] = ip
-                    else:
-                        # Anyway ip value here is None
-                        # Just writting explicitly for clarity
-                        graphServers[service.id]['ip'] = None
-                    #if not ip:
-                        # The ip was found but no data for this device on this graphserver
-                        # In this case should I ask with snmp?
-                #except EnvironmentError as error:
-                #    logger.error("\t\tCould not find working IP of graphserver %s of device %s\n Error: %s" % (service.id,device.id,error))
-                #    ip = None
-                except NoWorkingIPError as e:
-                    logger.error(e)
-                    graphServers[service.id]['ip'] = None
-                    graphServers[service.id]['ipBlackList'] = e.ipBlackList
-                    ip = None
-                except ServerMisconfiguredError as e:
-                    logger.error(e)
-                    graphServers[service.id]['misconfigured'] = True
-                    #continue
-                    #sys.exit(1)
-                #logger.info("\tThe ip %s of graphserver %s is correct for the device %s" % (ip,service.id,device.id))
-                logger.info("\t\t IP %s" % ip)
-#Assign devices to graphServers
-#graphServers['None'] = {}
-#graphServers['None']['ip'] = None
-#graphServers['None']['devices'] = []
-
-def zonesGraphServers(zone, depth=0, counter=0):
-	graphServers = {}
-    tabs = "\t"*depth
+graphServers = {}
+def zonesGraphServers(zone):
     gr = zone.workingZone.graphserverId
     if gr :
-    	try:
-    		graphServers[service.id] = {}
-    		ip = checkGraphServer(service,device, []])
-	        if gr in graphServers:
-	            counter += 1
-	            logger.info("%sZone: %s Graphserver: %s, %s" % (tabs,str(zone.id),str(gr),graphServers[gr]))
-	        else:
-	            logger.info("%sZone: %s Graphserver: %s, %s" % (tabs,str(zone.id),str(gr),"Not found in CNML"))
+        if gr not in graphServers :
+            try:
+                graphServers[gr] = {}
+                graphServers[gr]['zones']= [zone.id]
+                if gr in g.services:
+                    ip = checkGraphServer(g.services[gr],[])
+                    graphServers[gr]['ip'] = ip
+                else:
+                    graphServers[gr]['NotInCNML'] = True
+                    graphServers[gr]['ip'] = None
+            except NoWorkingIPError as e:
+                logger.error(e)
+                graphServers[gr]['ip'] = None
+                graphServers[gr]['ipBlackList'] = e.ipBlackList
+                ip = None
+            except ServerMisconfiguredError as e:
+                logger.error(e)
+                graphServers[gr]['ip'] = None
+                graphServers[gr]['misconfigured'] = True
+            #logger.info("%sZone: %s Graphserver: %s" % (tabs,str(zone.id),"No server found"))
+        else:
+            graphServers[gr]['zones'].append(zone.id)
+    for z in zone.subzones.values():
+        zonesGraphServers(z) 
+
+zonesGraphServers(g.guifizone)
+
+counter = 0
+def printZonesGraphServers(zone, depth=0):
+    tabs = "\t"*depth
+    gr = zone.workingZone.graphserverId
+    counter += 1
+    print counter
+    if gr :
+        if gr in graphServers:
+            counter += 1
+            logger.info("%sZone: %s Graphserver: %s, %s" % (tabs,str(zone.id),str(gr),graphServers[gr]))
+        else:
+            logger.info("%sZone: %s Graphserver: %s, %s" % (tabs,str(zone.id),str(gr),"Not found in CNML"))
     else:
         logger.info("%sZone: %s Graphserver: %s" % (tabs,str(zone.id),"No server found"))
     for z in zone.subzones.values():
-        zonesGraphServers(z, (depth+1),counter) 
+        printZonesGraphServers(z, (depth+1))
 
-return zonesGraphServers(g.guifizone)
+printZonesGraphServers(g.guifizone)
+
+workingGraphServers = {g:graphServers[g] for g in graphServers if graphServers[g]['ip']}
+print len(g.guifizone.allsubzones)
+logger.info("\t# of Total Graphservers:%s" % (len(graphServers)-1))
+logger.info("\t# of Working GraphServers:%s\t%s" % (len(workingGraphServers),len(workingGraphServers)/float(len(graphServers)-1)))

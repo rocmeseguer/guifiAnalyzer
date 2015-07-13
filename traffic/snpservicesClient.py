@@ -16,7 +16,7 @@ services = [
     "stats"]
 
 
-def snpRequest(ip, command="help", args={}, debug=False, timeout=3):
+def snpRequest(ip, command="help", args={}, debug=False, timeout=0):
     """
     Request to snpservices server
 
@@ -37,7 +37,7 @@ def snpRequest(ip, command="help", args={}, debug=False, timeout=3):
                 arguments += "="
                 for i in args[arg]:
                     if i == args[arg][-1]:
-                        print i
+                        #print i
                         arguments += str(i)
                     else:
                         # print i
@@ -46,6 +46,9 @@ def snpRequest(ip, command="help", args={}, debug=False, timeout=3):
         url = base + arguments
         #print("SNPServices request to graph server: %s" % url)
         req = urllib2.Request(url)
-        response = urllib2.urlopen(req, timeout=timeout)
+        if timeout:
+            response = urllib2.urlopen(req, timeout=timeout)
+        else:
+            response = urllib2.urlopen(req)
         data = response.read()
         return data
