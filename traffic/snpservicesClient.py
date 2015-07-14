@@ -16,7 +16,7 @@ services = [
     "stats"]
 
 
-def snpRequest(ip, command="help", args={}, debug=False, timeout=0):
+def snpRequest(ip, command="help", args={}, debug=False, timeout=0, csv = False):
     """
     Request to snpservices server
 
@@ -50,5 +50,8 @@ def snpRequest(ip, command="help", args={}, debug=False, timeout=0):
             response = urllib2.urlopen(req, timeout=timeout)
         else:
             response = urllib2.urlopen(req)
-        data = response.read()
-        return data
+        if csv:
+            return response
+        else:
+            data = response.read()
+            return data
