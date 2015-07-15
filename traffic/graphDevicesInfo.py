@@ -192,12 +192,46 @@ def graphDevicesInfo(root):
     noDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' in data and data['data']==False }
     wrongDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' in data and data['data']=='Incorrect' }
     wtfDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' not in data }
+    correctDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' in data and data['data']['traffic']}
     logger.info("Total Devices: %s" % len(devicesTable))
     logger.info("No data devices: %s" % len(noDataDevices))
     logger.info("Wrong data devices: %s" % len(wrongDataDevices))
     logger.info("wtf devices: %s" % len(wtfDataDevices)) #Should have some of the above types of data
+    logger.info("Correct data devices: %s" % len(correctDataDevices))
+
 
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         graphDevicesInfo(sys.argv[1])
+
+
+def testResult(root):
+    linksTable,devicesTable, graphServersTable = loadDB(root)
+    noDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' in data and data['data']==False }
+    wrongDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' in data and data['data']=='Incorrect' }
+    wtfDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' not in data }
+    correctDataDevices = {d:data for d,data in devicesTable.iteritems() if ('data' in data) and 'traffic' in data['data']}
+    for g,gdata in graphServersTable.iteritems():
+        if gdata['ip']:
+            logger.info("Server %s working with ip/url: %s" % (g,gdata['ip']))
+            noDataDevices1 = {dev:devd for dev,devd in noDataDevices.iteritems() if dev in gdata['devices']}
+            wrongDataDevices1 = {dev:devd for dev,devd in wrongDataDevices.iteritems() if dev in gdata['devices']}
+            wtfDataDevices1 = {dev:devd for dev,devd in wtfDataDevices.iteritems() if dev in gdata['devices']}
+            correctDataDevices1 = {dev:devd for dev,devd in correctfDataDevices.iteritems() if dev in gdata['devices']}
+            logger.info("\tTotal Devices: %s" % len(gdata['devices']))
+            logger.info("\tNo data devices: %s" % len(noDataDevices1))
+            logger.info("\tWrong data devices: %s" % len(wrongDataDevices1))
+            logger.info("\twtf devices: %s" % len(wtfDataDevices1)) #Should have some of the above types of data
+            logger.info("\tCorrect data devices: %s" % len(correctDataDevices))
+
+    logger.info("----- TOTAL ----")
+    logger.info("Total Devices: %s" % len(devicesTable))
+    logger.info("No data devices: %s" % len(noDataDevices))
+    logger.info("Wrong data devices: %s" % len(wrongDataDevices))
+    logger.info("wtf devices: %s" % len(wtfDataDevices)) #Should have some of the above types of data
+    logger.info("Correct data devices: %s" % len(correctDataDevices))
+
+
+# Mark to graphservers that i got results from them
+# Find how to measure correct data
