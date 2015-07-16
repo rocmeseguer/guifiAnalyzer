@@ -233,7 +233,7 @@ def graphDevicesInfo(root):
 
     logger.info("Servers should work %s : %s" % (len(shouldWorkGraphServers),[s for s in shouldWorkGraphServers]))
     logger.info("Servers working %s : %s" % (len(totalWorkingGraphServers),[s for s in totalWorkingGraphServers]))
-    logger.info("Servers not working %s : %s" % (len(noGraphServer),[(s,s['Error']) for s in noGraphServer]))
+    logger.info("Servers not working %s : %s" % (len(noGraphServer),{(s,s['Error']) for s in noGraphServer}))
     logger.info("Total Devices: %s" % len(devicesTable))
     logger.info("No data devices: %s" % len(noDataDevices))
     logger.info("Wrong data devices: %s" % len(wrongDataDevices))
@@ -270,7 +270,7 @@ def testResult(root):
     logger.info("----- TOTAL ----")
     logger.info("Servers should work %s : %s" % (len(shouldWorkGraphServers),[s for s in shouldWorkGraphServers]))
     logger.info("Servers working %s : %s" % (len(totalWorkingGraphServers),[s for s in totalWorkingGraphServers]))
-    logger.info("Servers not working %s : %s" % (len(noGraphServer),[(s,s['Working']['Reason']) for s in noGraphServer]))
+    logger.info("Servers not working %s : %s" % (len(noGraphServer),{(s,data['Error']) for s,data in noGraphServer.iteritems()}))
     logger.info("Total Devices: %s" % len(devicesTable))
     logger.info("No data devices: %s" % len(noDataDevices))
     logger.info("Wrong data devices: %s" % len(wrongDataDevices))
