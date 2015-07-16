@@ -62,25 +62,33 @@ def loadDB(root):
 
 
 def getAllDevicesGraphData(url):
-	try:
-	    data = snpRequest(
-	        url,
-	        command="stats",
-	        args={},
-	        debug=False,
-	        timeout=0,
+    try:
+        data = snpRequest(
+            url,
+            command="stats",
+            args={},
+            debug=False,
+            timeout=0,
                      csv=True)
-	    return data,0
-	except urllib2.HTTPError as e:
-		logger.error('Server not configured correctly')
-		logger.error("Error code: %s" % str(e.code))
-        return None,1
-	except urllib2.URLError as e:
-		logger.error('Failed to reach server')
-		logger.error(e.reason)
-        return None,1
-	except socket.timeout:
-		logger.error('Server could not be reached')
+        #return data,0
+        return data
+    except urllib2.HTTPError as e:
+        logger.error('Server not configured correctly')
+        logger.error("Error code: %s" % str(e.code))
+        #return None,1
+        msg = "Server not configured correctly, " + "HTTPError: " + str(e.code)
+        raise EnvironmentError(msg)
+    except urllib2.URLError as e:
+        logger.error('Failed to reach server')
+        logger.error(e.reason)
+        #return None,1
+        msg = "Failed to reach server, " + "URLError: "  + e.reason
+        raise EnvironmentError(msg)
+    except socket.timeout:
+       logger.error('Server could not be reached')
+       #return None,1
+       msg = "Server could not be reached, " + "Socket Timeout"
+       raise EnvironmentError(msg)
 
 
 def getDevicesGraphData(url, devices):
@@ -93,7 +101,8 @@ def getDevicesGraphData(url, devices):
 	        debug=False,
 	        timeout=0,
                      csv = True)
-        return data,1
+        #return data,0
+        return data
     except urllib2.HTTPError as e:
         logger.error("HTTPError")
         logger.error("Error code: %s" % str(e.code))
@@ -101,14 +110,21 @@ def getDevicesGraphData(url, devices):
             logger.warning("URL too big. Have to retrieve all the data")
             return getAllDevicesGraphData(url)
         else:
-            raise EnvironmentError("Server misconfigured")
+           logger.warning("Server misconfigured")
+           #return None,1
+           msg = "Server not configured correctly, " + "HTTPError: " + str(e.code)
+           raise EnvironmentError(msg)
     except urllib2.URLError as e:
         logger.error('Failed to reach server')
         logger.error(e.reason)
-        return None, 1
+        #return None,1
+        msg = "Failed to reach server, " + "URLError: " + e.reason
+        raise EnvironmentError(msg)
     except socket.timeout:
         logger.error('Server could not be reached')
-        return None, 1
+        #return None,1
+        msg = "Server could not be reached, " + "Socket Timeout"
+        raise EnvironmentError(msg)
 
 def processDevicesGraphData(result, devicesTable):
     data = csv.reader(result,delimiter='|')
@@ -177,18 +193,28 @@ def graphDevicesInfo(root):
     	# If there is a working IP
         if data['ip']:
             logger.info("GraphServer: %s" % str(g))
-            try:
-                result, error = getDevicesGraphData(data['ip'],data['devices'])
-                #file = open(os.path.join(os.getcwd(),'guifiAnalyzerOut','traffic',str(root),'snprequest_'+str(g)),'w')
-                #file.write(result.read())
-                #file.close()
-                if not error:
-                    data['Working'] = True
-                    processDevicesGraphData(result, devicesTable)
-                else:
-                    data['Working'] = False
+            # result, error = getDevicesGraphData(data['ip'],data['devices'])
+            # if not error:
+            #     data['Working'] = True
+            #     graphServersTable[g] = data
+            #     graphServersTable.commit()
+            #     processDevicesGraphData(result, devicesTable)
+            # else:
+            #     data['Working'] = False
+            #     graphServersTable[g] = data
+            #     graphServersTable.commit()
+            #     continue
+            try :
+                result = getDevicesGraphData(data['ip'],data['devices'])
+                data['Working'] = True
+                graphServersTable[g] = data
+                graphServersTable.commit()
+                processDevicesGraphData(result, devicesTable)
             except EnvironmentError as e:
-                logger.error(e)
+                data['Working'] = False
+                data['Error'] = str(e)
+                graphServersTable[g] = data
+                graphServersTable.commit()
                 continue
         else:
             logger.info("GrahpServer: %s" % str(g))
@@ -200,19 +226,23 @@ def graphDevicesInfo(root):
     noDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' in data and data['data']==False }
     wrongDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' in data and data['data']=='Incorrect' }
     wtfDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' not in data }
-    correctDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' in data and data['data']['traffic']}
-    shouldWorkGraphServers = {g:data for g,data in graphServersTable.iteritems() if 'ip' in data}
-    noGraphServer = {g:data for g,data in graphServersTable.iteritems() if 'Working' in data and data['Working']==False} 
+    correctDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' in data and isinstance(data['data'],dict)}
+    shouldWorkGraphServers = {g:data for g,data in graphServersTable.iteritems() if 'ip' in data and data['ip']}
+    noGraphServer = {g:data for g,data in graphServersTable.iteritems() if 'Working' in data and data['Working']==False}
     totalWorkingGraphServers = {g:data for g,data in graphServersTable.iteritems() if 'Working' in data and data['Working']==True }
 
-    logger.info("Servers should work %s : %s" % (len(shouldWorkGraphServers),shouldWorkGraphServers))
-    logger.info("Servers working %s : %s" % (len(totalWorkingGraphServers),totalWorkingGraphServers))
-    logger.info("Servers not working %s : %s" % (len(noGraphServer),noGraphServer))    
+    logger.info("Servers should work %s : %s" % (len(shouldWorkGraphServers),[s for s in shouldWorkGraphServers]))
+    logger.info("Servers working %s : %s" % (len(totalWorkingGraphServers),[s for s in totalWorkingGraphServers]))
+    logger.info("Servers not working %s : %s" % (len(noGraphServer),[(s,s['Error']) for s in noGraphServer]))
     logger.info("Total Devices: %s" % len(devicesTable))
     logger.info("No data devices: %s" % len(noDataDevices))
     logger.info("Wrong data devices: %s" % len(wrongDataDevices))
     logger.info("wtf devices: %s" % len(wtfDataDevices)) #Should have some of the above types of data
     logger.info("Correct data devices: %s" % len(correctDataDevices))
+
+    linksTable.close()
+    devicesTable.close()
+    graphServersTable.close()
 
 
 def testResult(root):
@@ -220,9 +250,9 @@ def testResult(root):
     noDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' in data and data['data']==False }
     wrongDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' in data and data['data']=='Incorrect' }
     wtfDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' not in data }
-    correctDataDevices = {d:data for d,data in devicesTable.iteritems() if ('data' in data) and 'traffic' in data['data']}
-    shouldWorkGraphServers = {g:data for g,data in graphServersTable.iteritems() if 'ip' in data}
-    noGraphServer = {g:data for g,data in graphServersTable.iteritems() if 'Working' in data and data['Working']==False} 
+    correctDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' in data and isinstance(data['data'],dict)}
+    shouldWorkGraphServers = {g:data for g,data in graphServersTable.iteritems() if 'ip' in data and data['ip']}
+    noGraphServer = {g:data for g,data in graphServersTable.iteritems() if 'Working' in data and data['Working']==False}
     totalWorkingGraphServers = {g:data for g,data in graphServersTable.iteritems() if 'Working' in data and data['Working']==True }
     for g,gdata in graphServersTable.iteritems():
         if gdata['ip']:
@@ -238,21 +268,26 @@ def testResult(root):
             logger.info("\tCorrect data devices: %s" % len(correctDataDevices1))
 
     logger.info("----- TOTAL ----")
-    logger.info("Servers should work %s : %s" % (len(shouldWorkGraphServers),shouldWorkGraphServers))
-    logger.info("Servers working %s : %s" % (len(totalWorkingGraphServers),totalWorkingGraphServers))
-    logger.info("Servers not working %s : %s" % (len(noGraphServer),noGraphServer))    
+    logger.info("Servers should work %s : %s" % (len(shouldWorkGraphServers),[s for s in shouldWorkGraphServers]))
+    logger.info("Servers working %s : %s" % (len(totalWorkingGraphServers),[s for s in totalWorkingGraphServers]))
+    logger.info("Servers not working %s : %s" % (len(noGraphServer),[(s,s['Working']['Reason']) for s in noGraphServer]))
     logger.info("Total Devices: %s" % len(devicesTable))
     logger.info("No data devices: %s" % len(noDataDevices))
     logger.info("Wrong data devices: %s" % len(wrongDataDevices))
     logger.info("wtf devices: %s" % len(wtfDataDevices)) #Should have some of the above types of data
     logger.info("Correct data devices: %s" % len(correctDataDevices))
 
+    linksTable.close()
+    devicesTable.close()
+    graphServersTable.close()
 
 # Mark to graphservers that i got results from them: Test it
 # Find how to measure correct data
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        graphDevicesInfo(sys.argv[1])
-        #testResult(sys.argv[1])
+    if len(sys.argv) > 2:
+        if sys.argv[1] == '1':
+            graphDevicesInfo(sys.argv[2])
+        elif sys.argv[1] =='2':
+            testResult(sys.argv[2])
