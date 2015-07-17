@@ -73,19 +73,19 @@ def getAllDevicesGraphData(url):
         #return data,0
         return data
     except urllib2.HTTPError as e:
-        logger.error('Server not configured correctly')
-        logger.error("Error code: %s" % str(e.code))
+        #logger.error('Server not configured correctly')
+        #logger.error("Error code: %s" % str(e.code))
         #return None,1
         msg = "Server not configured correctly, " + "HTTPError: " + str(e.code)
         raise EnvironmentError(msg)
     except urllib2.URLError as e:
-        logger.error('Failed to reach server')
-        logger.error(e.reason)
+        #logger.error('Failed to reach server')
+        #logger.error(e.reason)
         #return None,1
         msg = "Failed to reach server, " + "URLError: "  + e.reason
         raise EnvironmentError(msg)
     except socket.timeout:
-       logger.error('Server could not be reached')
+       #logger.error('Server could not be reached')
        #return None,1
        msg = "Server could not be reached, " + "Socket Timeout"
        raise EnvironmentError(msg)
@@ -110,18 +110,18 @@ def getDevicesGraphData(url, devices):
             logger.warning("URL too big. Have to retrieve all the data")
             return getAllDevicesGraphData(url)
         else:
-           logger.warning("Server misconfigured")
+           #logger.warning("Server misconfigured")
            #return None,1
            msg = "Server not configured correctly, " + "HTTPError: " + str(e.code)
            raise EnvironmentError(msg)
     except urllib2.URLError as e:
-        logger.error('Failed to reach server')
-        logger.error(e.reason)
+        #logger.error('Failed to reach server')
+        #logger.error(e.reason)
         #return None,1
         msg = "Failed to reach server, " + "URLError: " + e.reason
         raise EnvironmentError(msg)
     except socket.timeout:
-        logger.error('Server could not be reached')
+        #logger.error('Server could not be reached')
         #return None,1
         msg = "Server could not be reached, " + "Socket Timeout"
         raise EnvironmentError(msg)
@@ -205,7 +205,10 @@ def graphDevicesInfo(root):
             #     graphServersTable.commit()
             #     continue
             try :
-                result = getDevicesGraphData(data['ip'],data['devices'])
+                logger.info("\tTotal Devices %s" % len(data['devices']))
+                toBeGraphed = [d1 for d1,d2 in devicesTable.iteritems() if d2['graphServer']== g]
+                logger.info("\tGraphed Devices %s" % len(toBeGraphed))
+                result = getDevicesGraphData(data['ip'],toBeGraphed)
                 data['Working'] = True
                 graphServersTable[g] = data
                 graphServersTable.commit()
@@ -230,11 +233,13 @@ def graphDevicesInfo(root):
     shouldWorkGraphServers = {g:data for g,data in graphServersTable.iteritems() if 'ip' in data and data['ip']}
     noGraphServer = {g:data for g,data in graphServersTable.iteritems() if 'Working' in data and data['Working']==False}
     totalWorkingGraphServers = {g:data for g,data in graphServersTable.iteritems() if 'Working' in data and data['Working']==True }
+    graphedDevices = {d:data for d,data in devicesTable.iteritems() if data['graphServer'] in totalWorkingGraphServers}
 
     logger.info("Servers should work %s : %s" % (len(shouldWorkGraphServers),[s for s in shouldWorkGraphServers]))
     logger.info("Servers working %s : %s" % (len(totalWorkingGraphServers),[s for s in totalWorkingGraphServers]))
-    logger.info("Servers not working %s : %s" % (len(noGraphServer),{(s,s['Error']) for s in noGraphServer}))
+    logger.info("Servers not working %s : %s" % (len(noGraphServer),{(s,data['Error']) for s,data in noGraphServer.iteritems()}))
     logger.info("Total Devices: %s" % len(devicesTable))
+    logger.info("Total Should Be Graphed Devices: %s" % len(graphedDevices))    
     logger.info("No data devices: %s" % len(noDataDevices))
     logger.info("Wrong data devices: %s" % len(wrongDataDevices))
     logger.info("wtf devices: %s" % len(wtfDataDevices)) #Should have some of the above types of data
@@ -254,6 +259,8 @@ def testResult(root):
     shouldWorkGraphServers = {g:data for g,data in graphServersTable.iteritems() if 'ip' in data and data['ip']}
     noGraphServer = {g:data for g,data in graphServersTable.iteritems() if 'Working' in data and data['Working']==False}
     totalWorkingGraphServers = {g:data for g,data in graphServersTable.iteritems() if 'Working' in data and data['Working']==True }
+    graphedDevices = {d:data for d,data in devicesTable.iteritems() if data['graphServer'] in totalWorkingGraphServers}
+
     for g,gdata in graphServersTable.iteritems():
         if gdata['ip']:
             logger.info("Server %s working with ip/url: %s" % (g,gdata['ip']))
@@ -261,7 +268,7 @@ def testResult(root):
             wrongDataDevices1 = {dev:devd for dev,devd in wrongDataDevices.iteritems() if dev in gdata['devices']}
             wtfDataDevices1 = {dev:devd for dev,devd in wtfDataDevices.iteritems() if dev in gdata['devices']}
             correctDataDevices1 = {dev:devd for dev,devd in correctDataDevices.iteritems() if dev in gdata['devices']}
-            logger.info("\tTotal Devices: %s" % len(gdata['devices']))
+            logger.info("\tTotal Devices of server: %s" % len(gdata['devices']))
             logger.info("\tNo data devices: %s" % len(noDataDevices1))
             logger.info("\tWrong data devices: %s" % len(wrongDataDevices1))
             logger.info("\twtf devices: %s" % len(wtfDataDevices1)) #Should have some of the above types of data
@@ -272,6 +279,7 @@ def testResult(root):
     logger.info("Servers working %s : %s" % (len(totalWorkingGraphServers),[s for s in totalWorkingGraphServers]))
     logger.info("Servers not working %s : %s" % (len(noGraphServer),{(s,data['Error']) for s,data in noGraphServer.iteritems()}))
     logger.info("Total Devices: %s" % len(devicesTable))
+    logger.info("Total Should Be Graphed Devices: %s" % len(graphedDevices))    
     logger.info("No data devices: %s" % len(noDataDevices))
     logger.info("Wrong data devices: %s" % len(wrongDataDevices))
     logger.info("wtf devices: %s" % len(wtfDataDevices)) #Should have some of the above types of data
