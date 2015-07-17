@@ -24,6 +24,8 @@ import re
 
 from exceptions import *
 
+import collections
+
 #prepare regular expresion
 #r = re.compile('http:\/\/([^\/]*).*')
 
@@ -128,7 +130,9 @@ def getDevicesGraphData(url, devices):
 
 def processDevicesGraphData(result, devicesTable):
     data = csv.reader(result,delimiter='|')
+    rows = 0
     for row in data:
+        rows += 1
         if len(row) == 2:
             #No Data for this node
             deviceId = row[0]
@@ -169,7 +173,7 @@ def processDevicesGraphData(result, devicesTable):
                 temp['data'] = 'Incorrect'
                 devicesTable[deviceId] = temp
     devicesTable.commit()
-
+    return rows
 
 
     #return data
@@ -206,13 +210,14 @@ def graphDevicesInfo(root):
             #     continue
             try :
                 logger.info("\tTotal Devices %s" % len(data['devices']))
-                toBeGraphed = [d1 for d1,d2 in devicesTable.iteritems() if d2['graphServer']== g]
+                toBeGraphed = [d1 for d1,d2 in devicesTable.iteritems() if str(d2['graphServer']) == g]
                 logger.info("\tGraphed Devices %s" % len(toBeGraphed))
                 result = getDevicesGraphData(data['ip'],toBeGraphed)
                 data['Working'] = True
+                rows = processDevicesGraphData(result, devicesTable)
+                data['Rows'] = rows
                 graphServersTable[g] = data
                 graphServersTable.commit()
-                processDevicesGraphData(result, devicesTable)
             except EnvironmentError as e:
                 data['Working'] = False
                 data['Error'] = str(e)
@@ -228,18 +233,19 @@ def graphDevicesInfo(root):
 
     noDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' in data and data['data']==False }
     wrongDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' in data and data['data']=='Incorrect' }
-    wtfDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' not in data }
     correctDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' in data and isinstance(data['data'],dict)}
     shouldWorkGraphServers = {g:data for g,data in graphServersTable.iteritems() if 'ip' in data and data['ip']}
     noGraphServer = {g:data for g,data in graphServersTable.iteritems() if 'Working' in data and data['Working']==False}
     totalWorkingGraphServers = {g:data for g,data in graphServersTable.iteritems() if 'Working' in data and data['Working']==True }
-    graphedDevices = {d:data for d,data in devicesTable.iteritems() if data['graphServer'] in totalWorkingGraphServers}
+    graphedDevices = {d:data for d,data in devicesTable.iteritems() if str(data['graphServer']) in totalWorkingGraphServers}
+    wtfDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' not in data and str(data['graphServer']) in totalWorkingGraphServers }
+
 
     logger.info("Servers should work %s : %s" % (len(shouldWorkGraphServers),[s for s in shouldWorkGraphServers]))
     logger.info("Servers working %s : %s" % (len(totalWorkingGraphServers),[s for s in totalWorkingGraphServers]))
     logger.info("Servers not working %s : %s" % (len(noGraphServer),{(s,data['Error']) for s,data in noGraphServer.iteritems()}))
     logger.info("Total Devices: %s" % len(devicesTable))
-    logger.info("Total Should Be Graphed Devices: %s" % len(graphedDevices))    
+    logger.info("Total Should Be Graphed Devices: %s" % len(graphedDevices))
     logger.info("No data devices: %s" % len(noDataDevices))
     logger.info("Wrong data devices: %s" % len(wrongDataDevices))
     logger.info("wtf devices: %s" % len(wtfDataDevices)) #Should have some of the above types of data
@@ -254,43 +260,48 @@ def testResult(root):
     linksTable,devicesTable, graphServersTable = loadDB(root)
     noDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' in data and data['data']==False }
     wrongDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' in data and data['data']=='Incorrect' }
-    wtfDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' not in data }
     correctDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' in data and isinstance(data['data'],dict)}
     shouldWorkGraphServers = {g:data for g,data in graphServersTable.iteritems() if 'ip' in data and data['ip']}
     noGraphServer = {g:data for g,data in graphServersTable.iteritems() if 'Working' in data and data['Working']==False}
     totalWorkingGraphServers = {g:data for g,data in graphServersTable.iteritems() if 'Working' in data and data['Working']==True }
-    graphedDevices = {d:data for d,data in devicesTable.iteritems() if data['graphServer'] in totalWorkingGraphServers}
+    wtfDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' not in data and str(data['graphServer']) in totalWorkingGraphServers }
+    graphedDevices = {d:data for d,data in devicesTable.iteritems() if str(data['graphServer']) in totalWorkingGraphServers}
 
     for g,gdata in graphServersTable.iteritems():
         if gdata['ip']:
             logger.info("Server %s working with ip/url: %s" % (g,gdata['ip']))
-            noDataDevices1 = {dev:devd for dev,devd in noDataDevices.iteritems() if dev in gdata['devices']}
-            wrongDataDevices1 = {dev:devd for dev,devd in wrongDataDevices.iteritems() if dev in gdata['devices']}
-            wtfDataDevices1 = {dev:devd for dev,devd in wtfDataDevices.iteritems() if dev in gdata['devices']}
-            correctDataDevices1 = {dev:devd for dev,devd in correctDataDevices.iteritems() if dev in gdata['devices']}
+            noDataDevices1 = {dev:devd for dev,devd in noDataDevices.iteritems() if int(dev) in gdata['devices']}
+            wrongDataDevices1 = {dev:devd for dev,devd in wrongDataDevices.iteritems() if int(dev) in gdata['devices']}
+            wtfDataDevices1 = {dev:devd for dev,devd in wtfDataDevices.iteritems() if int(dev) in gdata['devices']}
+            correctDataDevices1 = {dev:devd for dev,devd in correctDataDevices.iteritems() if int(dev) in gdata['devices']}
+            graphedDevices1 = {dev:devd for dev,devd in graphedDevices.iteritems() if int(dev) in gdata['devices']}
             logger.info("\tTotal Devices of server: %s" % len(gdata['devices']))
+            logger.info("\tShould be graphed devices: %s" % len(graphedDevices1) )
             logger.info("\tNo data devices: %s" % len(noDataDevices1))
             logger.info("\tWrong data devices: %s" % len(wrongDataDevices1))
             logger.info("\twtf devices: %s" % len(wtfDataDevices1)) #Should have some of the above types of data
             logger.info("\tCorrect data devices: %s" % len(correctDataDevices1))
+            logger.info("\t Rows read : %s " % (str(gdata['Rows'] if gdata['Working'] else '0')))
 
     logger.info("----- TOTAL ----")
     logger.info("Servers should work %s : %s" % (len(shouldWorkGraphServers),[s for s in shouldWorkGraphServers]))
     logger.info("Servers working %s : %s" % (len(totalWorkingGraphServers),[s for s in totalWorkingGraphServers]))
     logger.info("Servers not working %s : %s" % (len(noGraphServer),{(s,data['Error']) for s,data in noGraphServer.iteritems()}))
     logger.info("Total Devices: %s" % len(devicesTable))
-    logger.info("Total Should Be Graphed Devices: %s" % len(graphedDevices))    
+    logger.info("Total Should Be Graphed Devices: %s" % len(graphedDevices))
     logger.info("No data devices: %s" % len(noDataDevices))
     logger.info("Wrong data devices: %s" % len(wrongDataDevices))
     logger.info("wtf devices: %s" % len(wtfDataDevices)) #Should have some of the above types of data
     logger.info("Correct data devices: %s" % len(correctDataDevices))
+    correctDataServers = [g['graphServer'] for  g in correctDataDevices.values()]
+    wtfDataServers = [g['graphServer'] for  g in wtfDataDevices.values()]
+    print collections.Counter(correctDataServers)
+    print collections.Counter(wtfDataServers)
+
 
     linksTable.close()
     devicesTable.close()
     graphServersTable.close()
-
-# Mark to graphservers that i got results from them: Test it
-# Find how to measure correct data
 
 
 if __name__ == "__main__":
@@ -299,3 +310,18 @@ if __name__ == "__main__":
             graphDevicesInfo(sys.argv[2])
         elif sys.argv[1] =='2':
             testResult(sys.argv[2])
+
+# Two open questions
+# 1) why servers return everytime a different amount of entries? and why the fuck it
+#     does not return all of them? for example
+        # Server 6833 working with ip/url: 10.138.2
+        #     Total Devices of server: 4719
+        #     Should be graphed devices: 4719
+        #     No data devices: 0
+        #     Wrong data devices: 55
+        #     wtf devices: 4055
+        #     Correct data devices: 609
+        #      Rows read : 816
+# 2) what does the index means in the snpservices stats service that causes multiple
+#     results of traffic?
+# 3)  separate core and see
