@@ -212,7 +212,7 @@ def cnmlNodeToDict(node):
 
 
 def getCNMLNodeLinks(node):
-    node = self.getNode(node)
+    #node = self.getNode(node)
     links = {}
     linkIds = []
     for device in node.getDevices():
@@ -231,7 +231,6 @@ def getCNMLNodeLinks(node):
     return links
 
 
-
 def getCNMLCoreZone(zoneIn):
     """
     Return Zone containing only core part of the network
@@ -245,20 +244,22 @@ def getCNMLCoreZone(zoneIn):
             device) for device in node.getDevices()}
         node.services = {service.id: cnmlObjectCopy(
             service) for service in node.getServices()}
-        for device in node.getDevices():   
+        for device in node.getDevices():
             device.interfaces = {
                 iface.id: cnmlObjectCopy(iface) for iface in device.getInterfaces()}
             device.radios = {
                 (device.id, radio.id): cnmlObjectCopy(radio) for radio in device.getRadios()}
             for interface in device.getInterfaces():
+                # Remove links that at least one of the involved nodes has less than 2 links
                 interface.links = {link.id: cnmlObjectCopy(
-                    link) for link in interface.getLinks()}
+                    link) for link in interface.getLinks() if (link.nodeA).totalLinks > 1 and (link.nodeB).totalLinks > 1}
             for radio in device.getRadios():
                 radio.interfaces = {
                     iface.id: cnmlObjectCopy(iface) for iface in radio.getInterfaces()}
                 for interface in radio.getInterfaces():
+                    # Remove links that at least one of the involved nodes has less than 2 links
                     interface.links = {link.id: cnmlObjectCopy(
-                        link) for link in interface.getLinks()}
+                        link) for link in interface.getLinks() if (link.nodeA).totalLinks > 1 and (link.nodeB).totalLinks > 1}
     return zone
 
 def dump(obj):
