@@ -211,6 +211,56 @@ def cnmlNodeToDict(node):
     return result
 
 
+def getCNMLNodeLinks(node):
+    node = self.getNode(node)
+    links = {}
+    linkIds = []
+    for device in node.getDevices():
+        for radio in device.getRadios():
+            for iface in radio.getInterfaces():
+                # Add new links (ignoring duplicates)
+                temp = [l for l in iface.links if l not in linkIds]
+                linkIds = linkIds + temp
+                for link in temp:
+                    links.update({link: iface.links[link]})
+        for iface in device.getInterfaces():
+            temp = [l for l in iface.links if l not in linkIds]
+            linkIds = linkIds + temp
+            for link in temp:
+                links.update({link: iface.links[link]})
+    return links
+
+
+
+def getCNMLCoreZone(zoneIn):
+    """
+    Return Zone containing only core part of the network
+    """
+    zone = cnmlObjectCopy(zoneIn)
+    nodes = {node.id: cnmlObjectCopy(
+            node) for node in zone.getNodes() if node.totalLinks > 1}
+    zone.nodes = nodes
+    for node in zone.getNodes():
+        node.devices = {device.id: cnmlObjectCopy(
+            device) for device in node.getDevices()}
+        node.services = {service.id: cnmlObjectCopy(
+            service) for service in node.getServices()}
+        for device in node.getDevices():   
+            device.interfaces = {
+                iface.id: cnmlObjectCopy(iface) for iface in device.getInterfaces()}
+            device.radios = {
+                (device.id, radio.id): cnmlObjectCopy(radio) for radio in device.getRadios()}
+            for interface in device.getInterfaces():
+                interface.links = {link.id: cnmlObjectCopy(
+                    link) for link in interface.getLinks()}
+            for radio in device.getRadios():
+                radio.interfaces = {
+                    iface.id: cnmlObjectCopy(iface) for iface in radio.getInterfaces()}
+                for interface in radio.getInterfaces():
+                    interface.links = {link.id: cnmlObjectCopy(
+                        link) for link in interface.getLinks()}
+    return zone
+
 def dump(obj):
     """
     Dump objects attributes

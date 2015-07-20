@@ -61,7 +61,7 @@ def flatten(lis):
 
 class CNMLWrapper(object):
 
-    def __init__(self, rootZoneId=None):
+    def __init__(self, rootZoneId=None, working = True, core = False):
         # GuifiAPI
         self.conn = authenticate()
         if rootZoneId:
@@ -72,7 +72,9 @@ class CNMLWrapper(object):
         #self.world = getCNMLZone(3671)
         self.cnml = parseCNMLZone(self.rootZoneId, self.conn)
         self.zone = self.cnml.zones[self.rootZoneId]
-        self.guifizone = GuifiZone(self.zone)
+        if core:
+            self.zone = getCNMLCoreZone(self.zone)
+        self.guifizone = GuifiZone(self.zone, working = working, core = core)
 
         self.zones = {}
         self.nodes = {}
@@ -180,10 +182,14 @@ class CNMLWrapper(object):
 
 class GuifiZone(object):
 
-    def __init__(self, zone):
+    def __init__(self, zone, working = True, core = False):
         self.id = zone.id
         self.zone = zone
+        self.working = working
+        self.core = core
         self.workingZone = self.getCNMLZoneWorking(self.zone)
+        if core:
+            self.workingZone = getCNMLCoreZone(self.workingZone)
         self.nodes = {}
         self.devices = {}
         self.services = {}
@@ -236,7 +242,7 @@ class GuifiZone(object):
                         len(cablelinks),
                         float(len(cablelinks)) / float(len(self.totallinks)))
 
-        #self.subzones = self.zone.subzones
+        #self.subzones = self.zone.subzones1
         self.subzones = {}
         self.setSubZones()
         self.allsubzones = self.getAllSubZones()
@@ -442,7 +448,7 @@ class GuifiZone(object):
 
     def setSubZones(self):
         for zone in self.zone.subzones.values():
-            self.subzones.update({zone.id: GuifiZone(zone)})
+            self.subzones.update({zone.id: GuifiZone(zone, working = self.working, core = self.core)})
 
     def getZoneLinks(self, zone):
         links = []
