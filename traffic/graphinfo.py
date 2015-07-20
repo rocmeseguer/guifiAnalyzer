@@ -36,7 +36,7 @@ r = re.compile('http:\/\/([^\/]*).*')
 #root = 8346 #Lucanes
 root = 2444 #Osona
 #root = 18668 #Castello
-g = CNMLWrapper(root)
+g = CNMLWrapper(root, working = True, core = True)
 #Get connection object form guifiwrapper
 conn = g.conn
 
