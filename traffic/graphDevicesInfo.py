@@ -40,8 +40,9 @@ import collections
 #wtfDevices = []
 
 
-def loadDB(root):
-    db = os.path.join(os.getcwd(),'guifiAnalyzerOut','traffic',str(root),'data.sqld')
+def loadDB(root, core):
+    corename = "_core" if core else ""
+    db = os.path.join(os.getcwd(),'guifiAnalyzerOut','traffic',str(root),'data'+corename+'.sqld')
     linksTable = SqliteDict(
         filename=db,
         tablename='links',
@@ -191,8 +192,8 @@ def processDevicesGraphData(result, devicesTable):
     # return
 
 
-def graphDevicesInfo(root):
-    linksTable,devicesTable, graphServersTable = loadDB(root)
+def graphDevicesInfo(root,core):
+    linksTable,devicesTable, graphServersTable = loadDB(root, core)
     for g, data in graphServersTable.iteritems():
     	# If there is a working IP
         if data['ip']:
@@ -256,8 +257,8 @@ def graphDevicesInfo(root):
     graphServersTable.close()
 
 
-def testResult(root):
-    linksTable,devicesTable, graphServersTable = loadDB(root)
+def testResult(root, core):
+    linksTable,devicesTable, graphServersTable = loadDB(root, core)
     noDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' in data and data['data']==False }
     wrongDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' in data and data['data']=='Incorrect' }
     correctDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' in data and isinstance(data['data'],dict)}
@@ -305,11 +306,17 @@ def testResult(root):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 2:
+    if len(sys.argv) == 3:
         if sys.argv[1] == '1':
-            graphDevicesInfo(sys.argv[2])
+            graphDevicesInfo(sys.argv[2], False)
         elif sys.argv[1] =='2':
-            testResult(sys.argv[2])
+            testResult(sys.argv[2], False)
+    elif len(sys.argv) == 4:
+        if sys.argv[1] == '1':
+            graphDevicesInfo(sys.argv[2], True if  sys.argv[3] == "core" else False)
+        elif sys.argv[1] =='2':
+            testResult(sys.argv[2], True if  sys.argv[3] == "core" else False)
+
 
 # Two open questions
 # 1) why servers return everytime a different amount of entries? and why the fuck it
