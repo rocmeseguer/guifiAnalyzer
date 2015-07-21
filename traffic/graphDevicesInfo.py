@@ -26,19 +26,6 @@ from exceptions import *
 
 import collections
 
-#prepare regular expresion
-#r = re.compile('http:\/\/([^\/]*).*')
-
-#root = 8346 #Lucanes
-#root = 2444 #Osona
-#root = 18668 #Castello
-#g = CNMLWrapper(root)
-#Get connection object form guifiwrapper
-#conn = g.conn
-
-#misDevices = []
-#wtfDevices = []
-
 
 def loadDB(root, core):
     corename = "_core" if core else ""
@@ -73,23 +60,14 @@ def getAllDevicesGraphData(url):
             debug=False,
             timeout=0,
                      csv=True)
-        #return data,0
         return data
     except urllib2.HTTPError as e:
-        #logger.error('Server not configured correctly')
-        #logger.error("Error code: %s" % str(e.code))
-        #return None,1
         msg = "Server not configured correctly, " + "HTTPError: " + str(e.code)
         raise EnvironmentError(msg)
     except urllib2.URLError as e:
-        #logger.error('Failed to reach server')
-        #logger.error(e.reason)
-        #return None,1
         msg = "Failed to reach server, " + "URLError: "  + e.reason
         raise EnvironmentError(msg)
     except socket.timeout:
-       #logger.error('Server could not be reached')
-       #return None,1
        msg = "Server could not be reached, " + "Socket Timeout"
        raise EnvironmentError(msg)
 
@@ -104,7 +82,6 @@ def getDevicesGraphData(url, devices):
 	        debug=False,
 	        timeout=0,
                      csv = True)
-        #return data,0
         return data
     except urllib2.HTTPError as e:
         logger.error("HTTPError")
@@ -113,19 +90,12 @@ def getDevicesGraphData(url, devices):
             logger.warning("URL too big. Have to retrieve all the data")
             return getAllDevicesGraphData(url)
         else:
-           #logger.warning("Server misconfigured")
-           #return None,1
            msg = "Server not configured correctly, " + "HTTPError: " + str(e.code)
            raise EnvironmentError(msg)
     except urllib2.URLError as e:
-        #logger.error('Failed to reach server')
-        #logger.error(e.reason)
-        #return None,1
         msg = "Failed to reach server, " + "URLError: " + e.reason
         raise EnvironmentError(msg)
     except socket.timeout:
-        #logger.error('Server could not be reached')
-        #return None,1
         msg = "Server could not be reached, " + "Socket Timeout"
         raise EnvironmentError(msg)
 
@@ -166,6 +136,29 @@ def processDevicesGraphData(result, devicesTable):
                 temp['data']['traffic']['traffic_out'] = traffic[2]
                 devicesTable[deviceId] = temp
                 #print devicesTable[deviceId]
+        elif len(row) > 3:
+            # Supernodes with multimple interfaces
+            deviceId = row[0]
+            availability = row[1].split(',')
+            traffic  = {}
+            for i in range(2,len(row)):
+                traffic[i-2] = row[i].split(',')
+            temp = devicesTable[deviceId]
+            temp['data']={}
+            temp['data']['availability'] = {}
+            temp['data']['availability']['max_latency'] = availability[0]
+            temp['data']['availability']['avg_latency'] = availability[1]
+            temp['data']['availability']['succeed'] = availability[2]
+            temp['data']['availability']['last_online'] = availability[3]
+            temp['data']['availability']['last_sample_date'] = availability[4]
+            temp['data']['availability']['last_sample'] = availability[5]
+            temp['data']['availability']['last_succeed'] = availability[6]
+            for tr,data in traffic.iteritems():
+                temp['data']['traffic'] = {}
+                temp['data']['traffic']['snmp_key'] = traffic[0]
+                temp['data']['traffic']['traffic_in'] = traffic[1]
+                temp['data']['traffic']['traffic_out'] = traffic[2]
+            devicesTable[deviceId] = temp
         else:
             logger.error("Server Data Incorrect")
             deviceId = row[0]
@@ -177,20 +170,6 @@ def processDevicesGraphData(result, devicesTable):
     return rows
 
 
-    #return data
-    # if data == str(device.id)+"|0,0,0.00,0,,,0":
-    #     #Check if server is responsible for the nodes
-    #     devices = graphServerDevices(graphService)
-    #     if device.id in devices:
-    #         # If yes, then it means that the node locally is misconfigured
-    #         logger.error("Misconfigured device %s" % (device.id))
-    #         misDevices.append(device)
-    #     else:
-    #         logger.error("VAYA PUTA MIERDA device %s" % (device.id))
-    #         wtfDevices.append(device)
-    #     return None
-    # return
-
 
 def graphDevicesInfo(root,core):
     linksTable,devicesTable, graphServersTable = loadDB(root, core)
@@ -198,17 +177,6 @@ def graphDevicesInfo(root,core):
     	# If there is a working IP
         if data['ip']:
             logger.info("GraphServer: %s" % str(g))
-            # result, error = getDevicesGraphData(data['ip'],data['devices'])
-            # if not error:
-            #     data['Working'] = True
-            #     graphServersTable[g] = data
-            #     graphServersTable.commit()
-            #     processDevicesGraphData(result, devicesTable)
-            # else:
-            #     data['Working'] = False
-            #     graphServersTable[g] = data
-            #     graphServersTable.commit()
-            #     continue
             try :
                 logger.info("\tTotal Devices %s" % len(data['devices']))
                 toBeGraphed = [d1 for d1,d2 in devicesTable.iteritems() if str(d2['graphServer']) == g]
@@ -329,6 +297,9 @@ if __name__ == "__main__":
         #     wtf devices: 4055
         #     Correct data devices: 609
         #      Rows read : 816
+# Reply(Possible):  Cause graphserver returns values only from the nodes that it has ping
+# value the last 12 hours? Nope. because of 30 seconds php call limit
+# Solution: Instead of asking all stats break requests in smaller parallel requests
 # 2) what does the index means in the snpservices stats service that causes multiple
 #     results of traffic?
-# 3)  separate core and see
+# Reply: Different interface
