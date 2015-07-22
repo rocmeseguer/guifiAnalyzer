@@ -86,6 +86,7 @@ def getDevicesGraphData(url, devices):
     except urllib2.HTTPError as e:
         logger.error("HTTPError")
         logger.error("Error code: %s" % str(e.code))
+        logger.error(e)
         if e.code == 414:
             logger.warning("URL too big. Have to retrieve all the data")
             return getAllDevicesGraphData(url)
@@ -112,38 +113,14 @@ def processDevicesGraphData(result, devicesTable):
                 temp = devicesTable[deviceId]
                 temp['data'] = False
                 devicesTable[deviceId] = temp
-        elif len(row) == 3:
+        elif len(row) >= 3:
             # 3 is a normal device that has traffic info for only 1 iface
             # More than 3 are supernodes
             # check from here:
             # https://github.com/guifi/snpservices/blob/master/services/stats.php
             deviceId = row[0]
             availability = row[1].split(',')
-            traffic = row[2].split(',')
-
-            if deviceId in devicesTable:
-                #print devicesTable[deviceId]
-                temp = devicesTable[deviceId]
-                temp['data']={}
-                temp['data']['availability'] = {}
-                temp['data']['availability']['max_latency'] = availability[0]
-                temp['data']['availability']['avg_latency'] = availability[1]
-                temp['data']['availability']['succeed'] = availability[2]
-                temp['data']['availability']['last_online'] = availability[3]
-                temp['data']['availability']['last_sample_date'] = availability[4]
-                temp['data']['availability']['last_sample'] = availability[5]
-                temp['data']['availability']['last_succeed'] = availability[6]
-                temp['data']['traffic'] = {}
-                temp['data']['traffic']['snmp_key'] = traffic[0]
-                temp['data']['traffic']['traffic_in'] = traffic[1]
-                temp['data']['traffic']['traffic_out'] = traffic[2]
-                devicesTable[deviceId] = temp
-                #print devicesTable[deviceId]
-        elif len(row) > 3:
-            # Supernodes with multimple interfaces
-            deviceId = row[0]
-            availability = row[1].split(',')
-            traffic  = {}
+            traffic = {}
             for i in range(2,len(row)):
                 traffic[i-2] = row[i].split(',')
             if deviceId in devicesTable:
@@ -157,14 +134,13 @@ def processDevicesGraphData(result, devicesTable):
                 temp['data']['availability']['last_sample_date'] = availability[4]
                 temp['data']['availability']['last_sample'] = availability[5]
                 temp['data']['availability']['last_succeed'] = availability[6]
+                temp['data']['traffic'] = {}
                 for data in traffic.values():
-                    temp['data']['traffic'] = {}
                     # snmp_key is used for indexing
                     temp['data']['traffic'][data[0]] = {}
                     temp['data']['traffic'][data[0]]['traffic_in'] = data[1]
                     temp['data']['traffic'][data[0]]['traffic_out'] = data[2]
                 devicesTable[deviceId] = temp
-                # Why does it store only one value????
         else:
             logger.error("Server Data Incorrect")
             deviceId = row[0]
@@ -305,7 +281,9 @@ if __name__ == "__main__":
         #      Rows read : 816
 # Reply(Possible):  Cause graphserver returns values only from the nodes that it has ping
 # value the last 12 hours? Nope. because of 30 seconds php call limit
-# Solution: Instead of asking all stats break requests in smaller parallel requests
+# Solution: Instead of asking all stats break requests in smaller parallel requests and combine that
+# with the maximum possible chars
 # 2) what does the index means in the snpservices stats service that causes multiple
 #     results of traffic?
 # Reply: Different interface
+# 3) Test what are the differences of my devices and the supernode argument
