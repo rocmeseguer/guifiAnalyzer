@@ -219,6 +219,11 @@ def checkGraphServer(graphService, device, ipBlacklist, conn, checkedUrl=False):
             raise ServerMisconfiguredError(graphService, ip, e.code)
         return checkGraphServer(graphService, device, ipBlacklist, conn, checkedUrl)
     except socket.timeout:
+        logger.error('Socket timeout')
+        ipBlacklist.append(ip)
+        return checkGraphServer(graphService, device, ipBlacklist, conn, checkedUrl)
+    except socket.error as e:
+        logger.error(e)
         ipBlacklist.append(ip)
         return checkGraphServer(graphService, device, ipBlacklist, conn, checkedUrl)
 
