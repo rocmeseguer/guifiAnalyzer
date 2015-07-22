@@ -113,11 +113,14 @@ def processDevicesGraphData(result, devicesTable):
                 temp['data'] = False
                 devicesTable[deviceId] = temp
         elif len(row) == 3:
+            # 3 is a normal device that has traffic info for only 1 iface
+            # More than 3 are supernodes
             # check from here:
             # https://github.com/guifi/snpservices/blob/master/services/stats.php
             deviceId = row[0]
             availability = row[1].split(',')
             traffic = row[2].split(',')
+
             if deviceId in devicesTable:
                 #print devicesTable[deviceId]
                 temp = devicesTable[deviceId]
@@ -143,22 +146,25 @@ def processDevicesGraphData(result, devicesTable):
             traffic  = {}
             for i in range(2,len(row)):
                 traffic[i-2] = row[i].split(',')
-            temp = devicesTable[deviceId]
-            temp['data']={}
-            temp['data']['availability'] = {}
-            temp['data']['availability']['max_latency'] = availability[0]
-            temp['data']['availability']['avg_latency'] = availability[1]
-            temp['data']['availability']['succeed'] = availability[2]
-            temp['data']['availability']['last_online'] = availability[3]
-            temp['data']['availability']['last_sample_date'] = availability[4]
-            temp['data']['availability']['last_sample'] = availability[5]
-            temp['data']['availability']['last_succeed'] = availability[6]
-            for tr,data in traffic.iteritems():
-                temp['data']['traffic'] = {}
-                temp['data']['traffic']['snmp_key'] = traffic[0]
-                temp['data']['traffic']['traffic_in'] = traffic[1]
-                temp['data']['traffic']['traffic_out'] = traffic[2]
-            devicesTable[deviceId] = temp
+            if deviceId in devicesTable:
+                temp = devicesTable[deviceId]
+                temp['data']={}
+                temp['data']['availability'] = {}
+                temp['data']['availability']['max_latency'] = availability[0]
+                temp['data']['availability']['avg_latency'] = availability[1]
+                temp['data']['availability']['succeed'] = availability[2]
+                temp['data']['availability']['last_online'] = availability[3]
+                temp['data']['availability']['last_sample_date'] = availability[4]
+                temp['data']['availability']['last_sample'] = availability[5]
+                temp['data']['availability']['last_succeed'] = availability[6]
+                for data in traffic.values():
+                    temp['data']['traffic'] = {}
+                    # snmp_key is used for indexing
+                    temp['data']['traffic'][data[0]] = {}
+                    temp['data']['traffic'][data[0]]['traffic_in'] = data[1]
+                    temp['data']['traffic'][data[0]]['traffic_out'] = data[2]
+                devicesTable[deviceId] = temp
+                # Why does it store only one value????
         else:
             logger.error("Server Data Incorrect")
             deviceId = row[0]
