@@ -89,6 +89,11 @@ def getDevicesGraphData(url, devices):
         logger.error(e)
         if e.code == 414:
             logger.warning("URL too big. Have to retrieve all the data")
+            # Ids size from 4-6 and one more for the comment
+            urlSize = 43 + len(devices)*6
+            # Max no problem size in characters found on web 4000
+            urlMax = 4000
+
             return getAllDevicesGraphData(url)
         else:
            msg = "Server not configured correctly, " + "HTTPError: " + str(e.code)
