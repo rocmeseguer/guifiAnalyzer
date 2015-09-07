@@ -1,5 +1,3 @@
-Welcome to the **guifiAnalyzer** wiki!
-
 # Intro
 
 **guifiAnalyzer** is a python project aspiring to be a monitoring/research tool collecting information from guifi.net. 
