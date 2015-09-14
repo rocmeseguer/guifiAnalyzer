@@ -71,6 +71,26 @@ def getAllDevicesGraphData(url):
        msg = "Server could not be reached, " + "Socket Timeout"
        raise EnvironmentError(msg)
 
+def getParallelDevicesGraphData(url):
+    try:
+        data = snpRequest(
+            url,
+            command="stats",
+            args={},
+            debug=False,
+            timeout=0,
+                     csv=True)
+        return data
+    except urllib2.HTTPError as e:
+        msg = "Server not configured correctly, " + "HTTPError: " + str(e.code)
+        raise EnvironmentError(msg)
+    except urllib2.URLError as e:
+        msg = "Failed to reach server, " + "URLError: "  + e.reason
+        raise EnvironmentError(msg)
+    except socket.timeout:
+       msg = "Server could not be reached, " + "Socket Timeout"
+       raise EnvironmentError(msg)
+
 
 def getDevicesGraphData(url, devices):
     try:
