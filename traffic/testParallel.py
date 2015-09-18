@@ -85,7 +85,13 @@ def doRequest(base, arguments, timeout):
         return urllib2.urlopen(req)
 
 
+def chunks(l, n):
+    """Yield successive n-sized chunks from l."""
+    for i in xrange(0, len(l), n):
+        yield l[i:i+n]
+
 def doParallelRequests(base, arguments, timeout):
+    arglists  = list(chunks(arguments,))
     for arg in args:
         arguments += "&" + str(arg)
         if args[arg]:
