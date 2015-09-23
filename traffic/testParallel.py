@@ -16,9 +16,11 @@ services = [
     "stats"]
 
 
+
+
 def buildArgs(args):
     """
-    Take a list of arguments and convert it to a url
+    Take a dictionary of arguments and values and convert it to a url
     string
     """
     arguments = ""
@@ -49,17 +51,23 @@ def doRequest(base, arguments, timeout):
 
 
 
-def doParallelRequests(base, args, timeout, csv):
+def doParallelStatsRequests(base, args, timeout, csv):
     # Define utilites for parallel request
     from urlparse import urlparse
     from threading import Thread
     import httplib, sys
     from Queue import Queue
 
-    def buildUrls(base, argsLists):
-        argumentsList = map(buildArgs,argsList)
-        urlsList = [(base+argument) for argument in argumentsList]
-        return urlsList
+    def buildUrl(base, devices):
+        url = base
+        for i in devices:
+            if i == devices[-1]:
+                #print i
+                url += str(i)
+            else:
+                # print i
+                url += str(i) + ","
+        return url
 
     def chunks(l, n):
         """
@@ -67,7 +75,6 @@ def doParallelRequests(base, args, timeout, csv):
         """
         for i in xrange(0, len(l), n):
             yield l[i:i+n]
-    
 
     def worker():
         while True:
@@ -81,12 +88,18 @@ def doParallelRequests(base, args, timeout, csv):
             q.task_done()
              # Parallel stuff end above this command
 
-    
+
+    # Since we know we are performing a stats command with many
+    # arguments we can expand the base url
+    base = base+"devices="
+    #Extract list of devices:
+    devices = args['devices']
 
     # Separate arguments in lists that fit the apache max url size (4000 chars)
-    chunksize = (len(args)*6) / (4000-len(base))
-    argsLists  = list(chunks(args, chunksize))
-    urls = [buildUrls(base,argsList) for argsList in argsLists]
+    # Each arg has a max of 5 chars + the comma after it
+    chunksize = (len(devices)*6) / (4000-len(base))
+    devicesLists  = list(chunks(devices, chunksize))
+    urls = [buildUrl(base,devicesList) for devicesList in devicesLists]
     print urls
     #Do parallel request for each url innlist
     concurrent = len(urls)
@@ -101,12 +114,14 @@ def doParallelRequests(base, args, timeout, csv):
         for url in urls:
             q.put(url.strip())
         q.join()
+    except KeyboardInterrupt:
+        sys.exit(1)
 
     if csv:
         # TODO
         #Merge all responses in one csv... How?????
         return response
-    else: 
+    else:
         readResponses = [r.read() for r in responses]
         return readResponses
 
@@ -127,14 +142,17 @@ def snpRequest(ip, command="help", args={}, debug=False, timeout=0, csv = False)
         base = "http://" + str(ip) + "/snpservices/index.php?call=" + command
         # Build arguments
         arguments = buildArgs(args)
-        
+
+
         # New code
         # Url character Limit
         # http://stackoverflow.com/a/1289610
         if len(arguments) < 4000:
             response = doRequest(base, arguments, timeout)
         else:
-            response = doParallellRequests(base, args, timeout, csv)
+            # Only stats command can have multiple argument values (for devices)
+            # index.php?call=stats&devices=<device_id>[,<device_id>]
+            response = doParallellStatsRequests(base, args, timeout, csv)
 
         if csv:
             return response
