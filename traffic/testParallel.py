@@ -91,13 +91,14 @@ def doParallelStatsRequests(base, args, timeout, csv):
 
     # Since we know we are performing a stats command with many
     # arguments we can expand the base url
-    base = base+"devices="
+    base = base+"&devices="
     #Extract list of devices:
     devices = args['devices']
 
     # Separate arguments in lists that fit the apache max url size (4000 chars)
     # Each arg has a max of 5 chars + the comma after it
     chunksize = (len(devices)*6) / (4000-len(base))
+    print chunksize
     devicesLists  = list(chunks(devices, chunksize))
     urls = [buildUrl(base,devicesList) for devicesList in devicesLists]
     print urls
@@ -142,16 +143,19 @@ def snpRequest(ip, command="help", args={}, debug=False, timeout=0, csv = False)
         base = "http://" + str(ip) + "/snpservices/index.php?call=" + command
         # Build arguments
         arguments = buildArgs(args)
+        print arguments
 
 
         # New code
         # Url character Limit
         # http://stackoverflow.com/a/1289610
         if len(arguments) < 4000:
+            print "Normal request"
             response = doRequest(base, arguments, timeout)
         else:
             # Only stats command can have multiple argument values (for devices)
             # index.php?call=stats&devices=<device_id>[,<device_id>]
+            print "Parallel Request"
             response = doParallellStatsRequests(base, args, timeout, csv)
 
         if csv:
@@ -164,3 +168,13 @@ def snpRequest(ip, command="help", args={}, debug=False, timeout=0, csv = False)
 
 
 
+#TEST
+#from guifiAnalyzer.traffic import testParallel as par
+#from guifiAnalyzer.traffic import graphDevicesInfo as gd
+#gd.graphDevicesInfo(8346,False)
+#linksTable,devicesTable, graphServersTable = gd.loadDB(8346, False)
+#toBeGraphed = [int(d1) for d1,d2 in devicesTable.iteritems() if str(d2['graphServer']) == '9969']
+#b={'devices':ltoBeGraphed}
+#a = par.snpRequest("perafita.guifi.net","stats",b,0,False)
+#OR
+#a = par.doParallelStatsRequests("http://perafita.guifi.net/snpservices/index.php?call=stats",b,0,False)
