@@ -4,6 +4,9 @@
 
 import urllib2
 import sys
+import socket
+
+from exceptions import *
 
 
 commands = ["help", "version", "phpinfo", "serverinfo"]
@@ -69,7 +72,7 @@ def doParallelStatsRequests(base, args, tout, csv):
             else:
                 # print i
                 url += str(i) + ","
-        return url 
+        return url
 
     def chunks(l, n):
         """
@@ -94,7 +97,11 @@ def doParallelStatsRequests(base, args, tout, csv):
                         print e
                     except urllib2.URLError as e:
                         print e
-                    break
+                    except socket.timeout as e:
+                        print "Hi"
+                        print e
+                    else:
+                        break
                 #pass
             else:
                 while True:
@@ -106,7 +113,10 @@ def doParallelStatsRequests(base, args, tout, csv):
                         print e
                     except urllib2.URLError as e:
                         print e
-                    break
+                    except socket.timeout as e:
+                        print e
+                    else:
+                        break
                 #pass
             q.task_done()
              # Parallel stuff end above this command
@@ -123,7 +133,7 @@ def doParallelStatsRequests(base, args, tout, csv):
     #WRONG chunksize = (len(devices)*6) / (4000-len(base))
     print "total devices"
     print len(devices)
-    chunksize = (100-len(base))/6
+    chunksize = (112-len(base))/6
     print "chunksize (# of devices)"
     print chunksize
     devicesLists  = list(chunks(devices, chunksize))
@@ -185,7 +195,7 @@ def snpRequest(ip, command="help", args={}, debug=False, timeout=0, csv = False)
         base = "http://" + str(ip) + "/snpservices/index.php?call=" + command
         # Build arguments
         arguments = buildArgs(args)
-        #print "Total Args" 
+        #print "Total Args"
         #print len(arguments)
 
 
