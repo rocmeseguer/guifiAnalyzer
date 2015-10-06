@@ -87,39 +87,20 @@ def doParallelStatsRequests(base, args, tout, csv):
             url = q.get()
             print "%s\n" % url
             req = urllib2.Request(url)
+            req_params = {}
             if timeout:
-                while True:
-                    try:
-                        response = urllib2.urlopen(req, timeout=timeout)
-                        responses.extend(response)
-                        print "Done"
-                    except urllib2.HTTPError as e:
-                        print e
-                    except urllib2.URLError as e:
-                        print e
-                    except socket.timeout as e:
-                        print "Hi"
-                        print e
-                    else:
-                        break
-                #pass
-            else:
-                while True:
-                    try:
-                        response = urllib2.urlopen(req)
-                        responses.extend(response)
-                        print "Done"
-                    except urllib2.HTTPError as e:
-                        print e
-                    except urllib2.URLError as e:
-                        print e
-                    except socket.timeout as e:
-                        print e
-                    else:
-                        break
-                #pass
+                req_params['timeout'] = timeout
+            while True:
+                try:
+                    response = urllib2.urlopen(req, **req_params)
+                    print "Done", q.qsize()
+                except (urllib2.HTTPError, urllib2.URLError, socket.timeout) as e:
+                    print e
+                else:
+                    break
+            responses.extend(response)
             q.task_done()
-             # Parallel stuff end above this command
+            # Parallel stuff end above this command
 
 
     # Since we know we are performing a stats command with many
@@ -133,7 +114,7 @@ def doParallelStatsRequests(base, args, tout, csv):
     #WRONG chunksize = (len(devices)*6) / (4000-len(base))
     print "total devices"
     print len(devices)
-    chunksize = (112-len(base))/6
+    chunksize = (100-len(base))/6
     print "chunksize (# of devices)"
     print chunksize
     devicesLists  = list(chunks(devices, chunksize))
@@ -145,10 +126,10 @@ def doParallelStatsRequests(base, args, tout, csv):
     print urlsLen
     #Do parallel request for each url innlist
     concurrent = len(urls)
-    q = Queue(concurrent * 2)
+    q = Queue(concurrent)
     responses = []
 
-    for i in range(concurrent):
+    for i in range(20):
         t = Thread(target=worker)
         t.daemon = True
         t.start()
