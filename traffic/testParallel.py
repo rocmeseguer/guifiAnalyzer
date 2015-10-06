@@ -98,6 +98,7 @@ def doParallelStatsRequests(base, args, tout, csv):
                     print e
                 else:
                     break
+            #Need to find thread-safe way to return the result
             responses.extend(response)
             q.task_done()
             # Parallel stuff end above this command
@@ -114,7 +115,7 @@ def doParallelStatsRequests(base, args, tout, csv):
     #WRONG chunksize = (len(devices)*6) / (4000-len(base))
     print "total devices"
     print len(devices)
-    chunksize = (100-len(base))/6
+    chunksize = (106-len(base))/6
     print "chunksize (# of devices)"
     print chunksize
     devicesLists  = list(chunks(devices, chunksize))
@@ -125,11 +126,13 @@ def doParallelStatsRequests(base, args, tout, csv):
     urlsLen = [len(url) for url in urls]
     print urlsLen
     #Do parallel request for each url innlist
-    concurrent = len(urls)
-    q = Queue(concurrent)
+    # but use standard number of workers
+    concurrent = 80
+    q = Queue(len(urls))
     responses = []
 
-    for i in range(20):
+
+    for i in range(concurrent):
         t = Thread(target=worker)
         t.daemon = True
         t.start()
