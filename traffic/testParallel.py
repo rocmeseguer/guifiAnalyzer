@@ -93,6 +93,7 @@ def doParallelStatsRequests(base, args, tout, csv):
             while True:
                 try:
                     response = urllib2.urlopen(req, **req_params)
+                    print type(response)
                     print "Done", q.qsize()
                 except (urllib2.HTTPError, urllib2.URLError, socket.timeout) as e:
                     print e
@@ -143,14 +144,20 @@ def doParallelStatsRequests(base, args, tout, csv):
     except KeyboardInterrupt:
         sys.exit(1)
 
+    #resp =''
+    print len(responses)
+    print type(responses[0])
+    #for  r in responses:
+    #    resp  = resp + r + '\n'
 
-    with open('test.txt','a') as outfile:
-        for response in responses:
-            outfile.write(response)
+    #with open('test.txt','a') as outfile:
+    #    outfile.write(resp)
+        #for response in responses:
+        #    outfile.write(response)
             #reader = response.reader()
             #for row in reader:
             #    outfile.write(row)
-
+    #return resp
 
     # Queue problem????
 
@@ -195,11 +202,12 @@ def snpRequest(ip, command="help", args={}, debug=False, timeout=0, csv = False)
             print "Parallel Request"
             response = doParallelStatsRequests(base, args, timeout, csv)
 
-        #if csv:
-        #    return response
-        #else:
-        #    data = response.read()
-        #    return data
+        print type(response)
+        if csv:
+            return response
+        else:
+            data = response.read()
+            return data
 
 #/snpservices/index.php?call=stats&devices=
 
