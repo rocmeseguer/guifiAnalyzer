@@ -9,6 +9,7 @@ from ..guifiwrapper.guifiwrapper import *
 from ..guifiwrapper.cnmlUtils import *
 from snpservicesClient import *
 
+
 import urllib2
 import socket
 import csv
@@ -71,26 +72,6 @@ def getAllDevicesGraphData(url):
        msg = "Server could not be reached, " + "Socket Timeout"
        raise EnvironmentError(msg)
 
-def getParallelDevicesGraphData(url):
-    try:
-        data = snpRequest(
-            url,
-            command="stats",
-            args={},
-            debug=False,
-            timeout=0,
-                     csv=True)
-        return data
-    except urllib2.HTTPError as e:
-        msg = "Server not configured correctly, " + "HTTPError: " + str(e.code)
-        raise EnvironmentError(msg)
-    except urllib2.URLError as e:
-        msg = "Failed to reach server, " + "URLError: "  + e.reason
-        raise EnvironmentError(msg)
-    except socket.timeout:
-       msg = "Server could not be reached, " + "Socket Timeout"
-       raise EnvironmentError(msg)
-
 
 def getDevicesGraphData(url, devices):
     try:
@@ -119,14 +100,14 @@ def getDevicesGraphData(url, devices):
            msg = "Server not configured correctly, " + "HTTPError: " + str(e.code)
            raise EnvironmentError(msg)
     except urllib2.URLError as e:
-        msg = "Failed to reach server, " + "URLError: " + e.reason
+        msg = "Failed to reach server, " + "URLError: " + str(e.reason)
         raise EnvironmentError(msg)
     except socket.timeout:
         msg = "Server could not be reached, " + "Socket Timeout"
         raise EnvironmentError(msg)
 
 def processDevicesGraphData(result, devicesTable):
-    data = csv.reader(result,delimiter='|')
+    data = csv.reader(result, delimiter='|')
     rows = 0
     for row in data:
         rows += 1
@@ -154,11 +135,11 @@ def processDevicesGraphData(result, devicesTable):
                 temp['data']['availability'] = {}
                 temp['data']['availability']['max_latency'] = availability[0]
                 temp['data']['availability']['avg_latency'] = availability[1]
-                temp['data']['availability']['succeed'] = availability[2]
+                temp['data']['availability']['availability'] = availability[2]
                 temp['data']['availability']['last_online'] = availability[3]
                 temp['data']['availability']['last_sample_date'] = availability[4]
-                temp['data']['availability']['last_sample'] = availability[5]
-                temp['data']['availability']['last_succeed'] = availability[6]
+                temp['data']['availability']['last_sample_time'] = availability[5]
+                temp['data']['availability']['last_availability'] = availability[6]
                 temp['data']['traffic'] = {}
                 for data in traffic.values():
                     # snmp_key is used for indexing
@@ -232,7 +213,7 @@ def graphDevicesInfo(root,core):
     graphServersTable.close()
 
 
-def testResult(root, core):
+def showDevicesInfo(root, core):
     linksTable,devicesTable, graphServersTable = loadDB(root, core)
     noDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' in data and data['data']==False }
     wrongDataDevices = {d:data for d,data in devicesTable.iteritems() if 'data' in data and data['data']=='Incorrect' }
@@ -285,12 +266,12 @@ if __name__ == "__main__":
         if sys.argv[1] == '1':
             graphDevicesInfo(sys.argv[2], False)
         elif sys.argv[1] =='2':
-            testResult(sys.argv[2], False)
+            showDevicesInfo(sys.argv[2], False)
     elif len(sys.argv) == 4:
         if sys.argv[1] == '1':
             graphDevicesInfo(sys.argv[2], True if  sys.argv[3] == "core" else False)
         elif sys.argv[1] =='2':
-            testResult(sys.argv[2], True if  sys.argv[3] == "core" else False)
+            showDevicesInfo(sys.argv[2], True if  sys.argv[3] == "core" else False)
 
 
 # Two open questions

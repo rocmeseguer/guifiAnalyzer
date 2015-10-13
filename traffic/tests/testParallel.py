@@ -144,12 +144,7 @@ def doParallelStatsRequests(base, args, tout, csv):
     except KeyboardInterrupt:
         sys.exit(1)
 
-    #resp =''
-    print len(responses)
-    print type(responses[0])
-    #for  r in responses:
-    #    resp  = resp + r + '\n'
-
+    return [str(r) for r in responses]
     #with open('test.txt','a') as outfile:
     #    outfile.write(resp)
         #for response in responses:
@@ -157,7 +152,6 @@ def doParallelStatsRequests(base, args, tout, csv):
             #reader = response.reader()
             #for row in reader:
             #    outfile.write(row)
-    #return resp
 
     # Queue problem????
 
@@ -203,6 +197,7 @@ def snpRequest(ip, command="help", args={}, debug=False, timeout=0, csv = False)
             response = doParallelStatsRequests(base, args, timeout, csv)
 
         print type(response)
+        #import pdb; pdb.set_trace()
         if csv:
             return response
         else:
