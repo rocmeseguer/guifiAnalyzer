@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 #
 # graphinfo.py
-
+""" This module finds which graphserver is responsible for each devices. It
+    also performs exploratory queries trying to determine which graphservers 
+    are working and in which IP or url they work. This information is stored 
+    in sqlitedict tables."""
 
 # Pordria pretender que yo soy un servidor de graficas?
 
