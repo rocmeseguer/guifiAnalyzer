@@ -2,9 +2,7 @@
 
 from pymongo import MongoClient
 
-import ..guifiwrapper.guifiwrapper as gi
-import ..guifiwrapper.cnmlUtils as cnmlUtils
-
+from  ...guifiwrapper.guifiwrapper import *
 
 client = MongoClient('mongodb://localhost:27017/')
 db = client.guifiAnalyzer
@@ -14,75 +12,97 @@ dbDevices = db.devices
 dbServices = db.services
 dbRadios = db.radios
 dbInterfaces = db.interfaces
-dbLinks = db.Links
+dbLinks = db.links
 
 
-g = gi.CNMLWrapper(2444)
+g = CNMLWrapper(2444)
+
+def mongoiseZone(zone):
+    mZone = vars(zone)
+    mZone['_id'] = str(mZone['id'])
+    del mZone['id']
+    mZone['subzones'] = [str(z) for z in mZone['subzones']]
+    mZone['nodes'] = [str(n) for n in mZone['nodes']]
+    return mZone
 
 
 def mongoiseNode(node):
     mNode = vars(node)
     # Use node id as MongoDB id
-    mNode['_id'] = mNode['id']
+    mNode['_id'] = str(mNode['id'])
+    #print type(mNode['_id'])
     # Delete old id element
     del mNode['id']
     # Keep id of parentZone
-    mNode['parentZone'] = mNode['parentZone'].id
+    mNode['parentZone'] = str(mNode['parentZone'].id)
     # Keep an array of device ids
-    mNode['devices'] = [d for d in mNode['devices']]
+    mNode['devices'] = [str(d) for d in mNode['devices']]
+    mNode['services'] = [str(d) for d in mNode['services']]
     return mNode
 
 def mongoiseService(service):
     mService = vars(service)
-    mService['_id'] = mService['id']
+    mService['_id'] = str(mService['id'])
     del mService['id']
-    mService['parentDevice'] = mService['parentDevice'].id
-    mService['interfaces'] = [d for d in mService['interfaces']]
+    mService['parentDevice'] = str(mService['parentDevice'].id)
     return mService
 
 def mongoiseDevice(device):
     mDevice = vars(device)
-    mDevice['_id'] = mDevice['id']
+    mDevice['_id'] = str(mDevice['id'])
     del mDevice['id']
-    mDevice['parentNode'] = mDevice['parentNode'].id
-    mDevice['radios'] = [d for d in mDevice['radios']]
-    mDevice['interfaces'] = [d for d in mDevice['interfaces']]
+    mDevice['parentNode'] = str(mDevice['parentNode'].id)
+    mDevice['radios'] = [str(d) for d in mDevice['radios']]
+    mDevice['interfaces'] = [str(d) for d in mDevice['interfaces']]
     return mDevice
 
 def mongoiseRadio(radio):
     mRadio = vars(radio)
-    mRadio['_id'] = mRadio['id']
+    mRadio['_id'] = {'device':str(mRadio['parentDevice'].id), 'radio':str(mRadio['id'])}
     del mRadio['id']
-    mRadio['parentDevice'] = mRadio['parentDevice'].id
-    mRadio['interfaces'] = [d for d in mRadio['interfaces']]
+    mRadio['parentDevice'] = str(mRadio['parentDevice'].id)
+    mRadio['interfaces'] = [str(d) for d in mRadio['interfaces']]
     return mRadio
 
 def mongoiseInterface(interface):
     mInterface = vars(interface)
-    mInterface['_id'] = mInterface['id']
+    mInterface['_id'] = str(mInterface['id'])
     del mInterface['id']
-    mInterface['parentRadio'] = mInterface['parentRadio'].id
-    mInterface['links'] = [d for d in mInterface['links']]
+    mInterface['parentRadio'] = str(mInterface['parentRadio'].id)
+    mInterface['links'] = [str(d) for d in mInterface['links']]
     return mInterface
 
 
 def mongoiseLink(link):
     mLink = vars(link)
-    mLink['_id'] = mLink['id']
+    mLink['_id'] = str(mLink['id'])
     del mLink['id']
-    mLink['nodeA'] = mLink['nodeA'].id
-    mLink['nodeB'] = mLink['nodeB'].id
-    mLink['deviceA'] = mLink['deviceA'].id
-    mLink['deviceB'] = mLink['deviceB'].id
-    mLink['interfaceA'] = mLink['interfaceA'].id
-    mLink['interfaceB'] = mLink['interfaceB'].id
-    mLink['parentInterface'] = mLink['parentInterface'].id
-    mLink['links'] = [d for d in mLink['links']]
+    mLink['nodeA'] = str(mLink['nodeA'].id)
+    mLink['nodeB'] = str(mLink['nodeB'].id)
+    mLink['deviceA'] = str(mLink['deviceA'].id)
+    mLink['deviceB'] = str(mLink['deviceB'].id)
+    mLink['interfaceA'] = str(mLink['interfaceA'].id)
+    mLink['interfaceB'] = str(mLink['interfaceB'].id)
+    mLink['parentInterface'] = str(mLink['parentInterface'].id)
     return mLink
 
-# Prepare nodes to add them in MongoDB
-zones = [mogoiseZone(zone.zone) for  ]
+# Prepare data to add them in MongoDB
+# Add only workingZone versions
+zones = [mongoiseZone(zone.workingZone) for zone in g.zones.values() ]
+dbZones.insert_many(zones)
 nodes = [mongoiseNode(node) for node in g.nodes.values()]
+dbNodes.insert_many(nodes)
+devices = [mongoiseDevice(device) for device in g.devices.values()]
+dbDevices.insert_many(devices)
+services = [mongoiseService(service) for service in g.services.values()]
+dbServices.insert_many(services)
+radios = [mongoiseRadio(radio) for radio in g.radios.values()]
+dbRadios.insert_many(radios)
+interfaces = [mongoiseInterface(interface) for interface in g.ifaces.values()]
+dbInterfaces.insert_many(interfaces)
+links = [mongoiseLink(link) for link in g.links.values()]
+dbLinks.insert_many(links)
+
 
 
 
