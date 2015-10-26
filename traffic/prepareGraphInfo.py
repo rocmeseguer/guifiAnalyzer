@@ -141,13 +141,12 @@ def getServiceUrlApi(conn, graphService):
         data = {'command':'guifi.service.get','service_id':graphService.id}
         params = urllib.urlencode(data)
         (codenum, response) = conn.sendRequest(params)
-        if codenum == constants.ANSWER_GOOD:
+        if codenum == constants.ANSWER_GOOD and (response['service'] != False):
            url = response['service']['var']['url']
            url = r.match(url).group(1)
            return url
         else:
-            extra = response['extra'] if 'extra' in response else None
-            raise GuifiApiError(response['str'], response['code'], extra)
+            raise EnvironmentError("Information does not exist in Guifi web")
     except URLError as e:
         raise EnvironmentError("Guifi web not replying, %s" % e)
 

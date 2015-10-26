@@ -5,7 +5,9 @@ from pymongo import MongoClient
 from  ...guifiwrapper.guifiwrapper import *
 
 client = MongoClient('mongodb://localhost:27017/')
-db = client.guifiAnalyzer
+rootZone = 2444
+dbName = 'guifi_'+str(rootZone)
+db = client[dbname]
 dbZones = db.zones
 dbNodes = db.nodes
 dbDevices = db.devices
