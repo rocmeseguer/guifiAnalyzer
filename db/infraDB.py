@@ -9,17 +9,9 @@ information concerning the infrastructure of the selected guifiZone.
 
 from pymongo import MongoClient
 from mongoiseCNML import *
+from dbExceptions import *
 
 from ..guifiwrapper.guifiwrapper import *
-
-
-class DocumentNotFound(Exception):
-    def __init__(self, collection, documentId):
-        self.collection = collection
-        self.documentId = documentId
-    def __str__(self):
-        msg = "No document of type " + str(self.collection) + "with id: " + str(self.documentId)
-        return repr(msg)
 
 
 class InfraDB(object):
@@ -82,13 +74,13 @@ class InfraDB(object):
     def getDevice(self,id):
         devices = self.db.nodes.find_one({'devices._id':str(id)},{'devices.$':1,'_id':0})
         if not devices:
-            raise DocumentNotFound('devices',id)
+            raise DocumentNotFound(self.dbname, 'devices',id)
         else:
             devices = devices['devices']
             for device in devices:
                 if device['_id'] == str(id):
                     return device
-            raise DocumentNotFound('devices',id)
+            raise DocumentNotFound(self.dbname, 'devices',id)
     #Maybe first query can be substituted with 
     #self.db.nodes.distinct('devices',{'devices._id':'19623'})  
     #but then again need to iterate and choose the right one
@@ -99,13 +91,13 @@ class InfraDB(object):
     def getService(self,id):
         services = self.db.nodes.find_one({'services._id':str(id)},{'services.$':1,'_id':0})
         if not services:
-            raise DocumentNotFound('services',id)
+            raise DocumentNotFound(self.dbname, 'services',id)
         else:
             services = services['services']
             for service in services:
                 if service['_id'] == str(id):
                     return service
-            raise DocumentNotFound('services',id)
+            raise DocumentNotFound(self.dbname, 'services',id)
 
     def getRadios(self):
         return self.db.nodes.distinct('devices.radios')

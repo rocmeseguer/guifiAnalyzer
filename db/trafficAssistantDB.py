@@ -1,18 +1,11 @@
-from pymongo import MongoClient
 """
 This module implements the backend class that communicates with
 MongoDB for the database that stores information that assists
 to perform the extraction of value information
 """
 
-#Exception
-class DocumentNotFound(Exception):
-    def __init__(self, collection, documentId):
-        self.collection = collection
-        self.documentId = documentId
-    def __str__(self):
-        msg = "No document of type " + str(self.collection) + "with id: " + str(self.documentId)
-        return repr(msg)
+from pymongo import MongoClient
+from dbExceptions import *
 
 def dictAddId(d,id):
         d['_id'] = id
@@ -64,7 +57,7 @@ class TrafficAssistantDB(object):
             }
         )
         if not update.raw_result['updatedExisting']:
-            raise DocumentNotFound(collection, id)
+            raise DocumentNotFound(self.dbname, collection, id)
 
 
     #def populateDB() ????
