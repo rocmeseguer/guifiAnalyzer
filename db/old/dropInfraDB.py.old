@@ -1,0 +1,27 @@
+#testMongo.py
+
+from pymongo import MongoClient
+
+from  ...guifiwrapper.guifiwrapper import *
+
+client = MongoClient('mongodb://localhost:27017/')
+rootZone = 2444
+dbname = 'guifi_'+str(rootZone)
+db = client[dbname]
+client.drop_database(dbname)
+#db.drop_collection("zones")
+#db.drop_collection("nodes")
+
+
+
+
+
+
+
+
+
+
+
+
+#index working nodes or store only working nodes and working in general?
+#index devices?

@@ -1,0 +1,36 @@
+from pymongo import MongoClient
+
+
+def getDB(zone):
+	client = MongoClient('mongodb://localhost:27017/')
+	rootZone = 2444
+	dbname = 'guifi_'+str(rootZone)
+	db = client[dbname]
+	return db
+
+def getCollections(db):
+	return db.zones, db.nodes, db.devices, db.services, db.radios, db.interfaces, db.links
+
+def getZones(db):
+	return db.zones.find()
+
+def getNodes(db):
+	return db.nodes.find()
+
+def getDevices(db):
+	return db.devices.find()
+
+def getServices(db):
+	return db.services.find()
+
+def getRadios(db):
+	return db.radios.find()
+
+def getIfaces(db):
+	return db.interfaces.find()
+
+def getLinks(db):
+	return db.links.find()
+
+
+
