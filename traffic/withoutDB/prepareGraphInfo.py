@@ -33,6 +33,8 @@ import re
 
 from exceptions import *
 
+import pdb
+
 #prepare regular expresion
 r = re.compile('http:\/\/([^\/]*).*')
 
@@ -334,6 +336,8 @@ def graphInfo(root, core):
                         'nodeB':link.nodeB.id}
         for index,device in enumerate([link.deviceA, link.deviceB]):
             logger.info("\tDEVICE: %s" % (device.id))
+            if not device:
+                pdb.set_trace()
             if device.id in devices:
                 logger.warning("\tAlready analyzed device: %s" % device.id)
                 # Complete link information
