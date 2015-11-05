@@ -1,4 +1,10 @@
 #graphDevicesInfo.py
+"""
+Performs a one time collection of traffic data from all the devices of
+the accessible graphServers in a guifi.net zone.
+"""
+
+
 import os
 import sys
 
@@ -30,6 +36,9 @@ import pdb
 
 
 def getAllDevicesGraphData(url):
+    """Performs a single snpRequest that will download all the traffic data
+    of the devices that correspond to the graphServer in question.
+    """
     try:
         data = snpRequest(
             url,
@@ -51,6 +60,9 @@ def getAllDevicesGraphData(url):
 
 
 def getDevicesGraphData(url, devices):
+    """Performs one or more snpRequests that will download the traffic data
+    of the devices are included in the devices list.
+    """
     try:
         data = snpRequest(
 	        url,
@@ -83,7 +95,10 @@ def getDevicesGraphData(url, devices):
         msg = "Server could not be reached, " + "Socket Timeout"
         raise EnvironmentError(msg)
 
+
 def processDevicesGraphData(result, devices, trafficAssDB):
+    """Parses and stores the result of an snpRequest.
+    """
     data = csv.reader(result, delimiter='|')
     rows = 0
     for row in data:
@@ -143,6 +158,9 @@ def processDevicesGraphData(result, devices, trafficAssDB):
 
 
 def graphDevicesInfo(root,core):
+    """Performs one traffic measurement round for the devices inlcuded in the 
+    trafficAssistantDB. 
+    """
     trafficAssDB = TrafficAssistantDB(root,core)
     trafficAssDB.connect()
     graphServers = trafficAssDB.getCollection('graphServers')
@@ -203,6 +221,9 @@ def graphDevicesInfo(root,core):
 #Store traffic in separate db
 
 def showDevicesInfo(root, core):
+    """Shows statistics for the current traffic measurement round for the devices inlcuded in the 
+    trafficAssistantDB. 
+    """
     trafficAssDB = TrafficAssistantDB(root,core)
     trafficAssDB.connect()
     graphServers = trafficAssDB.getCollection('graphServers')
