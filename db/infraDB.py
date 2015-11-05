@@ -2,8 +2,8 @@
 
 """
 This module implements the backend class that communicates with
-MongoDB for the database that stores information concerning
-the infrastructure of the selected guifiZone. 
+MongoDB for the database that stores all the collected CNML 
+information concerning the infrastructure of the selected guifiZone. 
 """
 
 
