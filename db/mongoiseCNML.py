@@ -4,78 +4,79 @@ This module converts CNML objects to MongoDB compatible dictionaries
 
 
 def mongoiseZone(zone):
-    mZone = vars(zone)
-    mZone['_id'] = str(mZone['id'])
-    del mZone['id']
-    mZone['subzones'] = [str(z) for z in mZone['subzones']]
-    mZone['nodes'] = [str(n) for n in mZone['nodes']]
-    return mZone
+    m_zone = vars(zone)
+    m_zone['_id'] = str(m_zone['id'])
+    del m_zone['id']
+    m_zone['subzones'] = [str(z) for z in m_zone['subzones']]
+    m_zone['nodes'] = [str(n) for n in m_zone['nodes']]
+    return m_zone
 
 
 def mongoiseNode(node):
-    mNode = vars(node)
+    m_node = vars(node)
     # Use node id as MongoDB id
-    mNode['_id'] = str(mNode['id'])
+    m_node['_id'] = str(m_node['id'])
     # Delete old id element
-    del mNode['id']
+    del m_node['id']
     # Keep id of parentZone
-    mNode['parentZone'] = str(mNode['parentZone'].id)
+    m_node['parentZone'] = str(m_node['parentZone'].id)
     # Keep an array of device ids
-    devices = [mongoiseDevice(d) for d in mNode['devices'].values()]
-    mNode['devices'] = devices
-    services = [mongoiseService(d) for d in mNode['services'].values()]
-    mNode['services'] = services
-    return mNode
+    devices = [mongoiseDevice(d) for d in m_node['devices'].values()]
+    m_node['devices'] = devices
+    services = [mongoiseService(d) for d in m_node['services'].values()]
+    m_node['services'] = services
+    return m_node
 
 def mongoiseService(service):
-    mService = vars(service)
-    mService['_id'] = str(mService['id'])
-    del mService['id']
-    mService['parentDevice'] = str(mService['parentDevice'].id)
-    return mService
+    m_service = vars(service)
+    m_service['_id'] = str(m_service['id'])
+    del m_service['id']
+    m_service['parentDevice'] = str(m_service['parentDevice'].id)
+    return m_service
 
 def mongoiseDevice(device):
-    mDevice = vars(device)
-    mDevice['_id'] = str(mDevice['id'])
-    del mDevice['id']
-    mDevice['parentNode'] = str(mDevice['parentNode'].id)
-    radios = [mongoiseRadio(d) for d in mDevice['radios'].values()]
-    mDevice['radios'] = radios
-    interfaces = [mongoiseInterface(d) for d in mDevice['interfaces'].values()]
-    mDevice['interfaces'] = interfaces
-    return mDevice
+    m_device = vars(device)
+    m_device['_id'] = str(m_device['id'])
+    del m_device['id']
+    m_device['parentNode'] = str(m_device['parentNode'].id)
+    radios = [mongoiseRadio(d) for d in m_device['radios'].values()]
+    m_device['radios'] = radios
+    interfaces = [mongoiseInterface(d) for d in m_device['interfaces'].values()]
+    m_device['interfaces'] = interfaces
+    return m_device
 
 def mongoiseRadio(radio):
-    mRadio = vars(radio)
-    mRadio['_id'] = {'device':str(mRadio['parentDevice'].id), 'radio':str(mRadio['id'])}
-    del mRadio['id']
-    mRadio['parentDevice'] = str(mRadio['parentDevice'].id)
-    interfaces = [mongoiseInterface(d) for d in mRadio['interfaces'].values()]
-    mRadio['interfaces'] = interfaces
-    return mRadio
+    m_radio = vars(radio)
+    m_radio['_id'] = {'device':str(m_radio['parentDevice'].id),\
+                        'radio':str(m_radio['id'])}
+    del m_radio['id']
+    m_radio['parentDevice'] = str(m_radio['parentDevice'].id)
+    interfaces = [mongoiseInterface(d) for d in m_radio['interfaces'].values()]
+    m_radio['interfaces'] = interfaces
+    return m_radio
 
 def mongoiseInterface(interface):
-    mInterface = vars(interface)
-    mInterface['_id'] = str(mInterface['id'])
-    del mInterface['id']
+    m_iface = vars(interface)
+    m_iface['_id'] = str(m_iface['id'])
+    del m_iface['id']
     # Watch out that the parent can be either radio or device
-    mInterface['parent'] = str(mInterface['parentRadio'].id)
-    del mInterface['parentRadio']
-    links = [mongoiseLink(d) for d in mInterface['links'].values()]
-    mInterface['links'] = links
-    return mInterface
+    m_iface['parent'] = str(m_iface['parentRadio'].id)
+    del m_iface['parentRadio']
+    links = [mongoiseLink(d) for d in m_iface['links'].values()]
+    m_iface['links'] = links
+    return m_iface
 
 
 def mongoiseLink(link):
-    mLink = vars(link)
-    mLink['_id'] = str(mLink['id'])
-    del mLink['id']
-    mLink['nodeA'] = str(mLink['nodeA'].id)
-    mLink['nodeB'] = str(mLink['nodeB'].id)
-    mLink['deviceA'] = str(mLink['deviceA'].id)
-    mLink['deviceB'] = str(mLink['deviceB'].id)
-    mLink['interfaceA'] = str(mLink['interfaceA'].id)
-    mLink['interfaceB'] = str(mLink['interfaceB'].id)
-    mLink['parentInterface'] = str(mLink['parentInterface'].id)
-    return mLink
+    m_link = vars(link)
+    m_link['_id'] = str(m_link['id'])
+    del m_link['id']
+    m_link['nodeA'] = str(m_link['nodeA'].id)
+    m_link['nodeB'] = str(m_link['nodeB'].id)
+    m_link['deviceA'] = str(m_link['deviceA'].id)
+    m_link['deviceB'] = str(m_link['deviceB'].id)
+    m_link['interfaceA'] = str(m_link['interfaceA'].id)
+    m_link['interfaceB'] = str(m_link['interfaceB'].id)
+    m_link['parentInterface'] = str(m_link['parentInterface'].id)
+    return m_link
 

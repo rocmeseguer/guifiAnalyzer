@@ -1,25 +1,22 @@
-#!/usr/bin/env python
-#
-# graphinfo.py
 """ 
 This module finds which graphserver is responsible for each devices. It
 also performs exploratory queries trying to determine which graphservers 
 are working and in which IP or url they work. This information is stored 
 in sqlitedict tables.
 """
-
-# Pordria pretender que yo soy un servidor de graficas?
-
 import os
 import sys
 
 
 from ..guifiwrapper.guifiwrapper import *
 from ..guifiwrapper.cnmlUtils import *
-#Will need to delete the guifiwrapper import
-from ..db.infraDB import InfraDB,DocumentNotFound
 
-from ..db.trafficAssistantDB import TrafficAssistantDB
+#Will need to delete the guifiwrapper import
+from ..db.infrastructure import InfraDB
+from ..db.exceptions import DocumentNotFoundError
+
+
+from ..db.traffic_assistant import TrafficAssistantDB
 from snpservicesClient import *
 
 import urllib2
@@ -45,29 +42,12 @@ import pdb
 #root = 8346 #Lucanes
 #root = 2444 #Osona
 #root = 18668 #Castello
-#g = CNMLWrapper(root, working = True, core = True)
-#Get connection object form guifiwrapper
-#conn = g.conn
+
 
 misDevices = []
 wtfDevices = []
 
 
-#  Store Example usage of sqlitedict:
-#
-#dbName = "./" + "graphinfo" + "_" + str(root) + ".sqlite"
-#tableName = 'links'
-#devices = SqliteDict(
-#    filename=dbName,
-#    tablename='devices',
-#    flag='n',
-#    autocommit=False)
-# for k,v in g.devices.iteritems():
-#    devices[k] = {"node":v.parentNode.id}
-# devices.commit()
-# devices.close()
-
-#  Read Example usages of sqlitedict
 
 
 def getDeviceGraphService(infraDB, device, node=None,blacklist=[]):
@@ -116,7 +96,7 @@ def getDeviceGraphService(infraDB, device, node=None,blacklist=[]):
         print serviceId
         try:
             service = infraDB.getService(serviceId)
-        except DocumentNotFound as e:
+        except DocumentNotFoundError as e:
             print e
             raise NoCNMLServerError(device)
     except KeyError as err:
@@ -368,7 +348,7 @@ def graphInfo(root, core):
                             #sys.exit(1)
                         #logger.info("\tThe ip %s of graphserver %s is correct for the device %s" % (ip,service.id,device.id))
                         logger.info("\t\t IP %s" % ip)
-            except DocumentNotFound as e:
+            except DocumentNotFoundError as e:
                 print e
                 links[link['_id']][enumDevice[index]] = None
                 links[link['_id']][enumGraphServer[index]] = None

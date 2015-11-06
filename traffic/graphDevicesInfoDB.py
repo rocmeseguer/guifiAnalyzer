@@ -1,19 +1,16 @@
-#graphDevicesInfo.py
 """
 Performs a one time collection of traffic data from all the devices of
 the accessible graphServers in a guifi.net zone.
 """
-
-
 import os
 import sys
-
 
 from ..guifiwrapper.guifiwrapper import *
 from ..guifiwrapper.cnmlUtils import *
 from snpservicesClient import *
 
-from ..db.trafficAssistantDB import TrafficAssistantDB, DocumentNotFound
+from ..db.traffic_assistant import TrafficAssistantDB
+from ..db.exceptions import DocumentNotFoundError
 
 import urllib2
 import socket
@@ -141,7 +138,7 @@ def processDevicesGraphData(result, devices, trafficAssDB):
                 devices[deviceId] = temp
                 try: 
                     trafficAssDB.updateDocument('devices',deviceId,'data',temp['data'])
-                except DocumentNotFound as e:
+                except DocumentNotFoundError as e:
                     msg= "processDevicesGraphData: "+e
                     raise EnvironmentError(msg)
         else:
@@ -150,7 +147,7 @@ def processDevicesGraphData(result, devices, trafficAssDB):
             if deviceId in devices:
                 try:
                     trafficAssDB.updateDocument('devices',deviceId,'data','Incorrect')
-                except DocumentNotFound as e:
+                except DocumentNotFoundError as e:
                     msg= "processDevicesGraphData: "+e
                     raise EnvironmentError(msg)
     return rows

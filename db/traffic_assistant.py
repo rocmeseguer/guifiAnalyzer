@@ -5,9 +5,9 @@ to perform the extraction of value information
 """
 
 from pymongo import MongoClient
-from dbExceptions import *
+from guifiAnalyzer.db.exceptions import DocumentNotFoundError
 
-def dictAddId(d,id):
+def dictAddId(d, id):
         d['_id'] = id
         return d
 
@@ -18,36 +18,36 @@ class TrafficAssistantDB(object):
     Devices
     GraphServices
     """
-
-    def __init__(self,zone,core = False):
+    def __init__(self, zone, core=False):
         self.zone = zone
         self.core = core
-        coreStr = "_core" if core else ''
-        self.dbname = 'guifi_traffic_'+str(zone)+coreStr
+        core_str = "_core" if core else ''
+        self.dbname = 'guifi_traffic_'+str(zone)+core_str
         self.client = None
-        self.db = None
+        self.database = None
 
     def connect(self):
         self.client = MongoClient('mongodb://localhost:27017/')
-        self.db = self.client[self.dbname]
+        self.database = self.client[self.dbname]
 
     def storeDictofDicts(self,name,dictionary):
         """	This function store into the database db a the dictionary
     	as a collection with the given name. The dictionary must be in 
         the form {id:dic}"""
-        collection = self.db[name]
-        dictionaries = [dictAddId(value,key) for key,value in dictionary.iteritems()]
+        collection = self.database[name]
+        dictionaries = [dictAddId(value, key) for key, value in\
+                                                dictionary.iteritems()]
         collection.insert_many(dictionaries)
 
     def getCollection(self,collection):
-        documents = self.db[collection].find()
+        documents = self.database[collection].find()
         return [d for d in documents]
     
     #def getDocument(db,collection,id): ???
 
 
     def updateDocument(self, collection, id, key, value ):
-        update = self.db[collection].update_one(
+        update = self.database[collection].update_one(
             {'_id':str(id)},
             {
                 "$set":{
@@ -57,7 +57,7 @@ class TrafficAssistantDB(object):
             }
         )
         if not update.raw_result['updatedExisting']:
-            raise DocumentNotFound(self.dbname, collection, id)
+            raise DocumentNotFoundError(self.dbname, collection, id)
 
 
     #def populateDB() ????
