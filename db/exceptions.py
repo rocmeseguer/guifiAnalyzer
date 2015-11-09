@@ -9,10 +9,12 @@ class DocumentNotFoundError(Exception):
         return repr(msg)
 
 class BulkAlreadyExistsError(Exception):
-    def __init__(self, dbname):
+    def __init__(self, dbname, collection):
         self.dbname = dbname
+        self.collection = collection
     def __str__(self):
-        msg = self.dbname+" DB: A bulk action is already pending"
+        msg = self.dbname+" DB: A bulk operation already exists"+\
+                    " for the collection: "+self.collection
         return repr(msg)
 
 class NoBulkExistsError(Exception):
