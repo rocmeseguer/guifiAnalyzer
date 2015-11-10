@@ -91,8 +91,7 @@ def doParallelStatsRequests(base, args, tout, csv):
             while True:
                 try:
                     response = urllib2.urlopen(req, **req_params)
-                    print type(response)
-                    print "Done", q.qsize()
+                    #print "Done", q.qsize()
                 except (urllib2.HTTPError, urllib2.URLError, socket.timeout) as e:
                     print e
                 else:
