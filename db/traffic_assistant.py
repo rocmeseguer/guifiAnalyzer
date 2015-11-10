@@ -22,7 +22,7 @@ class TrafficAssistantDB(object):
         self.zone = zone
         self.core = core
         core_str = "_core" if core else ''
-        self.dbname = 'guifi_traffic_'+str(zone)+core_str
+        self.dbname = 'guifi_traffic_assistant_'+str(zone)+core_str
         self.client = None
         self.database = None
 
