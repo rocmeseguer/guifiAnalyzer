@@ -150,6 +150,7 @@ def cnmlObjectCopy(obj):
             obj.id,
             obj.protocol,
             obj.snmp_name,
+            obj.snmp_index,
             obj.ssid,
             obj.mode,
             obj.antenna_gain,

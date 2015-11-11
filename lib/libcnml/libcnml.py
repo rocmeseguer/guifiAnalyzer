@@ -375,10 +375,11 @@ class CNMLRadio(object):
     """
     This CNMLRadio class represents a radio of a device in the network
     """
-    def __init__(self, rid, protocol, snmp_name, ssid, mode, gain, angle, channel, clients, parent):
+    def __init__(self, rid, protocol, snmp_name, snmp_index, ssid, mode, gain, angle, channel, clients, parent):
         self.id = rid
         self.protocol = protocol
         self.snmp_name = snmp_name
+        self.snmp_index = snmp_index
         self.ssid = ssid
         self.mode = mode
         self.antenna_gain = gain
@@ -400,6 +401,7 @@ class CNMLRadio(object):
         rid = int(r.get('id'))
         protocol = r.get('protocol')
         snmp_name = r.get('snmp_name')
+        snmp_index = r.get('snmp_index') or None
         ssid = r.get('ssid')
         mode = r.get('mode')
         antenna_gain = r.get('antenna_gain')
@@ -411,7 +413,7 @@ class CNMLRadio(object):
         #falta atributo interfaces="2"
         #sobra atributo device_id
 
-        newradio = CNMLRadio(rid, protocol, snmp_name, ssid, mode, antenna_gain, antenna_angle, channel, clients, parent)
+        newradio = CNMLRadio(rid, protocol, snmp_name, snmp_index, ssid, mode, antenna_gain, antenna_angle, channel, clients, parent)
         return newradio
 
     @staticmethod
@@ -420,6 +422,7 @@ class CNMLRadio(object):
         rid = int(r.getAttribute('id'))
         protocol = r.getAttribute('protocol')
         snmp_name = r.getAttribute('snmp_name')
+        snmp_index = r.getAttribute('snmp_index') or None
         ssid = r.getAttribute('ssid')
         mode = r.getAttribute('mode')
         antenna_gain = r.getAttribute('antenna_gain')
@@ -431,7 +434,7 @@ class CNMLRadio(object):
         #falta atributo interfaces="2"
         #sobra atributo device_id
 
-        newradio = CNMLRadio(rid, protocol, snmp_name, ssid, mode, antenna_gain, antenna_angle, channel, clients, parent)
+        newradio = CNMLRadio(rid, protocol, snmp_name, snmp_index, ssid, mode, antenna_gain, antenna_angle, channel, clients, parent)
         return newradio
 
     @staticmethod
