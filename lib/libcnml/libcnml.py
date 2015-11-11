@@ -452,8 +452,10 @@ class CNMLInterface(object):
     """
     This CNMLInterface class represents a interface associated to a radio of a device in the network
     """
-    def __init__(self, iid, ipv4, mask, mac, itype, parent):
+    def __init__(self, iid, snmp_name, snmp_index, ipv4, mask, mac, itype, parent):
         self.id = iid
+        self.snmp_name = snmp_name
+        self.snmp_index = snmp_index
         self.ipv4 = ipv4
         self.mask = mask
         self.mac = mac
@@ -470,26 +472,30 @@ class CNMLInterface(object):
     @staticmethod
     def parseLxml(i, parent):
         iid = int(i.get('id'))
+        snmp_name = i.get('snmp_name') or None
+        snmp_index = i.get('snmp_index') or None
         ipv4 = i.get('ipv4')
         mac = i.get('mac')
         #checkMac
         mask = i.get('mask')
         itype = i.get('type')  # wLan/Lan
 
-        newiface = CNMLInterface(iid, ipv4, mask, mac, itype, parent)
+        newiface = CNMLInterface(iid, snmp_name, snmp_index, ipv4, mask, mac, itype, parent)
 
         return newiface
 
     @staticmethod
     def parseMinidom(i, parent):
         iid = int(i.getAttribute('id'))
+        snmp_name = i.getAttribute('snmp_name')
+        snmp_index = i.getAttribute('snmp_index') or None
         ipv4 = i.getAttribute('ipv4')
         mac = i.getAttribute('mac')
         #checkMac
         mask = i.getAttribute('mask')
         itype = i.getAttribute('type')  # wLan/Lan
 
-        newiface = CNMLInterface(iid, ipv4, mask, mac, itype, parent)
+        newiface = CNMLInterface(iid, snmp_name, snmp_index, ipv4, mask, mac, itype, parent)
 
         return newiface
 

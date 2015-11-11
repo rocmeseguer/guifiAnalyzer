@@ -162,6 +162,8 @@ def cnmlObjectCopy(obj):
     elif isinstance(obj, libcnml.libcnml.CNMLInterface):
         new = libcnml.libcnml.CNMLInterface(
             obj.id,
+            obj.snmp_name,
+            obj.snmp_index,
             obj.ipv4,
             obj.mask,
             obj.mac,
