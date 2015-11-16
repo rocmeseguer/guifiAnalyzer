@@ -41,7 +41,7 @@ def mongoiseDevice(device):
     m_device['parentNode'] = str(m_device['parentNode'].id)
     radios = [mongoiseRadio(d) for d in m_device['radios'].values()]
     m_device['radios'] = radios
-    interfaces = [mongoiseInterface(d) for d in m_device['interfaces'].values()]
+    interfaces = [mongoiseInterface(d,radio=False) for d in m_device['interfaces'].values()]
     m_device['interfaces'] = interfaces
     return m_device
 
@@ -51,16 +51,20 @@ def mongoiseRadio(radio):
                         'radio':str(m_radio['id'])}
     del m_radio['id']
     m_radio['parentDevice'] = str(m_radio['parentDevice'].id)
-    interfaces = [mongoiseInterface(d) for d in m_radio['interfaces'].values()]
+    interfaces = [mongoiseInterface(d,radio=True) for d in m_radio['interfaces'].values()]
     m_radio['interfaces'] = interfaces
     return m_radio
 
-def mongoiseInterface(interface):
+def mongoiseInterface(interface, radio):
     m_iface = vars(interface)
     m_iface['_id'] = str(m_iface['id'])
     del m_iface['id']
     # Watch out that the parent can be either radio or device
-    m_iface['parent'] = str(m_iface['parentRadio'].id)
+    if radio:
+        m_iface['parent'] = {'device':str(m_iface['parentRadio'].parentDevice.id),
+                            'radio':str(m_iface['parentRadio'].id)}
+    else:
+        m_iface['parent'] = str(m_iface['parentRadio'].id)
     del m_iface['parentRadio']
     links = [mongoiseLink(d) for d in m_iface['links'].values()]
     m_iface['links'] = links
