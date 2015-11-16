@@ -86,6 +86,12 @@ class InfraDB(object):
     #self.database.nodes.distinct('devices',{'devices._id':'19623'})  
     #but then again need to iterate and choose the right one
 
+    def getDeviceLinks(self,id):
+        temp = self.database.nodes.distinct('devices.radios.interfaces.links',
+                                 {'devices._id':id})
+        return temp +self.database.nodes.distinct('devices.interfaces.links',
+                                         {'devices._id':id})
+
     def getServices(self):
         return self.database.nodes.distinct('services')
 
@@ -111,4 +117,5 @@ class InfraDB(object):
     def getLinks(self):
         temp = self.database.nodes.distinct('devices.radios.interfaces.links')
         return temp+self.database.nodes.distinct('devices.interfaces.links')
+
 
