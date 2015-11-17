@@ -400,7 +400,7 @@ class CNMLRadio(object):
         #radio ids are 0, 1, 2...
         rid = int(r.get('id'))
         protocol = r.get('protocol')
-        snmp_name = r.get('snmp_name')
+        snmp_name = r.get('snmp_name') or None
         snmp_index = r.get('snmp_index') or None
         ssid = r.get('ssid')
         mode = r.get('mode')
@@ -421,7 +421,7 @@ class CNMLRadio(object):
         #radio ids are 0, 1, 2...
         rid = int(r.getAttribute('id'))
         protocol = r.getAttribute('protocol')
-        snmp_name = r.getAttribute('snmp_name')
+        snmp_name = r.getAttribute('snmp_name') or None
         snmp_index = r.getAttribute('snmp_index') or None
         ssid = r.getAttribute('ssid')
         mode = r.getAttribute('mode')
@@ -487,7 +487,7 @@ class CNMLInterface(object):
     @staticmethod
     def parseMinidom(i, parent):
         iid = int(i.getAttribute('id'))
-        snmp_name = i.getAttribute('snmp_name')
+        snmp_name = i.getAttribute('snmp_name') or None
         snmp_index = i.getAttribute('snmp_index') or None
         ipv4 = i.getAttribute('ipv4')
         mac = i.getAttribute('mac')
@@ -837,6 +837,34 @@ class CNMLParser(object):
                 self.devices[did] = newdevice
                 self.nodes[nid].addDevice(newdevice)
 
+                # --radios--
+                for r in d.iterfind('radio'):
+                    rid = int(r.get('id'))
+                    newradio = CNMLRadio.parse(r, newdevice)
+                    self.radios[(did, rid)] = newradio
+                    self.devices[did].addRadio(newradio)
+
+                    # --interfaces--
+                    for i in r.iterchildren('interface'):
+                        iid = int(i.get('id'))
+
+                        if  iid not in self.ifaces:
+                            newiface = CNMLInterface.parse(i, newradio)
+                            self.ifaces[iid] = newiface
+                            self.devices[did].radios[rid].addInterface(newiface)
+
+                        # --links--
+                        for l in i.iterfind('link'):
+                            lid = int(l.get('id'))
+
+                            if lid in self.links:
+                                self.links[lid].parseLinkB(l)
+                                self.ifaces[iid].addLink(self.links[lid])
+                            else:
+                                newlink = CNMLLink.parse(l, self.ifaces[iid])
+                                self.links[lid] = newlink
+                                self.ifaces[iid].addLink(newlink)
+
                 # --interfaces--
                 # If there's a working service in this device, it has interfaces (and it's not a son of a radio!)
                 for i in d.iterchildren('interface'):
@@ -866,34 +894,6 @@ class CNMLParser(object):
                     newservice = CNMLService.parse(s, newdevice)
                     self.services[sid] = newservice
                     self.nodes[nid].addService(newservice)
-
-                # --radios--
-                for r in d.iterfind('radio'):
-                    rid = int(r.get('id'))
-                    newradio = CNMLRadio.parse(r, newdevice)
-                    self.radios[(did, rid)] = newradio
-                    self.devices[did].addRadio(newradio)
-
-                    # --interfaces--
-                    for i in r.iterfind('interface'):
-                        iid = int(i.get('id'))
-
-                        if  iid not in self.ifaces:
-                            newiface = CNMLInterface.parse(i, newradio)
-                            self.ifaces[iid] = newiface
-                            self.devices[did].radios[rid].addInterface(newiface)
-
-                        # --links--
-                        for l in i.iterfind('link'):
-                            lid = int(l.get('id'))
-
-                            if lid in self.links:
-                                self.links[lid].parseLinkB(l)
-                                self.ifaces[iid].addLink(self.links[lid])
-                            else:
-                                newlink = CNMLLink.parse(l, self.ifaces[iid])
-                                self.links[lid] = newlink
-                                self.ifaces[iid].addLink(newlink)
 
         # Replace None by true reference of nodes/devices/interfaces
         # Note that if they belong to a different zone they might not be defined in the CNML file
@@ -942,6 +942,33 @@ class CNMLParser(object):
                 self.devices[did] = newdevice
                 self.nodes[nid].addDevice(newdevice)
 
+                # --radios--
+                for r in d.getElementsByTagName("radio"):
+                    rid = int(r.getAttribute('id'))
+                    newradio = CNMLRadio.parse(r, newdevice)
+                    self.radios[(did, rid)] = newradio
+                    self.devices[did].addRadio(newradio)
+
+                    # --interfaces--
+                    for i in r.getElementsByTagName("interface"):
+                        iid = int(i.getAttribute('id'))
+                        newiface = CNMLInterface.parse(i, newradio)
+                        self.ifaces[iid] = newiface
+                        logger.info("MINIDOM: ADDING NEW IFACE TO RADIOS")
+                        self.devices[did].radios[rid].addInterface(newiface)
+
+                        # --links--
+                        for l in i.getElementsByTagName("link"):
+                            lid = int(l.getAttribute('id'))
+
+                            if lid in self.links:
+                                self.links[lid].parseLinkB(l)
+                                self.ifaces[iid].addLink(self.links[lid])
+                            else:
+                                newlink = CNMLLink.parse(l, newiface)
+                                self.links[lid] = newlink
+                                self.ifaces[iid].addLink(newlink)
+
                 # --interfaces--
                 # TODO: If there's a working service in this device, it has interfaces (and it's not a son of a radio!)
                 # Look at the lxml parsing
@@ -970,31 +997,6 @@ class CNMLParser(object):
                     self.services[sid] = newservice
                     self.nodes[nid].addService(newservice)
 
-                # --radios--
-                for r in d.getElementsByTagName("radio"):
-                    rid = int(r.getAttribute('id'))
-                    newradio = CNMLRadio.parse(r, newdevice)
-                    self.radios[(did, rid)] = newradio
-                    self.devices[did].addRadio(newradio)
-
-                    # --interfaces--
-                    for i in r.getElementsByTagName("interface"):
-                        iid = int(i.getAttribute('id'))
-                        newiface = CNMLInterface.parse(i, newradio)
-                        self.ifaces[iid] = newiface
-                        self.devices[did].radios[rid].addInterface(newiface)
-
-                        # --links--
-                        for l in i.getElementsByTagName("link"):
-                            lid = int(l.getAttribute('id'))
-
-                            if lid in self.links:
-                                self.links[lid].parseLinkB(l)
-                                self.ifaces[iid].addLink(self.links[lid])
-                            else:
-                                newlink = CNMLLink.parse(l, newiface)
-                                self.links[lid] = newlink
-                                self.ifaces[iid].addLink(newlink)
 
         # Replace None by true reference of nodes/devices/interfaces
         # Note that if they belong to a different zone they might not be defined in the CNML file
