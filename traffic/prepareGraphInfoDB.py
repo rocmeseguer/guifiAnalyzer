@@ -296,8 +296,9 @@ def graphInfo(root, core):
                     # Complete link information
                     links[link['_id']][enumDevice[index]] = device['_id']
                     links[link['_id']][enumGraphServer[index]] = devices[device['_id']]['graphServer']
+                    devices[device['_id']]['links'][link['_id']] = infraDB.getLinkSnmpKey(device['_id'], link['_id'])
                 else:
-                    devices[device['_id']] = {'link':link['_id']}
+                    devices[device['_id']] = {'links':{link['_id']:infraDB.getLinkSnmpKey(device['_id'], link['_id'])}}
                     try:
                         service, found = getDeviceGraphService(infraDB, device)
                         # Using enum to avoid if else

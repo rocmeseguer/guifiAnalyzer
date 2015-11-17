@@ -110,12 +110,84 @@ class InfraDB(object):
     def getRadios(self):
         return self.database.nodes.distinct('devices.radios')
 
+    def getRadio(self, radio_id):
+        radios = self.database.nodes.distinct("devices.radios",
+                                    {'devices.radios._id':radio_id})
+        if radios:
+            for radio in radios:
+                if radio['_id'] == radio_id:
+                    return radio
+        # `If none of the above works
+        raise DocumentNotFoundError(self.dbname, 'radio', radio_id)
+
+
+
     def getIfaces(self):
         temp = self.database.nodes.distinct('devices.radios.interfaces')
         return temp+self.database.nodes.distinct('devices.interfaces')
+
+    def getInterface(self, iface_id):
+        ifaces = self.database.nodes.distinct("devices.radios.interfaces",
+                                {'devices.radios.interfaces._id':iface_id})
+        if ifaces:
+            for iface in ifaces:
+                if iface['_id'] == iface_id:
+                    return iface
+        ifaces = self.database.nodes.distinct("devices.interfaces",
+                                    {'devices.interfaces._id':iface_id})
+        if ifaces:
+            for iface in ifaces:
+                if iface['_id'] == iface_id:
+                    return iface
+        # `If none of the above works
+        raise DocumentNotFoundError(self.dbname, 'interfaces', iface_id)
+
 
     def getLinks(self):
         temp = self.database.nodes.distinct('devices.radios.interfaces.links')
         return temp+self.database.nodes.distinct('devices.interfaces.links')
 
+    def getLink(self, link_id):
+        links = self.database.nodes.distinct("devices.radios.interfaces.links",
+                                {'devices.radios.interfaces.links._id':link_id})
+        if links:
+            for link in links:
+                if link['_id'] == link_id:
+                    return link
+        links = self.database.nodes.distinct("devices.interfaces.links",
+                                    {'devices.interfaces.links._id':link_id})
+        if links:
+            for link in links:
+                if link['_id'] == link_id:
+                    return link
+        # If none of the above works
+        raise DocumentNotFoundError(self.dbname, 'links', link_id)
 
+    def getLinkSnmpKey(self,device_id, link_id):
+        link = self.getLink(link_id)
+        # Find correct interface
+        if link['deviceA'] == device_id:
+            interface_id = link['interfaceA']
+        elif link['deviceB'] == device_id:
+            interface_id = link['interfaceB']
+        else:
+            raise DocumentNotFoundError(self.dbname, 'device', device_id)
+        interface = self.getInterface(interface_id)
+        try:
+            radio_id = interface['parent']
+            radio = self.getRadio(radio_id)
+        except DocumentNotFoundError:
+            print "No radio found for this link"
+            radio = None
+        snmp_key = None
+        if interface['snmp_index'] != None:
+            snmp_key = interface['snmp_index']
+        elif radio and radio['snmp_index'] != None:
+            snmp_key = radio['snmp_index']
+        elif interface['snmp_name'] != None or (radio and
+                                         (radio['snmp_name'] != None)):
+            snmp_key = radio['_id']['radio']
+        else:
+            raise DocumentNotFoundError(self.dbname,
+                                        'snmp_key of link', link_id)
+        return snmp_key
