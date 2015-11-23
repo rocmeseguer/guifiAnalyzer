@@ -47,7 +47,7 @@ def parseCNMLZone(zoneId, conn):
     """
     Return a zone parced by libcnml
     """
-    zonefile = os.path.join(os.getcwd(), 'cnml', str(zoneId))
+    zonefile = os.path.join(os.getcwd(), 'guifiAnalyzerOut','cnml', str(zoneId))
     if not os.path.isfile(zonefile):
         logger.info('Cannot find zone %s locally. Will download', zoneId)
         zonefile = getCNMLZone(zoneId, conn)
