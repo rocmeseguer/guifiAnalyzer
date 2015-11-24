@@ -304,7 +304,8 @@ class TrafficDB(object):
                 time_slot = self.__getTimeSlot(remote_datetime)
                 results = results.copy()
                 if (time_slot == 0 or (not last_measured_datetime) or 
-                    remote_datetime.strftime('%y%m%H') != last_measured_datetime.strftime('%y%m%H')):
+                    remote_datetime.strftime('%y%m%d%H') !=
+                    last_measured_datetime.strftime('%y%m%d%H')):
                 # New document
                     new_document = copy.deepcopy(empty_document[collection])
                     #Set values for new document:
