@@ -231,7 +231,7 @@ class TrafficDB(object):
 
 
     def getDeviceLastDocument(self, device_id):
-        documents = self.dbdevices.find({'_id':{'$regex':'^'+device_id}}).\
+        documents = self.dbdevices.find({'_id':{'$regex':'^'+device_id+':'}}).\
                                     sort('_id', DESCENDING)
         if documents.count():
             for doc in documents:
@@ -240,7 +240,7 @@ class TrafficDB(object):
             return None
 
     def getDeviceDocumentsAscending(self, device_id):
-        documents = self.dbdevices.find({'_id':{'$regex':'^'+device_id}}).\
+        documents = self.dbdevices.find({'_id':{'$regex':'^'+device_id+':'}}).\
                                     sort('_id', ASCENDING)
         if documents.count():
             return list(documents)
