@@ -10,6 +10,7 @@ from ..guifiwrapper.cnmlUtils import *
 from snpservicesClient import *
 
 from ..db.traffic_assistant import TrafficAssistantDB
+from ..db.traffic import TrafficDB
 from ..db.exceptions import DocumentNotFoundError
 
 import urllib2
@@ -31,6 +32,7 @@ import collections
 
 import pdb
 
+from datetime import datetime as dt
 
 def getAllDevicesGraphData(url):
     """Performs a single snpRequest that will download all the traffic data
@@ -93,21 +95,25 @@ def getDevicesGraphData(url, devices):
         raise EnvironmentError(msg)
 
 
-def processDevicesGraphData(result, devices, trafficAssDB):
+def processDevicesGraphData(result, devices, links, trafficAssDB, trafficdb, date):
     """Parses and stores the result of an snpRequest.
     """
     data = csv.reader(result, delimiter='|')
     rows = 0
+    correct_data = False
+    trafficdb.initializeBulk('devices')
+    #trafficdb.initializeBulk('links')
     for row in data:
         rows += 1
         if len(row) == 2:
             #No Data for this node
             deviceId = row[0]
             if deviceId in devices:
-                logger.error("No data")
+                #logger.error("No data")
                 temp = devices[deviceId]
                 temp['data'] = False
                 devices[deviceId] = temp
+                trafficdb.storeBulk('devices',deviceId, date, False)
         elif len(row) >= 3:
             # 3 is a normal device that has traffic info for only 1 iface
             # More than 3 are supernodes
@@ -119,6 +125,10 @@ def processDevicesGraphData(result, devices, trafficAssDB):
             for i in range(2,len(row)):
                 traffic[i-2] = row[i].split(',')
             if deviceId in devices:
+                #linkId = devices['deviceId']['link']
+                #link = links[linkId]
+                #devicePosition = 'deviceA' if deviceId == link['deviceA'] else 'deviceB'
+                #correct_data = True
                 temp = devices[deviceId]
                 temp['data']={}
                 temp['data']['availability'] = {}
@@ -137,29 +147,46 @@ def processDevicesGraphData(result, devices, trafficAssDB):
                     temp['data']['traffic'][data[0]]['traffic_out'] = data[2]
                 devices[deviceId] = temp
                 try: 
-                    trafficAssDB.updateDocument('devices',deviceId,'data',temp['data'])
+                    trafficAssDB.updateDocument('devices',deviceId,'data','Correct')
+                    bulk = trafficdb.storeBulk('devices',deviceId, date, temp['data'])
+                    #trafficdb.storeBulk('links',deviceId, date, temp['data'])
+                    correct_data = (correct_data or bulk)
                 except DocumentNotFoundError as e:
                     msg= "processDevicesGraphData: "+e
                     raise EnvironmentError(msg)
         else:
-            logger.error("Server Data Incorrect")
+            #logger.error("Server Data Incorrect")
             deviceId = row[0]
             if deviceId in devices:
                 try:
                     trafficAssDB.updateDocument('devices',deviceId,'data','Incorrect')
+                    trafficdb.storeBulk('devices',deviceId, date, False)
                 except DocumentNotFoundError as e:
                     msg= "processDevicesGraphData: "+e
                     raise EnvironmentError(msg)
+    if correct_data:
+        trafficdb.executeBulk('devices')
+        #trafficdb.executeBulk('links')
+    trafficdb.dropDevicesBulk('devices')
+    #trafficdb.dropDevicesBulk('links')
     return rows
 
 
 
-def graphDevicesInfo(root,core):
+def graphDevicesInfo(root,core, date=None):
     """Performs one traffic measurement round for the devices inlcuded in the 
     trafficAssistantDB. 
     """
+    if not date:
+        date = dt.now()
+    logger.info("START:%s" % dt.now().strftime(' %H:%M.%S | %d/%m/%y'))
+    logger.info("/////////////////")
+    logger.info("Starting measurement for Zone: %s" % str(root))
+
     trafficAssDB = TrafficAssistantDB(root,core)
     trafficAssDB.connect()
+    trafficdb = TrafficDB(root,core)
+    trafficdb.connect()
     graphServers = trafficAssDB.getCollection('graphServers')
     devices = trafficAssDB.getCollection('devices')
     links = trafficAssDB.getCollection('links')
@@ -173,7 +200,8 @@ def graphDevicesInfo(root,core):
                 logger.info("\tGraphed Devices %s" % len(toBeGraphed))
                 result = getDevicesGraphData(data['ip'],toBeGraphed)
                 devicesDict = {data['_id']:data for data in devices}
-                rows = processDevicesGraphData(result, devicesDict, trafficAssDB)
+                linksDict = {data['_id']:data for data in links}
+                rows = processDevicesGraphData(result, devicesDict, linksDict, trafficAssDB, trafficdb, date)
                 trafficAssDB.updateDocument('graphServers', data['_id'], 'Working', True)
                 trafficAssDB.updateDocument('graphServers', data['_id'], 'Rows', rows)
             except EnvironmentError as e:
@@ -185,9 +213,9 @@ def graphDevicesInfo(root,core):
             logger.info("No working ip")
 
 
-    for data in devices:
-        d = data['_id']
-        print("%s : %s" % (str(d),data))
+    #for data in devices:
+    #    d = data['_id']
+    #    print("%s : %s" % (str(d),data))
 
     graphServers = trafficAssDB.getCollection('graphServers')
     devices = trafficAssDB.getCollection('devices')
@@ -195,7 +223,7 @@ def graphDevicesInfo(root,core):
 
     noDataDevices = {data['_id']:data for data in devices if 'data' in data and data['data']==False }
     wrongDataDevices = {data['_id']:data for data in devices if 'data' in data and data['data']=='Incorrect' }
-    correctDataDevices = {data['_id']:data for data in devices if 'data' in data and isinstance(data['data'],dict)}
+    correctDataDevices = {data['_id']:data for data in devices if 'data' in data and data['data']=='Correct'}
     shouldWorkGraphServers = {data['_id']:data for data in graphServers if 'ip' in data and data['ip']}
     noGraphServer = {data['_id']:data for data in graphServers if 'Working' in data and data['Working']==False}
     totalWorkingGraphServers = {data['_id']:data for data in graphServers if 'Working' in data and data['Working']==True }
@@ -214,6 +242,10 @@ def graphDevicesInfo(root,core):
     logger.info("wtf devices: %s" % len(wtfDataDevices)) #Should have some of the above types of data
     logger.info("Correct data devices: %s" % len(correctDataDevices))
 
+    logger.info("Finished measurement for Zone: %s" % str(root))
+    logger.info("/////////////////")
+    logger.info("STOP:%s" % dt.now().strftime(' %H:%M.%S | %d/%m/%y'))
+
 #TODO Correct showDevicesInfo
 #Store traffic in separate db
 
@@ -228,7 +260,7 @@ def showDevicesInfo(root, core):
     links = trafficAssDB.getCollection('links')
     noDataDevices = {data['_id']:data for data in devices if 'data' in data and data['data']==False }
     wrongDataDevices = {data['_id']:data for data in devices if 'data' in data and data['data']=='Incorrect' }
-    correctDataDevices = {data['_id']:data for data in devices if 'data' in data and isinstance(data['data'],dict)}
+    correctDataDevices = {data['_id']:data for data in devices if 'data' in data and data['data']=='Correct'}
     shouldWorkGraphServers = {data['_id']:data for data in graphServers if 'ip' in data and data['ip']}
     noGraphServer = {data['_id']:data for data in graphServers if 'Working' in data and data['Working']==False}
     totalWorkingGraphServers = {data['_id']:data for data in graphServers if 'Working' in data and data['Working']==True }
