@@ -42,6 +42,15 @@ class TrafficAssistantDB(object):
     def getCollection(self,collection):
         documents = self.database[collection].find()
         return [d for d in documents]
+
+    def getLink(self, link_id):
+        return self.database.links.find_one({'_id':link_id})
+
+    def getDevice(self, device_id):
+        return self.database.devices.find_one({'_id':device_id})
+
+    def getGraphServer(self, graphServer_id):
+        return self.database.graphServers.find_one({'_id':graphServer_id})
     
     #def getDocument(db,collection,id): ???
 
