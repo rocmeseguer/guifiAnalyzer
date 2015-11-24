@@ -65,10 +65,8 @@ def doParallelStatsRequests(base, args, tout, csv):
         url = base
         for i in devices:
             if i == devices[-1]:
-                #print i
                 url += str(i)
             else:
-                # print i
                 url += str(i) + ","
         return url
 
@@ -83,7 +81,7 @@ def doParallelStatsRequests(base, args, tout, csv):
         while True:
             # Parallel stuff start under this command
             url = q.get()
-            print "%s\n" % url
+            #print "%s\n" % url
             req = urllib2.Request(url)
             req_params = {}
             if timeout:
@@ -122,7 +120,7 @@ def doParallelStatsRequests(base, args, tout, csv):
     urls = [buildUrl(base,devicesList) for devicesList in devicesLists]
     #print "Urls"
     urlsLen = [len(url) for url in urls]
-    print urlsLen
+    #print urlsLen
     #Do parallel request for each url innlist
     # but use standard number of workers
     concurrent = 70
@@ -172,7 +170,6 @@ def snpRequest(ip, command="help", args={}, debug=False, timeout=0, csv = False)
             print "Parallel Request"
             response = doParallelStatsRequests(base, args, timeout, csv)
 
-        print type(response)
         if csv:
             return response
         else:
