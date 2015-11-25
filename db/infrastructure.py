@@ -9,6 +9,7 @@ information concerning the infrastructure of the selected guifiZone.
 from pymongo import MongoClient
 from mongoiseCNML import *
 from guifiAnalyzer.db.exceptions import DocumentNotFoundError
+from guifiAnalyzer.db.settings import SERVER, PORT
 
 from ..guifiwrapper.guifiwrapper import CNMLWrapper
 
@@ -29,7 +30,7 @@ class InfraDB(object):
         self.database = None
 
     def connect(self):
-        self.client = MongoClient('mongodb://localhost:27017/')
+        self.client = MongoClient('mongodb://'+SERVER+':'+PORT+'/')
         self.database = self.client[self.dbname]
 
     # Prepare data to add them in MongoDB

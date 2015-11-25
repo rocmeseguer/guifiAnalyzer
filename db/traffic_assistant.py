@@ -6,6 +6,7 @@ to perform the extraction of value information
 
 from pymongo import MongoClient
 from guifiAnalyzer.db.exceptions import DocumentNotFoundError
+from guifiAnalyzer.db.settings import SERVER, PORT
 
 def dictAddId(d, id):
         d['_id'] = id
@@ -27,7 +28,7 @@ class TrafficAssistantDB(object):
         self.database = None
 
     def connect(self):
-        self.client = MongoClient('mongodb://localhost:27017/')
+        self.client = MongoClient('mongodb://'+SERVER+':'+PORT+'/')
         self.database = self.client[self.dbname]
 
     def storeDictofDicts(self,name,dictionary):

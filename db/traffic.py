@@ -9,6 +9,7 @@ from pymongo import ASCENDING, DESCENDING
 from guifiAnalyzer.db.exceptions import BulkAlreadyExistsError,\
                                             NoBulkExistsError,\
                                             DocumentNotFoundError
+from guifiAnalyzer.db.settings import SERVER, PORT
 
 import copy
 from pprint import pprint
@@ -207,7 +208,7 @@ class TrafficDB(object):
 
 
     def connect(self):
-        self.client = MongoClient('mongodb://localhost:27017/')
+        self.client = MongoClient('mongodb://'+SERVER+':'+PORT+'/')
         self.database = self.client[self.dbname]
         self.dbdevices = self.database.devices
         self.dblinks = self.database.links
