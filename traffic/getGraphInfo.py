@@ -63,10 +63,10 @@ day = now.day
 hour = now.hour
 minute = now.minute
 #zone = raw_input('Enter Zone')
-zone = 2444
-#zone = 8346
+#zone = 2444
+zone = 8346
 core = False
-#initializeInfraDB(zone, core, populate=True)
+initializeInfraDB(zone, core, populate=True)
 #initializeTrafficAssistantDB(zone, core, populate=True)
 
 
@@ -85,24 +85,26 @@ core = False
 #job.enable()
 #cron.write_to_user( user=True )
 
-logfile = '/home/manos/Documents/guifiAnalyzerOut/log/traffic_'+str(zone)+'.log'
-#cron = CronTab(user=True, log=logfile)
-cron = CronTab(user=True)
-python = '/usr/bin/python'
-module = 'guifiAnalyzer.traffic.graphDevicesInfoDB 1 '
-args = str(zone)
-cmd = 'cd /home/manos/Documents; '+python+' -m '+module+' '+args+' >> '+logfile+' 2>&1'
-#cmd = 'cd /home/manos/Documents; '+python+' -m '+module+' '+args
-# You can even set a comment for this command
-job = cron.new(command=cmd)
-job.minute.every(5)
-#job.hour.on(now.hour)
-job.hour.during(0,2).every(1)
-job.day.on(now.day+1)
-job.month.on(now.month)
-job.enable()
-cron.write_to_user( user=True )
+def addCronJob():
+    logfile = '/home/manos/Documents/phd/Guifi/my/guifiAnalyzerOut/log/traffic_'+str(zone)+'.log'
+    #cron = CronTab(user=True, log=logfile)
+    cron = CronTab(user=True)
+    python = '/usr/bin/python'
+    module = 'guifiAnalyzer.traffic.graphDevicesInfoDB 1 '
+    args = str(zone)
+    cmd = 'cd /home/manos/Documents/phd/Guifi/my; '+python+' -m '+module+' '+args+' >> '+logfile+' 2>&1'
+    #cmd = 'cd /home/manos/Documents; '+python+' -m '+module+' '+args
+    # You can even set a comment for this command
+    job = cron.new(command=cmd)
+    job.minute.every(5)
+    #job.hour.on(now.hour)
+    job.hour.during(0,23).every(1)
+    job.day.on(now.day+1)
+    job.month.on(now.month)
+    job.enable()
+    cron.write_to_user( user=True )
 
+#addCronJob()
 
 #infraDB = storeInfraDB.createDB(root,core)
 #storeInfraDB.populateDB(infraDB,root,core)
@@ -119,7 +121,7 @@ cron.write_to_user( user=True )
 #separate devices that have no data from prepareGraphInfo
 #introduce ifaces in linksTables from graphInfo and check how
 #	to introduce link id in the deviceTable when there are
-#	multiple ifaces 
+#	multiple ifaces
 #check if client devices (1 iface, 1 link) report always 0 traffic in out
 # put an one minute timeout in snprequests
 
