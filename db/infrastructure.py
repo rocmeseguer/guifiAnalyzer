@@ -69,6 +69,12 @@ class InfraDB(object):
     def getNode(self,id):
         return self.database.nodes.find_one({'_id':str(id)})
 
+    def getNodeLinks(self,id):
+        temp = self.database.nodes.distinct('devices.radios.interfaces.links',
+                                 {'_id':id})
+        return temp +self.database.nodes.distinct('devices.interfaces.links',
+                                         {'_id':id})
+
     def getDevices(self):
         return self.database.nodes.distinct('devices')
 
@@ -112,8 +118,14 @@ class InfraDB(object):
         return self.database.nodes.distinct('devices.radios')
 
     def getRadio(self, radio_id):
+        #TODO this should probably be getRadio(self, device_id, radio_id)
         radios = self.database.nodes.distinct("devices.radios",
                                     {'devices.radios._id':radio_id})
+        #TODO this should probably be 
+        #radios = self.database.nodes.distinct("devices.radios",
+        #                            {'devices.radios._id':{'device':device_id
+        #                                                   'radio':radio_id})
+        #TODO also change next 
         if radios:
             for radio in radios:
                 if radio['_id'] == radio_id:
