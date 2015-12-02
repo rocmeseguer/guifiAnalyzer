@@ -75,6 +75,16 @@ class InfraDB(object):
         return temp +self.database.nodes.distinct('devices.interfaces.links',
                                          {'_id':id})
 
+    def parseNodeLinks(self, getnode_result):
+        links = []
+        for device in getnode_result['devices']:
+            for radio in device['radios']:
+                for interface in radio['interfaces']:
+                    links.extend(interface['links'])
+            for interface in device['interfaces']:
+                    links.extend(interface['links'])
+        return links
+
     def getDevices(self):
         return self.database.nodes.distinct('devices')
 
