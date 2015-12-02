@@ -15,7 +15,7 @@ trafficDB.connect()
 traffic_assDB = TrafficAssistantDB(2444, False)
 traffic_assDB.connect()
 
-link_id = "124351"
+link_id = "54034"
 
 link_infra = traffic_assDB.getLink(link_id)
 
@@ -42,11 +42,9 @@ def getDeviceLinkTrafficDF(device_id):
 				else:
 					traffic_in.extend([float('NaN')])
 					traffic_out.extend([float('NaN')])
-		df = {'date':dates, 
-				'trafficIn':pandas.Series(traffic_in),
-				'trafficOut':pandas.Series(traffic_out)}
-		data_frame = pandas.DataFrame(df)
-		data_frame.set_index('date')
+		ts_in = pandas.Series(traffic_in, index=dates, name='trafficIn')
+		ts_out = pandas.Series(traffic_out, index=dates, name='trafficOut')
+		data_frame = pandas.concat([ts_in, ts_out], join='outer', axis=1)
 	return data_frame
 
 devices = [link_infra['deviceA'], link_infra['deviceB']]
