@@ -65,7 +65,7 @@ def getCNMLZone(zoneId, conn):
     logger.info('Downloading Zone %s detailed CNML ', zoneId)
     try:
         fp = conn.downloadCNML(int(zoneId), 'detail')
-        filename = os.path.join(os.getcwd(), 'cnml', str(zoneId))
+        filename = os.path.join(os.getcwd(), 'guifiAnalyzerOut', 'cnml', str(zoneId))
         with open(filename, 'w') as zonefile:
             zonefile.write(fp.read())
         logger.info('Zone saved successfully to %s', str(filename))
