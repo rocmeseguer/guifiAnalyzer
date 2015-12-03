@@ -12,6 +12,7 @@ from guifiAnalyzer.db.exceptions import DocumentNotFoundError
 from guifiAnalyzer.db.settings import SERVER, PORT
 
 from ..guifiwrapper.guifiwrapper import CNMLWrapper
+from ..guifiwrapper.cnmlUtils import *
 
 
 class InfraDB(object):
@@ -108,6 +109,15 @@ class InfraDB(object):
                                  {'devices._id':id})
         return temp +self.database.nodes.distinct('devices.interfaces.links',
                                          {'devices._id':id})
+
+    def parseDeviceLinks(self, getdevice_result):
+        links = []
+        for radio in getdevice_result['radios']:
+            for interface in radio['interfaces']:
+                links.extend(interface['links'])
+        for interface in getdevice_result['interfaces']:
+                links.extend(interface['links'])
+        return links
 
     def getServices(self):
         return self.database.nodes.distinct('services')
