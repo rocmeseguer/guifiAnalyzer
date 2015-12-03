@@ -350,7 +350,8 @@ def graphInfo(root, core):
                         #logger.info("\tThe ip %s of graphserver %s is correct for the device %s" % (ip,service.id,device.id))
                         logger.info("\t\t IP %s" % ip)
             except DocumentNotFoundError as e:
-                print e
+                # Device not found or no SNMP_KEY so cannot graph it
+                logger.error(e)
                 links[link['_id']][enumDevice[index]] = None
                 links[link['_id']][enumGraphServer[index]] = None
 
