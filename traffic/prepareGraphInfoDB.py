@@ -277,6 +277,8 @@ def graphInfo(root, core):
     conn = authenticate()
     infraDB = InfraDB(root,core)
     infraDB.connect()
+    temp = infraDB.getDevices()
+    infraDevices = {d['_id']:d for d in temp }
     enumDevice = {0:'deviceA',1:'deviceB'}
     enumGraphServer = {0:'graphServerA',1:'graphServerB'}
     links = {}
@@ -290,7 +292,10 @@ def graphInfo(root, core):
         for index,device in enumerate([link['deviceA'], link['deviceB']]):
             # device or device['_id']?
             try:
-                device = infraDB.getDevice(device)
+                if device in infraDevices:
+                    device = infraDevices[device]
+                else:
+                    raise DocumentNotFoundError(infraDB.dbname, 'devices', device)
                 logger.info("\tDEVICE: %s" % (device['_id']))
                 if device['_id'] in devices:
                     logger.warning("\tAlready analyzed device: %s" % device['_id'])
