@@ -285,7 +285,8 @@ def graphInfo(root, core):
     for link in infraDB.getLinks():
         logger.info("LINK: %s" % link['_id'])
         links[link['_id']]= {'nodeA':link['nodeA'],
-                        'nodeB':link['nodeB']}
+                        'nodeB':link['nodeB'],
+                        'type':link['type']}
         for index,device in enumerate([link['deviceA'], link['deviceB']]):
             # device or device['_id']?
             try:
