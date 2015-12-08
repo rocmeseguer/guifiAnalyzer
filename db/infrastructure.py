@@ -119,6 +119,23 @@ class InfraDB(object):
                 links.extend(interface['links'])
         return links
 
+    def parseDeviceInterface(self, getdevice_result, interface_id):
+        for radio in getdevice_result['radios']:
+            for interface in radio['interfaces']:
+                if interface['_id'] == interface_id:
+                   return interface  
+        for interface in getdevice_result['interfaces']:
+            if interface['_id'] == interface_id:
+                       return interface
+
+    def parseDeviceRadio(self, getdevice_result, radio_id):
+        for radio in getdevice_result['radios']:
+            if radio['_id'] == radio_id:
+               return radio
+        # No result
+        return None
+
+
     def getServices(self):
         return self.database.nodes.distinct('services')
 
@@ -223,4 +240,29 @@ class InfraDB(object):
         else:
             raise DocumentNotFoundError(self.dbname,
                                         'snmp_key of link', link_id)
+        return snmp_key
+
+
+    def parseLinkSnmpKeyFromDevice(self, device, link):
+        # Find correct interface
+        if link['deviceA'] == device['_id']:
+            interface_id = link['interfaceA']
+        elif link['deviceB'] == device['_id']:
+            interface_id = link['interfaceB']
+        else:
+            raise DocumentNotFoundError(self.dbname, 'device', device['_id'])
+        interface = self.parseDeviceInterface(device, interface_id)
+        radio_id = interface['parent']
+        radio = self.parseDeviceRadio(device, radio_id)
+        snmp_key = None
+        if interface['snmp_index'] != None:
+            snmp_key = interface['snmp_index']
+        elif radio and radio['snmp_index'] != None:
+            snmp_key = radio['snmp_index']
+        elif interface['snmp_name'] != None or (radio and
+                                         (radio['snmp_name'] != None)):
+            snmp_key = radio['_id']['radio']
+        else:
+            raise DocumentNotFoundError(self.dbname,
+                                        'snmp_key of link', link['_id'])
         return snmp_key
