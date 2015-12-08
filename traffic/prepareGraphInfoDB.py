@@ -281,6 +281,7 @@ def graphInfo(root, core):
     infraDevices = {d['_id']:d for d in temp }
     enumDevice = {0:'deviceA',1:'deviceB'}
     enumGraphServer = {0:'graphServerA',1:'graphServerB'}
+    enumRadioMode = {0:'radioModeA',1:'radioModeB'}
     links = {}
     devices = {}
     graphServers = {}
@@ -297,15 +298,14 @@ def graphInfo(root, core):
                 else:
                     raise DocumentNotFoundError(infraDB.dbname, 'devices', device)
                 logger.info("\tDEVICE: %s" % (device['_id']))
+                links[link['_id']][enumRadioMode[index]] = infraDB.parseLinkDeviceRadioMode(device, link)
                 if device['_id'] in devices:
                     logger.warning("\tAlready analyzed device: %s" % device['_id'])
                     # Complete link information
                     links[link['_id']][enumDevice[index]] = device['_id']
                     links[link['_id']][enumGraphServer[index]] = devices[device['_id']]['graphServer']
-                    #devices[device['_id']]['links'][link['_id']] = infraDB.getLinkSnmpKey(device['_id'], link['_id'])
                     devices[device['_id']]['links'][link['_id']] = infraDB.parseLinkSnmpKeyFromDevice(device, link)
                 else:
-                    #devices[device['_id']] = {'links':{link['_id']:infraDB.getLinkSnmpKey(device['_id'], link['_id'])}}
                     devices[device['_id']] = {'links':{link['_id']:infraDB.parseLinkSnmpKeyFromDevice(device, link)}}
                     try:
                         service, found = getDeviceGraphService(infraDB, device)
@@ -362,6 +362,7 @@ def graphInfo(root, core):
                 logger.error(e)
                 links[link['_id']][enumDevice[index]] = None
                 links[link['_id']][enumGraphServer[index]] = None
+                links[link['_id']][enumRadioMode[index]] = None
 
                 #pdb.set_trace()
                 #continue

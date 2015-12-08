@@ -213,36 +213,6 @@ class InfraDB(object):
         # If none of the above works
         raise DocumentNotFoundError(self.dbname, 'links', link_id)
 
-    def getLinkSnmpKey(self,device_id, link_id):
-        link = self.getLink(link_id)
-        # Find correct interface
-        if link['deviceA'] == device_id:
-            interface_id = link['interfaceA']
-        elif link['deviceB'] == device_id:
-            interface_id = link['interfaceB']
-        else:
-            raise DocumentNotFoundError(self.dbname, 'device', device_id)
-        interface = self.getInterface(interface_id)
-        try:
-            radio_id = interface['parent']
-            radio = self.getRadio(radio_id)
-        except DocumentNotFoundError:
-            print "No radio found for this link"
-            radio = None
-        snmp_key = None
-        if interface['snmp_index'] != None:
-            snmp_key = interface['snmp_index']
-        elif radio and radio['snmp_index'] != None:
-            snmp_key = radio['snmp_index']
-        elif interface['snmp_name'] != None or (radio and
-                                         (radio['snmp_name'] != None)):
-            snmp_key = radio['_id']['radio']
-        else:
-            raise DocumentNotFoundError(self.dbname,
-                                        'snmp_key of link', link_id)
-        return snmp_key
-
-
     def parseLinkSnmpKeyFromDevice(self, device, link):
         # Find correct interface
         if link['deviceA'] == device['_id']:
@@ -266,3 +236,19 @@ class InfraDB(object):
             raise DocumentNotFoundError(self.dbname,
                                         'snmp_key of link', link['_id'])
         return snmp_key
+
+    def parseLinkDeviceRadioMode(self, device, link):
+        # Find correct interface
+        if link['deviceA'] == device['_id']:
+            interface_id = link['interfaceA']
+        elif link['deviceB'] == device['_id']:
+            interface_id = link['interfaceB']
+        else:
+            raise DocumentNotFoundError(self.dbname, 'device', device['_id'])
+        interface = self.parseDeviceInterface(device, interface_id)
+        radio_id = interface['parent']
+        radio = self.parseDeviceRadio(device, radio_id)
+        radio_mode = None
+        if radio:
+            radio_mode = radio['mode']
+        return radio_mode
