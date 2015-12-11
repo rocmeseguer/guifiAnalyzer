@@ -329,8 +329,10 @@ def graphInfo(root, core):
                         graphServers[service['_id']] = {}
                         graphServers[service['_id']]['found'] = found
                         graphServers[service['_id']]['devices'] = []
+                        graphServers[service['_id']]['ip'] = None 
                         try:
                             ipBlacklist = []
+                            logger.info("\t\tChecking Graphserver %s" % (service['_id']))
                             ip = checkGraphServer(infraDB, service,device, ipBlacklist, conn)
                             if ip:
                                 graphServers[service['_id']]['ip'] = ip
