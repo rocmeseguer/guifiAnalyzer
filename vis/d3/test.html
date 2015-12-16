@@ -4,7 +4,7 @@
 
 .node {
   stroke: #fff;
-  stroke-width: 1.5px;
+  stroke-width: 1px;
 }
 
 .link {
@@ -12,9 +12,61 @@
   stroke-opacity: .6;
 }
 
+path.link {
+  fill: none;
+  stroke: #666;
+  stroke-width: 1px;
+}
+
+h3 {
+    color: #0000FF;
+    text-align:center;  
+    font-style: italic;
+    font-size: 14px;
+    font-family: "Helvetica";
+}
+
+#search {
+  float: left;
+}
+
+#threshold {
+  float: right;
+
+#cc {
+  float: center;
+
+}
+
 </style>
 <body>
-<script src="http://d3js.org/d3.v3.min.js"></script>
+  <!-- Search -->
+  <div class="ui-widget" id="search">
+    <h3>Search<br>
+    <input type="radio" name="elem" value="node">Node <input type="radio" name="elem" value="link">Link<br>
+    Attribute<input id="attr"> Value<input id="val">
+    <button type="button" onclick="searchNode()">Search</button>
+    </h3>
+  </div>
+
+
+  <!-- Max Connected Component -->
+  <div id="cc">
+    Show Max Connected Component<input type="checkbox" onchange="toggleCC()"> 
+  </div>
+
+  <!--  Threshold html -->
+  <div id="threshold">
+    <form>
+      <h3> Link threshold 0 <input type="range" id="thersholdSlider" name="points" value = 0 min="0" max="1000" onchange="threshold(this.value)"> 1000 </h3>
+    </form>
+  </div>
+
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script type='text/javascript' src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js"> </script>
+<script type='text/javascript' src="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css"> </script>
+<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <script>
 
 
@@ -28,10 +80,19 @@
  // vis.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 //}
 
-var width = 1024,
+var width = 2048,
     height = 1024;
 
-var color = d3.scale.category20();
+
+
+var proxy_color = '#ff0000',
+    client_color = '#006400',
+    wds_color = '#000000',
+    apclient_color = '#00ffff',
+    supernode_size = 12,
+    client_size = 5;
+
+var color = d3.scale.category10();
 
 var force = d3.layout.force()
     .charge(-120)
@@ -42,61 +103,367 @@ var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height)
     .append("g")
-    .call(d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", zoom))
+    .call(d3.behavior.zoom().scaleExtent([0, 8]).on("zoom", zoom))
     .append("g");
+
+
+
+
+//-------------------------------------------------------------//
+
 
 // apply the zoom behavior to the svg image
 //zoomListener(svg);
 
-d3.json("test.json", function(error, graph) {
-  force
-      .nodes(graph.nodes)
-      .links(graph.links)
-      .start();
+// Get JS graph file
+var request = new XMLHttpRequest();
+var graphSrc = "2444_core.json";
+request.open("GET", graphSrc, false);
+request.send(null)
+graph = JSON.parse(request.responseText);
+graphRec=JSON.parse(JSON.stringify(graph)); 
 
-  var link = svg.selectAll(".link")
-      .data(graph.links)
-    .enter().append("line")
-      .attr("class", "link")
-       .attr("stroke", function(d) { return color(d.group); })
-      .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+//graph = JSON.parse(graphJS);
 
-  var node = svg.selectAll(".node")
-      .data(graph.nodes)
-      .enter().append("circle")
-      .attr("class", "node")
-      .attr("r", 5)
-      .style("fill", function(d) { return color(d.group); })
-      .call(force.drag);
+//d3.json("2444_core.json", function(error, graph) {
 
-  node.append("title")
-      .text(function(d) { return d.name; });
-
-var texts = svg.selectAll("text.label")
-                .data(graph.nodes)
-                .enter().append("text")
-                .attr("class", "label")
-                .attr("fill", "black")
-                .text(function(d) {  return d.name;  });
+graph.links.forEach(function(link, index, list) {
+      if (typeof graph.nodes[link.source] === 'undefined') {
+          console.log('undefined source', link);
+      }
+      if (typeof graph.nodes[link.target] === 'undefined') {
+          console.log('undefined target', link);
+      }
+  });
 
 
-  force.on("tick", function() {
-    link.attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; });
 
-    node.attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.y; });
+force
+    .nodes(graph.nodes)
+    .links(graph.links)
+    .start();
 
-    texts.attr("transform", function(d) {
-        return "translate(" + d.x + "," + d.y + ")"});
-     });
+var link_scale = d3.scale.log()
+                .base(2);
+
+//-------------------------------------------------------------//
+//----------------------------  EXTRAS ------------------------//
+//-------------------------------------------------------------//
+// check http://www.coppelia.io/2014/07/an-a-to-z-of-extra-features-for-the-d3-force-layout/
+
+//----------------------- Configuring Arrows   ----------------//
+svg.append("defs").selectAll("marker")
+  .data(["suit", "licensing", "resolved"])
+.enter().append("marker")
+  .attr("id", function(d) { return d; })
+  .attr("viewBox", "0 -5 10 10")
+  .attr("refX", 15)
+  .attr("refY", -1.5)
+  .attr("markerWidth", 3)
+  .attr("markerHeight", 3)
+  .attr("orient", "auto")
+.append("path")
+  //.attr("d", "M0,-5L10,0L0,5 L10,0 L0, -5")
+  .attr("d", "M0,-5L10,0L0,5")
+  .style("stroke", "#4679BD")
+  .style("opacity", "0.6");
 
 
+//------------------------ Collision Detection -----------------//
+var padding = 1, // separation between circles
+    radius=8;
+function collide(alpha) {
+  var quadtree = d3.geom.quadtree(graph.nodes);
+  return function(d) {
+    var rb = 2*radius + padding,
+        nx1 = d.x - rb,
+        nx2 = d.x + rb,
+        ny1 = d.y - rb,
+        ny2 = d.y + rb;
+    quadtree.visit(function(quad, x1, y1, x2, y2) {
+      if (quad.point && (quad.point !== d)) {
+        var x = d.x - quad.point.x,
+            y = d.y - quad.point.y,
+            l = Math.sqrt(x * x + y * y);
+          if (l < rb) {
+          l = (l - rb) / l * alpha;
+          d.x -= x *= l;
+          d.y -= y *= l;
+          quad.point.x += x;
+          quad.point.y += y;
+        }
+      }
+      return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+    });
+  };
+}
+
+//------------------------ adjust threshold -----------------//
+// WORKS ONLY FOR UNDIRECTED
+//adjust threshold
+function threshold(thresh) {
+    graph.links.splice(0, graph.links.length);
+
+    for (var i = 0; i < graphRec.links.length; i++) {
+      if (graphRec.links[i].weight > thresh) {graph.links.push(graphRec.links[i]);}
+    }
+    restart();
+}
+
+//Restart the visualisation after any node and link changes
+function restart() {
+  
+  link = link.data(graph.links);
+  link.exit().remove();
+  link.enter().insert("path", ".node").attr("class", "link")
+    .attr("class", "link")
+    //.attr("stroke", function(d) { return color(d.type); })
+    .attr("stroke", function(d) { if (d.type=='wds') { return d3.rgb(wds_color) } else { return d3.rgb(apclient_color)}; })
+    //.style("stroke-width", function(d) { return Math.sqrt(d.value)*1000; });
+    //.style("stroke-width", 2);
+      .style("stroke-width", function(d) { return link_scale(d.weight+1); });
+  node = node.data(graph.nodes);
+  node.enter().insert("circle", ".cursor").attr("class", "node")
+    //.attr("r", 5)
+    //.style("fill", function(d) { return color(d.type); })
+    .attr("r", function(d) { if (d.type=='supernode') { return supernode_size } else { return client_size}; })
+    //.attr("r", function(d) { return d.bc; })
+    .style("fill", function(d) { if (d.proxy=='Yes') { return d3.rgb(proxy_color) } else { return d3.rgb(client_color)}; })
+    //.style("fill", function(d) { return color(d.kclique); })
+    .call(force.drag);
+    
+  force.start();
+
+}
+//---End Insert---
+
+
+
+
+//----------------------- Hihlighting -------------------------//
+//Toggle stores whether the highlighting is on
+var toggle = 0;
+//Create an array logging what is connected to what
+var linkedByIndex = {};
+for (i = 0; i < graph.nodes.length; i++) {
+    linkedByIndex[i + "," + i] = 1;
+};
+graph.links.forEach(function (d) {
+    linkedByIndex[d.source.index + "," + d.target.index] = 1;
 });
+//This function looks up whether a pair are neighbours
+function neighboring(a, b) {
+    return linkedByIndex[a.index + "," + b.index];
+}
+function connectedNodes() {
+    if (toggle == 0) {
+        //Reduce the opacity of all but the neighbouring nodes
+        d = d3.select(this).node().__data__;
+        node.style("opacity", function (o) {
+            return neighboring(d, o) | neighboring(o, d) ? 1 : 0.1;
+        });
+        link.style("opacity", function (o) {
+            return d.index==o.source.index | d.index==o.target.index ? 1 : 0.1;
+        });
+        //Reduce the op
+        toggle = 1;
+    } else {
+        //Put them back to opacity=1
+        node.style("opacity", 1);
+        link.style("opacity", 1);
+        toggle = 0;
+    }
+}
 
-  function zoom() {
+
+
+
+//------------------------- Search -----------------------------//
+/*var optArray = [];
+for (var i = 0; i < graph.nodes.length - 1; i++) {
+    optArray.push(graph.nodes[i].name);
+}
+optArray = optArray.sort();
+$(function () {
+    $("#search").autocomplete({
+        source: optArray
+    });
+});*/
+
+function searchNode() {
+    //find the node
+    var selectedVal = document.getElementById('val').value;
+    var attr = document.getElementById('attr').value;
+
+    var radios = document.getElementsByName('elem');
+    var elem;
+    for (var i = 0, length = radios.length; i < length; i++) {
+      if (radios[i].checked) {
+          // do whatever you want with the checked radio
+          elem = "."+radios[i].value;
+          // only one radio can be logically checked, don't check the rest
+          break;
+      }
+    }
+
+    var choice = svg.selectAll(elem);
+    if (selectedVal == "none") {
+        choice.style("stroke", "white").style("stroke-width", "1");
+    } else {
+        var selected = choice.filter(function (d, i) {
+            return d[attr] != selectedVal;
+        });
+        selected.style("opacity", "0");
+        var other;
+        if (elem==".node"){
+          other = ".link"
+        }
+        else{
+          other =".node"
+        }
+        var link = svg.selectAll(other)
+        link.style("opacity", "0");
+        d3.selectAll(".node, .link").transition()
+            .duration(7000)
+            .style("opacity", 1);
+    }
+}
+
+
+
+//------------- Max Connected Componnent ----------------------//
+var toggleCCC = 1;
+
+//This function looks up whether a pair are neighbours
+
+function toggleCC() {
+    if (toggleCCC == 1) {
+        //Reduce the opacity of all but the connected component links
+        link.style("opacity", function (o) {
+            return o.incc==1 ? 1 : 0.1;
+        });
+        //Reduce the op
+        toggleCCC = 0;
+    } else {
+        //Put them back to opacity=1
+        node.style("opacity", 1);
+        link.style("opacity", 1);
+        toggleCCC = 1;
+    }
+}
+
+
+//-------------------------------------------------------------//
+//------------------------- END EXTRAS ------------------------//
+//-------------------------------------------------------------//
+
+
+var link;
+
+//-------------------- Define Links -----------------------//
+if (graph.directed=="True") {
+  link = svg.selectAll(".link")
+      .data(graph.links)
+      .enter().append("path")
+      .attr("class", "link")
+       //.attr("stroke", function(d) { return color(d.type); })
+      .attr("stroke", function(d) { if (d.type=='wds') { return d3.rgb(wds_color) } else { return d3.rgb(apclient_color)}; })
+      
+      .attr("d", "M0,-5L10,0L0,5")
+      .attr("viewBox", "0 -5 10 10")
+      .attr("refX", 15)
+      .attr("refY", -1.5)
+      .attr("markerWidth", 6)
+      .attr("markerHeight", 6)
+      .attr("orient", "auto")
+      // Adding arrows
+      .attr("marker-end", "")
+      //.style("stroke-width", function(d) { return Math.sqrt(d.value)*1000; });
+      //.style("stroke-width", 2);
+     .style("stroke-width", function(d) { return link_scale(d.weight+1); });
+
+  }
+else{
+  link = svg.selectAll(".link")
+      .data(graph.links)
+      .enter().append("line")
+      .attr("class", "link")
+      .attr("stroke", function(d) { return color(d.type); })
+      //.attr("stroke", function(d) { if (d.type=='wds') { return d3.rgb(wds_color) } else { return d3.rgb(apclient_color)}; })
+      //.style("stroke-width", function(d) { return Math.sqrt(d.value)*1000; });
+      //.style("stroke-width", 2);
+      .style("stroke-width", function(d) { return link_scale(d.weight+1); });
+
+};
+
+    
+link.append("title")
+    .text(function(d) { var txt=""; for (var x in d){ txt += x+" : "+JSON.stringify(d[x])+"\n";} return txt; });
+
+
+//------------------- Define Nodes ---------------------//
+var node = svg.selectAll(".node")
+    .data(graph.nodes)
+    .enter().append("circle")
+    .attr("class", "node")
+    //.attr("r", 5)
+    //.style("fill", function(d) { return color(d.type); })
+    .attr("r", function(d) { if (d.type=='supernode') { return supernode_size } else { return client_size}; })
+    //.attr("r", function(d) { return d.bc; })
+    //.style("fill", function(d) { if (d.proxy=='Yes') { return d3.rgb(proxy_color) } else { return d3.rgb(client_color)}; })
+    //.style("fill", function(d) { return color(d.kclique); })
+    .style("fill", function(d) { return color(d.graphServer); })
+    .style("stroke", function(d) { if (d.proxy=='Yes') { return d3.rgb(proxy_color) } else { return "#fff"}; })
+    .style("stroke-width", function(d) { if (d.isproxy==1) { return "2px" } else { return "1px"}; })
+    .call(force.drag)
+    // highlight
+    .on('dblclick', connectedNodes);
+
+node.append("title")
+    .text(function(d) { var txt=""; for (var x in d){ txt += x+" : "+d[x]+"\n";} return txt; });
+
+//------------------- Add Labels ---------------------//
+var texts = svg.selectAll("text.label")
+              .data(graph.nodes)
+              .enter().append("text")
+              .attr("class", "label")
+              .attr("fill", "black")
+              .text(function(d) {  return d.name;  });
+
+
+force.on("tick", function() {
+  // For line
+  link.attr("x1", function(d) { return d.source.x; })
+  link.attr("x1", function(d) { return d.source.x; })
+     .attr("y1", function(d) { return d.source.y; })
+     .attr("x2", function(d) { return d.target.x; })
+     .attr("y2", function(d) { return d.target.y; });
+
+  
+  // For path
+  // link.attr("d", function(d) {
+  //     var dx = d.target.x - d.source.x,
+  //         dy = d.target.y - d.source.y,
+  //         dr = Math.sqrt(dx * dx + dy * dy);
+  //     return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+  //   });
+
+
+  // Add collision
+  node.each(collide(0.5));
+
+  node.attr("cx", function(d) { return d.x; })
+      .attr("cy", function(d) { return d.y; });
+
+  texts.attr("transform", function(d) {
+      return "translate(" + d.x + "," + d.y + ")"});
+   });
+
+
+//});
+
+function zoom() {
   svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 }
+
 </script>
