@@ -32,7 +32,7 @@ import json
 
 class GuifiAPI(object):
 
-    def __init__(self, username=None, passwd=None, host='test.guifi.net',
+    def __init__(self, username=None, passwd=None, host='guifi.net',
                  secure=True, retry_count=0, retry_delay=0, retry_errors=None,
                  authToken=None):
 
