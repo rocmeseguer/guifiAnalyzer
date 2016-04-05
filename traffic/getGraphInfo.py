@@ -88,12 +88,14 @@ initializeInfraDB(zone, core, populate=True)
 #cron.write_to_user( user=True )
 
 def addCronJob():
-    logfile = '/home/manos/Documents/phd/Guifi/my/guifiAnalyzerOut/log/traffic_'+str(zone)+'.log'
+    corename = '_core' if core else ''
+    logfile ='/home/manos/Documents/phd/Guifi/my/guifiAnalyzerOut/log/traffic_'+str(zone)+corename+'.log'
     #cron = CronTab(user=True, log=logfile)
     cron = CronTab(user=True)
     python = '/usr/bin/python'
     module = 'guifiAnalyzer.traffic.graphDevicesInfoDB 1 '
-    args = str(zone)
+    corearg = ' core' if core else ''
+    args = str(zone)+corearg
     cmd = 'cd /home/manos/Documents/phd/Guifi/my; '+python+' -m '+module+' '+args+' >> '+logfile+' 2>&1'
     #cmd = 'cd /home/manos/Documents; '+python+' -m '+module+' '+args
     # You can even set a comment for this command
