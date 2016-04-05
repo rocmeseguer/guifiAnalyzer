@@ -4,6 +4,8 @@
 from guifiAnalyzer.db.infrastructure import InfraDB
 from guifiAnalyzer.db.traffic_assistant import TrafficAssistantDB
 
+from guifiAnalyzer.proxies import getIPNetworks
+
 
 import networkx
 from networkx.readwrite import json_graph
@@ -24,7 +26,12 @@ import math
 
 import pdb
 
-def node2Gnode(graph, digraph, infra, ass_devices, node):
+def node2Gnode(graph, digraph, infra, ass_devices, nodes_networks, node):
+    node_id = node['_id']
+    if node_id in nodes_networks:
+        networks = nodes_networks[node_id]
+    else:
+        networks = []
     node_type = "client"
     graphServer = "NA"
     devices = list(node['devices'])
@@ -43,20 +50,22 @@ def node2Gnode(graph, digraph, infra, ass_devices, node):
     for s in services:
         if s['type'] == 'Proxy':
             proxy = 1
-    digraph.add_node(node['_id'], 
-                    {'name': node['_id'], 
+    digraph.add_node(node_id, 
+                    {'name': node_id, 
                     'status': node['status'],
                     'type': node_type,
                     'isproxy' : proxy,
                     'graphServer' : graphServer,
-                    'zone' : node['parentZone']})
-    graph.add_node(node['_id'], 
-                    {'name': node['_id'], 
+                    'zone' : node['parentZone'],
+                    'networks' : networks})
+    graph.add_node(node_id, 
+                    {'name': node_id, 
                     'status': node['status'],
                     'type': node_type,
                     'isproxy': proxy,
                     'graphServer' : graphServer,
-                    'zone' : node['parentZone']})
+                    'zone' : node['parentZone'],
+                    'networks' : networks})
 
 
 def link2Gedge(graph, digraph, traffic_df, link):
@@ -148,12 +157,12 @@ def createGraph(root, core):
         #traffic_df[i] /= traffic_df[i].max()
         #traffic_df[i] *= 10
         #traffic_df[i] /= 100000 
-
+    ip_networks = getIPNetworks.mapDevicesProxy(root,core)
 
     graph = networkx.Graph()
     digraph = networkx.DiGraph()
 
-    map(functools.partial(node2Gnode, graph, digraph, infraDB, ass_devices), nodes)
+    map(functools.partial(node2Gnode, graph, digraph, infraDB, ass_devices,ip_networks), nodes)
     map(functools.partial(link2Gedge, graph, digraph, traffic_df), links)
     return (graph, digraph)
 
@@ -219,10 +228,15 @@ def save(G, fname):
                    links=[[u, v, G.edge[u][v]] for u,v in G.edges()]),
               open(fname, 'w'), indent=2)
 
-def drawGraph(graph, connected=False):
-    connected_str = "_connected" if connected else ""
+def drawGraph(graph, is_connected=False):
+    print 'Nodes: %s' % graph.order()
+    print 'Links: %s' % graph.size()
+    connected_str = "_connected" if is_connected else ""
     outputfile = os.path.join( os.getcwd(), 'guifiAnalyzerOut',
         'd3', str(root)+corename+connected_str+'.json')
+    #outputgexf = os.path.join( os.getcwd(), 'guifiAnalyzerOut',
+    #    'results', str(root)+corename+connected_str+'.gexf')
+    #networkx.write_gexf(graph, outputgexf)
     # For undirected
     d = json_graph.node_link_data(graph)
     json.dump(d, open(outputfile, 'w'))
@@ -291,15 +305,7 @@ def between_central_to_html(G):
         G.node[node]['bc'] = value*100
 
 
-#root = 8346
-#root = 18668
-root = 2444
-#core = False
-core = True
-corename = '_core' if core else ''
 
-
-G, DiG = createGraph(root, core)
 
 
 def getTrafficConnectedComponentGraph(G):
@@ -312,22 +318,64 @@ def getTrafficConnectedComponentGraph(G):
     #print list(networkx.connected_components(H))
     print networkx.number_connected_components(H)
     Gc = max(networkx.connected_component_subgraphs(H), key=len)
-    print 'Nodes: %s' % Gc.order()
-    print 'Links: %s' % Gc.size()
     #drawGraph(Gc, connected=True)
     return Gc
 
+
+
+
+
+def addOneHopNeighbours(graph,conn_graph):
+    new_graph = conn_graph.copy()
+    nodeslist = graph.nodes(data=True)
+    nodes = {n:d for (n, d) in nodeslist}
+    for node in conn_graph:
+        neigh = graph.neighbors(node)
+        ccneigh = conn_graph.neighbors(node)
+        extraneigh = [item for item in neigh if item not in ccneigh]
+        for neighbor in extraneigh:
+            nodedata = nodes[node]
+            new_graph.add_node(node, nodedata)
+            edgedata = graph.get_edge_data(node, neighbor)
+            new_graph.add_edge(node, neighbor, edgedata)
+    #pdb.set_trace()
+    return new_graph
+
+
+
+root = 8346
+#root = 18668
+#root = 2444
+#root = 2435
+core = False
+#core = True
+corename = '_core' if core else ''
+
+
+G, DiG = createGraph(root, core)
+
 #plot_communities(G)
 #between_central_to_html(G)
-#drawGraph(G)
-Gc = getTrafficConnectedComponentGraph(G)
-for (s,d) in G.edges():
-    if Gc.has_edge(s,d):
-        G[s][d]['incc'] = 1
-    else:
-        G[s][d]['incc'] = 0
-
-#for (s,d) in Gc.edges():
-#    G[s][d]['incc'] = True
 drawGraph(G)
+
+
+if False:
+# Connected components and neighbors
+    Gc = getTrafficConnectedComponentGraph(G)
+    for (s,d) in G.edges():
+        if Gc.has_edge(s,d):
+            G[s][d]['incc'] = 1
+        else:
+            G[s][d]['incc'] = 0
+
+
+
+    Gc1 = addOneHopNeighbours(G, Gc)
+    Gc2 = addOneHopNeighbours(G,Gc1)
+
+
+    #for (s,d) in Gc.edges():
+    #    G[s][d]['incc'] = True
+    drawGraph(Gc2, True)
+
 

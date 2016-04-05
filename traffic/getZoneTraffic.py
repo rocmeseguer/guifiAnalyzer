@@ -1,6 +1,6 @@
-from ..traffic import TrafficDB
-from ..traffic_assistant import TrafficAssistantDB
-from ..infrastructure import InfraDB
+from guifiAnalyzer.db.traffic import TrafficDB
+from guifiAnalyzer.db.traffic_assistant import TrafficAssistantDB
+from guifiAnalyzer.db.infrastructure import InfraDB
 from datetime import datetime
 
 #from pprint import pprint
@@ -14,8 +14,9 @@ import os
 import pdb
 
 #root = 2444
-#root = 8346
-root = 18668
+#root = 2435
+root = 8346
+#root = 18668
 core = False
 corename = '_core' if core else ''
 
@@ -195,15 +196,22 @@ def get_df_statistics(df, name, stats):
 	print '/////////////////'
 	print 'Info %s' % name
 	#print df.info()
-	print 'Total Devices: %s' % (len(df))
-	stats.loc[name, 'total'] = len(df)
+	if name == 'TOTAL':
+		total = stats.loc['WDS', 'total'] + stats.loc['AP/CLIENT', 'total']
+	else:
+		total = len(df)
+	print 'Total Devices: %s' % (total)
+	stats.loc[name, 'total'] = total
 	usable = df[(df.trafficIn > 0) | (df.trafficOut > 0)].trafficIn.count()
 	print 'Total Usable Devices: %s' % (usable)
 	stats.loc[name, 'correct'] = usable
 	zeros = df[(df.trafficIn == 0) & (df.trafficOut == 0)].trafficIn.count()
 	print 'Total Devices with zero traffic: %s' % (zeros)
 	stats.loc[name, 'zeros'] = zeros
-	null = df.trafficIn.isnull().sum()
+	if name == 'TOTAL':
+		null = stats.loc['WDS', 'null'] + stats.loc['AP/CLIENT', 'null']
+	else:
+		null = df.trafficIn.isnull().sum()
 	print 'Total Null %s' % (null)
 	stats.loc[name, 'null'] = null
 	otherrors = len(df) -usable -zeros -null
@@ -222,9 +230,9 @@ stats_df = pandas.DataFrame(columns=['total', 'correct', 'zeros', 'null', 'error
 							index=['TOTAL', 'WDS', 'AP/CLIENT'])
 
 print 'STATISTICS'
-get_df_statistics(final_df, 'TOTAL', stats_df)
 get_df_statistics(final_df[final_df.radioMode == 'wds'], 'WDS', stats_df)
 get_df_statistics(final_df[(final_df.radioMode == 'ap') | (final_df.radioMode == 'client')],'AP/CLIENT', stats_df)
+get_df_statistics(final_df, 'TOTAL', stats_df)
 #get_df_statistics(final_df[final_df.radioMode == 'ap'], 'ap')
 #get_df_statistics(final_df[final_df.radioMode == 'client'], 'client')
 
