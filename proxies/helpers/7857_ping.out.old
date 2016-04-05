@@ -1,0 +1,3111 @@
+PING 10.138.85.176 (10.138.85.176) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.43.110 icmp_seq=1 Destination Host Unreachable
+From 172.25.43.110 icmp_seq=2 Destination Host Unreachable
+From 172.25.43.110 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.85.176 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2001ms
+, pipe 3
+PING 10.228.8.37 (10.228.8.37) 56(84) bytes of data.
+64 bytes from 10.228.8.37: icmp_seq=1 ttl=58 time=20.6 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.228.8.37: icmp_seq=2 ttl=58 time=12.6 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.228.8.37: icmp_seq=3 ttl=58 time=10.5 ms
+
+--- 10.228.8.37 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1998ms
+rtt min/avg/max/mdev = 10.562/14.646/20.680/4.356 ms
+PING 10.228.8.62 (10.228.8.62) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.62 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.138.57.99 (10.138.57.99) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.47.189 icmp_seq=1 Destination Host Unreachable
+From 172.25.47.189 icmp_seq=2 Destination Host Unreachable
+From 172.25.47.189 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.57.99 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.139.30.9 (10.139.30.9) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.139.250.22 icmp_seq=1 Destination Host Unreachable
+From 10.139.250.22 icmp_seq=2 Destination Host Unreachable
+From 10.139.250.22 icmp_seq=3 Destination Host Unreachable
+
+--- 10.139.30.9 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.138.3.172 (10.138.3.172) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.161 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.161 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.161 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.172 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.138.90.9 (10.138.90.9) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.90.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.90.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.90.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.90.9 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.228.0.57 (10.228.0.57) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.34.174 icmp_seq=1 Destination Host Unreachable
+From 172.25.34.174 icmp_seq=2 Destination Host Unreachable
+From 172.25.34.174 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.57 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.138.57.101 (10.138.57.101) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.47.189 icmp_seq=1 Destination Host Unreachable
+From 172.25.47.189 icmp_seq=2 Destination Host Unreachable
+From 172.25.47.189 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.57.101 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.138.120.103 (10.138.120.103) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.103 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2004ms
+, pipe 3
+PING 10.138.93.29 (10.138.93.29) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.93.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.93.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.93.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.93.29 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2014ms
+, pipe 3
+PING 10.138.42.165 (10.138.42.165) 56(84) bytes of data.
+64 bytes from 10.138.42.165: icmp_seq=1 ttl=58 time=13.3 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.42.165: icmp_seq=2 ttl=58 time=9.82 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.42.165: icmp_seq=3 ttl=58 time=77.8 ms
+
+--- 10.138.42.165 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1999ms
+rtt min/avg/max/mdev = 9.828/33.686/77.897/31.294 ms
+PING 10.138.35.84 (10.138.35.84) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.1.234 icmp_seq=1 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=2 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.35.84 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2007ms
+, pipe 3
+PING 10.138.120.76 (10.138.120.76) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.76 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2007ms
+, pipe 3
+PING 10.138.85.168 (10.138.85.168) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.43.110 icmp_seq=1 Destination Host Unreachable
+From 172.25.43.110 icmp_seq=2 Destination Host Unreachable
+From 172.25.43.110 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.85.168 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2003ms
+, pipe 3
+PING 10.228.8.130 (10.228.8.130) 56(84) bytes of data.
+64 bytes from 10.228.8.130: icmp_seq=1 ttl=58 time=124 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.228.8.130: icmp_seq=2 ttl=58 time=12.0 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.228.8.130: icmp_seq=3 ttl=58 time=242 ms
+
+--- 10.228.8.130 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1998ms
+rtt min/avg/max/mdev = 12.051/126.399/242.705/94.174 ms
+PING 10.228.0.138 (10.228.0.138) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.228.0.97 icmp_seq=1 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=2 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.138 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 172.25.34.221 (172.25.34.221) 56(84) bytes of data.
+From 80.58.67.153 icmp_seq=1 Packet filtered
+From 80.58.67.153 icmp_seq=2 Packet filtered
+From 80.58.67.153 icmp_seq=3 Packet filtered
+
+--- 172.25.34.221 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1998ms
+
+PING 10.138.3.23 (10.138.3.23) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.23 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.228.0.111 (10.228.0.111) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.228.0.97 icmp_seq=1 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=2 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.111 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.228.8.44 (10.228.8.44) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.44 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1998ms
+, pipe 3
+PING 10.228.8.42 (10.228.8.42) 56(84) bytes of data.
+64 bytes from 10.228.8.42: icmp_seq=1 ttl=58 time=33.9 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.228.8.42: icmp_seq=2 ttl=58 time=20.6 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.228.8.42: icmp_seq=3 ttl=58 time=11.9 ms
+
+--- 10.228.8.42 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 11.991/22.214/33.997/9.051 ms
+PING 10.139.53.36 (10.139.53.36) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.139.53.33 icmp_seq=1 Destination Host Unreachable
+From 10.139.53.33 icmp_seq=2 Destination Host Unreachable
+From 10.139.53.33 icmp_seq=3 Destination Host Unreachable
+
+--- 10.139.53.36 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2001ms
+, pipe 3
+PING 10.138.35.4 (10.138.35.4) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.47.198 icmp_seq=1 Destination Host Unreachable
+From 172.25.47.198 icmp_seq=2 Destination Host Unreachable
+From 172.25.47.198 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.35.4 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2002ms
+, pipe 3
+PING 10.138.120.116 (10.138.120.116) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.116 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2001ms
+, pipe 3
+PING 10.138.85.164 (10.138.85.164) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.43.110 icmp_seq=1 Destination Host Unreachable
+From 172.25.43.110 icmp_seq=2 Destination Host Unreachable
+From 172.25.43.110 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.85.164 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2001ms
+, pipe 3
+PING 10.228.0.13 (10.228.0.13) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.34.174 icmp_seq=1 Destination Host Unreachable
+From 172.25.34.174 icmp_seq=2 Destination Host Unreachable
+From 172.25.34.174 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.13 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2000ms
+, pipe 3
+PING 10.138.90.10 (10.138.90.10) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.90.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.90.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.90.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.90.10 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.138.121.146 (10.138.121.146) 56(84) bytes of data.
+64 bytes from 10.138.121.146: icmp_seq=1 ttl=56 time=18.3 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.121.146: icmp_seq=2 ttl=56 time=6.57 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.121.146: icmp_seq=3 ttl=56 time=12.2 ms
+
+--- 10.138.121.146 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2001ms
+rtt min/avg/max/mdev = 6.577/12.381/18.347/4.806 ms
+PING 10.138.3.75 (10.138.3.75) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.75 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2001ms
+, pipe 3
+PING 10.228.0.16 (10.228.0.16) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.34.174 icmp_seq=1 Destination Host Unreachable
+From 172.25.34.174 icmp_seq=2 Destination Host Unreachable
+From 172.25.34.174 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.16 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.90.11 (10.138.90.11) 56(84) bytes of data.
+64 bytes from 10.138.90.11: icmp_seq=1 ttl=59 time=9.00 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.90.11: icmp_seq=2 ttl=59 time=9.97 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.90.11: icmp_seq=3 ttl=59 time=10.4 ms
+
+--- 10.138.90.11 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2000ms
+rtt min/avg/max/mdev = 9.006/9.795/10.400/0.583 ms
+PING 10.228.0.67 (10.228.0.67) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.34.174 icmp_seq=1 Destination Host Unreachable
+From 172.25.34.174 icmp_seq=2 Destination Host Unreachable
+From 172.25.34.174 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.67 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2003ms
+, pipe 3
+PING 10.138.35.115 (10.138.35.115) 56(84) bytes of data.
+64 bytes from 10.138.35.115: icmp_seq=1 ttl=53 time=15.3 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.35.115: icmp_seq=2 ttl=53 time=21.2 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.35.115: icmp_seq=3 ttl=53 time=17.0 ms
+
+--- 10.138.35.115 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 15.369/17.901/21.277/2.486 ms
+PING 10.138.121.25 (10.138.121.25) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.33.250 icmp_seq=1 Destination Host Unreachable
+From 172.25.33.250 icmp_seq=2 Destination Host Unreachable
+From 172.25.33.250 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.121.25 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2000ms
+, pipe 3
+PING 10.138.3.177 (10.138.3.177) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.161 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.161 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.161 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.177 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.138.42.205 (10.138.42.205) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.148.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.148.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.148.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.42.205 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.3.11 (10.138.3.11) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.11 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.138.121.139 (10.138.121.139) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.121.139 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.139.53.34 (10.139.53.34) 56(84) bytes of data.
+64 bytes from 10.139.53.34: icmp_seq=1 ttl=57 time=9.84 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.139.53.34: icmp_seq=2 ttl=57 time=13.1 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.139.53.34: icmp_seq=3 ttl=57 time=15.9 ms
+
+--- 10.139.53.34 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2001ms
+rtt min/avg/max/mdev = 9.847/13.002/15.998/2.517 ms
+PING 10.138.120.118 (10.138.120.118) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.118 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.138.121.22 (10.138.121.22) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.33.250 icmp_seq=1 Destination Host Unreachable
+From 172.25.33.250 icmp_seq=2 Destination Host Unreachable
+From 172.25.33.250 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.121.22 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.228.8.148 (10.228.8.148) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.228.8.148: icmp_seq=1 ttl=58 time=1025 ms
+64 bytes from 10.228.8.148: icmp_seq=2 ttl=58 time=33.1 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.228.8.148: icmp_seq=3 ttl=58 time=15.9 ms
+
+--- 10.228.8.148 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1999ms
+rtt min/avg/max/mdev = 15.902/358.048/1025.119/471.742 ms, pipe 2
+PING 10.138.77.218 (10.138.77.218) 56(84) bytes of data.
+From 10.138.77.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.77.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.77.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.77.218 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.228.8.54 (10.228.8.54) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.54 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2000ms
+, pipe 3
+PING 10.138.122.2 (10.138.122.2) 56(84) bytes of data.
+64 bytes from 10.138.122.2: icmp_seq=1 ttl=57 time=17.4 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.122.2: icmp_seq=2 ttl=57 time=17.9 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.122.2: icmp_seq=3 ttl=57 time=15.9 ms
+
+--- 10.138.122.2 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2001ms
+rtt min/avg/max/mdev = 15.954/17.132/17.955/0.861 ms
+PING 10.138.120.119 (10.138.120.119) 56(84) bytes of data.
+64 bytes from 10.138.120.119: icmp_seq=1 ttl=56 time=13.6 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.120.119: icmp_seq=2 ttl=56 time=11.2 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.120.119: icmp_seq=3 ttl=56 time=8.64 ms
+
+--- 10.138.120.119 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2001ms
+rtt min/avg/max/mdev = 8.648/11.196/13.658/2.046 ms
+PING 10.138.85.181 (10.138.85.181) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.43.110 icmp_seq=1 Destination Host Unreachable
+From 172.25.43.110 icmp_seq=2 Destination Host Unreachable
+From 172.25.43.110 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.85.181 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2001ms
+, pipe 3
+PING 10.138.90.12 (10.138.90.12) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.90.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.90.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.90.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.90.12 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.138.35.75 (10.138.35.75) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.1.234 icmp_seq=1 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=2 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.35.75 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2000ms
+, pipe 3
+PING 10.138.77.138 (10.138.77.138) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.139.250.18 icmp_seq=1 Destination Host Unreachable
+From 10.139.250.18 icmp_seq=2 Destination Host Unreachable
+From 10.139.250.18 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.77.138 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.120.156 (10.138.120.156) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.156 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.228.0.134 (10.228.0.134) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.228.0.97 icmp_seq=1 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=2 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.134 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2001ms
+, pipe 3
+PING 10.228.8.46 (10.228.8.46) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.46 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2000ms
+, pipe 3
+PING 10.138.77.145 (10.138.77.145) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.139.250.18 icmp_seq=1 Destination Host Unreachable
+From 10.139.250.18 icmp_seq=2 Destination Host Unreachable
+From 10.139.250.18 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.77.145 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.138.57.167 (10.138.57.167) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.47.189 icmp_seq=1 Destination Host Unreachable
+From 172.25.47.189 icmp_seq=2 Destination Host Unreachable
+From 172.25.47.189 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.57.167 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.228.0.108 (10.228.0.108) 56(84) bytes of data.
+From 10.228.0.97 icmp_seq=1 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=2 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.108 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.138.121.19 (10.138.121.19) 56(84) bytes of data.
+64 bytes from 10.138.121.19: icmp_seq=1 ttl=55 time=17.2 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.121.19: icmp_seq=2 ttl=55 time=17.7 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.121.19: icmp_seq=3 ttl=55 time=16.6 ms
+
+--- 10.138.121.19 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1999ms
+rtt min/avg/max/mdev = 16.638/17.216/17.795/0.484 ms
+PING 10.138.90.5 (10.138.90.5) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.90.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.90.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.90.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.90.5 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.228.0.103 (10.228.0.103) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.228.0.97 icmp_seq=1 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=2 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.103 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.139.53.106 (10.139.53.106) 56(84) bytes of data.
+64 bytes from 10.139.53.106: icmp_seq=1 ttl=57 time=48.2 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.139.53.106: icmp_seq=2 ttl=57 time=8.61 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.139.53.106: icmp_seq=3 ttl=57 time=19.7 ms
+
+--- 10.139.53.106 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1999ms
+rtt min/avg/max/mdev = 8.616/25.535/48.246/16.689 ms
+PING 10.138.35.67 (10.138.35.67) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.1.234 icmp_seq=1 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=2 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.35.67 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.228.8.124 (10.228.8.124) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.124 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.138.3.34 (10.138.3.34) 56(84) bytes of data.
+64 bytes from 10.138.3.34: icmp_seq=1 ttl=56 time=16.2 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.3.34: icmp_seq=2 ttl=56 time=22.3 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.3.34: icmp_seq=3 ttl=56 time=20.2 ms
+
+--- 10.138.3.34 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1998ms
+rtt min/avg/max/mdev = 16.200/19.605/22.365/2.563 ms
+PING 10.228.8.55 (10.228.8.55) 56(84) bytes of data.
+64 bytes from 10.228.8.55: icmp_seq=1 ttl=58 time=7.61 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.228.8.55: icmp_seq=2 ttl=58 time=22.6 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.228.8.55: icmp_seq=3 ttl=58 time=14.1 ms
+
+--- 10.228.8.55 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2001ms
+rtt min/avg/max/mdev = 7.616/14.817/22.689/6.173 ms
+PING 10.139.34.35 (10.139.34.35) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.16.185 icmp_seq=1 Destination Host Unreachable
+From 172.25.16.185 icmp_seq=2 Destination Host Unreachable
+From 172.25.16.185 icmp_seq=3 Destination Host Unreachable
+
+--- 10.139.34.35 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.228.0.166 (10.228.0.166) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.228.0.97 icmp_seq=1 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=2 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.166 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.138.42.186 (10.138.42.186) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.148.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.148.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.148.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.42.186 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.42.34 (10.138.42.34) 56(84) bytes of data.
+64 bytes from 10.138.42.34: icmp_seq=1 ttl=58 time=21.8 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.42.34: icmp_seq=2 ttl=58 time=27.6 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.42.34: icmp_seq=3 ttl=58 time=20.6 ms
+
+--- 10.138.42.34 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2001ms
+rtt min/avg/max/mdev = 20.629/23.381/27.660/3.069 ms
+PING 10.228.8.157 (10.228.8.157) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.157 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.138.42.185 (10.138.42.185) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.148.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.148.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.148.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.42.185 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.120.92 (10.138.120.92) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.92 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.139.53.98 (10.139.53.98) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.139.53.33 icmp_seq=1 Destination Host Unreachable
+From 10.139.53.33 icmp_seq=2 Destination Host Unreachable
+From 10.139.53.33 icmp_seq=3 Destination Host Unreachable
+
+--- 10.139.53.98 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.138.42.180 (10.138.42.180) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.148.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.148.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.148.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.42.180 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.138.3.38 (10.138.3.38) 56(84) bytes of data.
+64 bytes from 10.138.3.38: icmp_seq=1 ttl=55 time=16.7 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.3.38: icmp_seq=2 ttl=55 time=22.5 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.3.38: icmp_seq=3 ttl=55 time=29.1 ms
+
+--- 10.138.3.38 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1999ms
+rtt min/avg/max/mdev = 16.752/22.830/29.170/5.075 ms
+PING 10.138.77.170 (10.138.77.170) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.139.250.18 icmp_seq=1 Destination Host Unreachable
+From 10.139.250.18 icmp_seq=2 Destination Host Unreachable
+From 10.139.250.18 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.77.170 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.228.8.137 (10.228.8.137) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.137 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.139.53.227 (10.139.53.227) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.134.108 icmp_seq=1 Destination Host Unreachable
+From 172.25.134.108 icmp_seq=2 Destination Host Unreachable
+From 172.25.134.108 icmp_seq=3 Destination Host Unreachable
+
+--- 10.139.53.227 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.228.0.171 (10.228.0.171) 56(84) bytes of data.
+64 bytes from 10.228.0.171: icmp_seq=1 ttl=59 time=8.52 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.228.0.171: icmp_seq=2 ttl=59 time=5.92 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.228.0.171: icmp_seq=3 ttl=59 time=7.38 ms
+
+--- 10.228.0.171 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2000ms
+rtt min/avg/max/mdev = 5.921/7.276/8.523/1.065 ms
+PING 10.138.7.38 (10.138.7.38) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.2.30 icmp_seq=1 Destination Host Unreachable
+From 172.25.2.30 icmp_seq=2 Destination Host Unreachable
+From 172.25.2.30 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.7.38 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.138.3.40 (10.138.3.40) 56(84) bytes of data.
+64 bytes from 10.138.3.40: icmp_seq=1 ttl=55 time=18.2 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.3.40: icmp_seq=2 ttl=55 time=13.6 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.3.40: icmp_seq=3 ttl=55 time=17.2 ms
+
+--- 10.138.3.40 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 13.686/16.411/18.299/1.979 ms
+PING 10.138.120.145 (10.138.120.145) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.145 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.138.120.107 (10.138.120.107) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.107 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.228.0.78 (10.228.0.78) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.34.174 icmp_seq=1 Destination Host Unreachable
+From 172.25.34.174 icmp_seq=2 Destination Host Unreachable
+From 172.25.34.174 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.78 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.138.121.21 (10.138.121.21) 56(84) bytes of data.
+64 bytes from 10.138.121.21: icmp_seq=1 ttl=55 time=18.7 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.121.21: icmp_seq=2 ttl=55 time=28.2 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.121.21: icmp_seq=3 ttl=55 time=19.4 ms
+
+--- 10.138.121.21 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1998ms
+rtt min/avg/max/mdev = 18.718/22.132/28.203/4.306 ms
+PING 10.138.3.157 (10.138.3.157) 56(84) bytes of data.
+64 bytes from 10.138.3.157: icmp_seq=1 ttl=57 time=17.9 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.3.157: icmp_seq=2 ttl=57 time=13.0 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.3.157: icmp_seq=3 ttl=57 time=11.4 ms
+
+--- 10.138.3.157 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2001ms
+rtt min/avg/max/mdev = 11.469/14.150/17.948/2.760 ms
+PING 10.138.121.144 (10.138.121.144) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.121.144 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.138.3.138 (10.138.3.138) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.138 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.138.121.133 (10.138.121.133) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.121.133 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.3.131 (10.138.3.131) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.131 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.138.90.4 (10.138.90.4) 56(84) bytes of data.
+64 bytes from 10.138.90.4: icmp_seq=1 ttl=59 time=9.03 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.90.4: icmp_seq=2 ttl=59 time=7.15 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.90.4: icmp_seq=3 ttl=59 time=8.43 ms
+
+--- 10.138.90.4 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2001ms
+rtt min/avg/max/mdev = 7.159/8.209/9.037/0.789 ms
+PING 10.138.57.176 (10.138.57.176) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.47.189 icmp_seq=1 Destination Host Unreachable
+From 172.25.47.189 icmp_seq=2 Destination Host Unreachable
+From 172.25.47.189 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.57.176 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.138.77.24 (10.138.77.24) 56(84) bytes of data.
+From 10.138.77.2 icmp_seq=1 Destination Host Unreachable
+From 10.138.77.2 icmp_seq=2 Destination Host Unreachable
+From 10.138.77.2 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.77.24 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.138.120.73 (10.138.120.73) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.73 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.228.8.41 (10.228.8.41) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.41 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2000ms
+, pipe 3
+PING 10.138.93.68 (10.138.93.68) 56(84) bytes of data.
+From 172.25.61.242 icmp_seq=1 Destination Net Unreachable
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.242 icmp_seq=2 Destination Net Unreachable
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.242 icmp_seq=3 Destination Net Unreachable
+
+--- 10.138.93.68 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2000ms
+
+PING 10.138.42.176 (10.138.42.176) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.148.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.148.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.148.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.42.176 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.228.8.142 (10.228.8.142) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.142 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.138.85.171 (10.138.85.171) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.43.110 icmp_seq=1 Destination Host Unreachable
+From 172.25.43.110 icmp_seq=2 Destination Host Unreachable
+From 172.25.43.110 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.85.171 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.138.77.107 (10.138.77.107) 56(84) bytes of data.
+From 10.138.77.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.77.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.77.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.77.107 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.138.120.152 (10.138.120.152) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.152 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 172.25.3.90 (172.25.3.90) 56(84) bytes of data.
+
+--- 172.25.3.90 ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2000ms
+
+PING 10.228.0.99 (10.228.0.99) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.228.0.97 icmp_seq=1 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=2 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.99 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2001ms
+, pipe 3
+PING 10.138.35.59 (10.138.35.59) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.47.198 icmp_seq=1 Destination Host Unreachable
+From 172.25.47.198 icmp_seq=2 Destination Host Unreachable
+From 172.25.47.198 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.35.59 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.138.121.134 (10.138.121.134) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.121.134 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2000ms
+, pipe 3
+PING 10.138.35.100 (10.138.35.100) 56(84) bytes of data.
+64 bytes from 10.138.35.100: icmp_seq=1 ttl=57 time=9.48 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.35.100: icmp_seq=2 ttl=57 time=8.91 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.35.100: icmp_seq=3 ttl=57 time=11.5 ms
+
+--- 10.138.35.100 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1998ms
+rtt min/avg/max/mdev = 8.919/9.986/11.551/1.133 ms
+PING 10.228.8.143 (10.228.8.143) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.143 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.138.57.130 (10.138.57.130) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.47.189 icmp_seq=1 Destination Host Unreachable
+From 172.25.47.189 icmp_seq=2 Destination Host Unreachable
+From 172.25.47.189 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.57.130 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.120.80 (10.138.120.80) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.80 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.139.58.34 (10.139.58.34) 56(84) bytes of data.
+64 bytes from 10.139.58.34: icmp_seq=1 ttl=56 time=39.7 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.139.58.34: icmp_seq=2 ttl=56 time=14.3 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.139.58.34: icmp_seq=3 ttl=56 time=17.6 ms
+
+--- 10.139.58.34 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1999ms
+rtt min/avg/max/mdev = 14.390/23.917/39.735/11.263 ms
+PING 10.139.34.42 (10.139.34.42) 56(84) bytes of data.
+64 bytes from 10.139.34.42: icmp_seq=1 ttl=57 time=12.7 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.139.34.42: icmp_seq=2 ttl=57 time=9.57 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.139.34.42: icmp_seq=3 ttl=57 time=9.04 ms
+
+--- 10.139.34.42 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1999ms
+rtt min/avg/max/mdev = 9.045/10.451/12.735/1.629 ms
+PING 10.139.34.5 (10.139.34.5) 56(84) bytes of data.
+64 bytes from 10.139.34.5: icmp_seq=1 ttl=57 time=10.1 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.139.34.5: icmp_seq=2 ttl=57 time=9.16 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.139.34.5: icmp_seq=3 ttl=57 time=7.20 ms
+
+--- 10.139.34.5 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2000ms
+rtt min/avg/max/mdev = 7.209/8.839/10.144/1.220 ms
+PING 10.138.3.170 (10.138.3.170) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.161 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.161 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.161 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.170 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.138.90.16 (10.138.90.16) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.90.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.90.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.90.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.90.16 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2001ms
+, pipe 3
+PING 10.138.120.68 (10.138.120.68) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.68 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2005ms
+, pipe 3
+PING 10.138.35.38 (10.138.35.38) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.47.198 icmp_seq=1 Destination Host Unreachable
+From 172.25.47.198 icmp_seq=2 Destination Host Unreachable
+From 172.25.47.198 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.35.38 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2007ms
+, pipe 3
+PING 10.138.77.196 (10.138.77.196) 56(84) bytes of data.
+From 10.138.77.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.77.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.77.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.77.196 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2000ms
+, pipe 3
+PING 10.228.0.142 (10.228.0.142) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.228.0.97 icmp_seq=1 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=2 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.142 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2000ms
+, pipe 3
+PING 10.138.120.144 (10.138.120.144) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.144 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2000ms
+, pipe 3
+PING 10.138.3.15 (10.138.3.15) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.15 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2007ms
+, pipe 3
+PING 10.228.0.168 (10.228.0.168) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.228.0.97 icmp_seq=1 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=2 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.168 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2000ms
+, pipe 3
+PING 10.138.85.187 (10.138.85.187) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.43.110 icmp_seq=1 Destination Host Unreachable
+From 172.25.43.110 icmp_seq=2 Destination Host Unreachable
+From 172.25.43.110 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.85.187 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.121.34 (10.138.121.34) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.33.250 icmp_seq=1 Destination Host Unreachable
+From 172.25.33.250 icmp_seq=2 Destination Host Unreachable
+From 172.25.33.250 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.121.34 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2001ms
+, pipe 3
+PING 10.138.120.121 (10.138.120.121) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.120.121: icmp_seq=1 ttl=56 time=1015 ms
+64 bytes from 10.138.120.121: icmp_seq=2 ttl=56 time=10.6 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.120.121: icmp_seq=3 ttl=56 time=9.72 ms
+
+--- 10.138.120.121 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2009ms
+rtt min/avg/max/mdev = 9.727/345.240/1015.351/473.840 ms, pipe 2
+PING 10.138.77.149 (10.138.77.149) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.139.250.18 icmp_seq=1 Destination Host Unreachable
+From 10.139.250.18 icmp_seq=2 Destination Host Unreachable
+From 10.139.250.18 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.77.149 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2003ms
+, pipe 3
+PING 10.138.85.73 (10.138.85.73) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.43.110 icmp_seq=1 Destination Host Unreachable
+From 172.25.43.110 icmp_seq=2 Destination Host Unreachable
+From 172.25.43.110 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.85.73 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.139.34.40 (10.139.34.40) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.16.185 icmp_seq=1 Destination Host Unreachable
+From 172.25.16.185 icmp_seq=2 Destination Host Unreachable
+From 172.25.16.185 icmp_seq=3 Destination Host Unreachable
+
+--- 10.139.34.40 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2006ms
+, pipe 3
+PING 10.228.8.146 (10.228.8.146) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.146 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2007ms
+, pipe 3
+PING 10.228.0.174 (10.228.0.174) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.228.0.97 icmp_seq=1 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=2 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.174 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2004ms
+, pipe 3
+PING 10.138.57.230 (10.138.57.230) 56(84) bytes of data.
+64 bytes from 10.138.57.230: icmp_seq=1 ttl=57 time=25.2 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.57.230: icmp_seq=2 ttl=57 time=47.3 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.57.230: icmp_seq=3 ttl=57 time=27.7 ms
+
+--- 10.138.57.230 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1998ms
+rtt min/avg/max/mdev = 25.203/33.452/47.355/9.887 ms
+PING 10.228.0.43 (10.228.0.43) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.34.174 icmp_seq=1 Destination Host Unreachable
+From 172.25.34.174 icmp_seq=2 Destination Host Unreachable
+From 172.25.34.174 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.43 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.138.35.74 (10.138.35.74) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.1.234 icmp_seq=1 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=2 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.35.74 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2004ms
+, pipe 3
+PING 10.138.7.37 (10.138.7.37) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.2.30 icmp_seq=1 Destination Host Unreachable
+From 172.25.2.30 icmp_seq=2 Destination Host Unreachable
+From 172.25.2.30 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.7.37 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.57.21 (10.138.57.21) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.47.189 icmp_seq=1 Destination Host Unreachable
+From 172.25.47.189 icmp_seq=2 Destination Host Unreachable
+From 172.25.47.189 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.57.21 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2000ms
+, pipe 3
+PING 10.138.120.70 (10.138.120.70) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.70 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2001ms
+, pipe 3
+PING 10.139.250.22 (10.139.250.22) 56(84) bytes of data.
+64 bytes from 10.139.250.22: icmp_seq=1 ttl=56 time=15.6 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.139.250.22: icmp_seq=2 ttl=56 time=13.1 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.139.250.22: icmp_seq=3 ttl=56 time=13.6 ms
+
+--- 10.139.250.22 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1998ms
+rtt min/avg/max/mdev = 13.131/14.161/15.679/1.104 ms
+PING 10.138.90.39 (10.138.90.39) 56(84) bytes of data.
+64 bytes from 10.138.90.39: icmp_seq=1 ttl=59 time=9.11 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.90.39: icmp_seq=2 ttl=59 time=7.66 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.90.39: icmp_seq=3 ttl=59 time=7.55 ms
+
+--- 10.138.90.39 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1998ms
+rtt min/avg/max/mdev = 7.550/8.107/9.111/0.718 ms
+PING 10.138.121.138 (10.138.121.138) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.121.138 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2001ms
+, pipe 3
+PING 10.138.121.26 (10.138.121.26) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.33.250 icmp_seq=1 Destination Host Unreachable
+From 172.25.33.250 icmp_seq=2 Destination Host Unreachable
+From 172.25.33.250 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.121.26 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2001ms
+, pipe 3
+PING 10.138.35.78 (10.138.35.78) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.1.234 icmp_seq=1 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=2 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.35.78 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.228.0.139 (10.228.0.139) 56(84) bytes of data.
+64 bytes from 10.228.0.139: icmp_seq=1 ttl=59 time=6.33 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.228.0.139: icmp_seq=2 ttl=59 time=9.59 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.228.0.139: icmp_seq=3 ttl=59 time=7.26 ms
+
+--- 10.228.0.139 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2001ms
+rtt min/avg/max/mdev = 6.338/7.732/9.590/1.369 ms
+PING 10.138.121.132 (10.138.121.132) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.121.132 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2014ms
+, pipe 3
+PING 10.138.121.132 (10.138.121.132) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.121.132 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.120.75 (10.138.120.75) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.75 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.85.184 (10.138.85.184) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.43.110 icmp_seq=1 Destination Host Unreachable
+From 172.25.43.110 icmp_seq=2 Destination Host Unreachable
+From 172.25.43.110 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.85.184 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2004ms
+, pipe 3
+PING 10.228.8.60 (10.228.8.60) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.60 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.138.120.146 (10.138.120.146) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.146 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.228.8.136 (10.228.8.136) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.136 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2001ms
+, pipe 3
+PING 10.228.0.86 (10.228.0.86) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.34.174 icmp_seq=1 Destination Host Unreachable
+From 172.25.34.174 icmp_seq=2 Destination Host Unreachable
+From 172.25.34.174 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.86 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2007ms
+, pipe 3
+PING 10.138.35.60 (10.138.35.60) 56(84) bytes of data.
+64 bytes from 10.138.35.60: icmp_seq=1 ttl=54 time=17.4 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.35.60: icmp_seq=2 ttl=54 time=11.7 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.35.60: icmp_seq=3 ttl=54 time=10.5 ms
+
+--- 10.138.35.60 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2000ms
+rtt min/avg/max/mdev = 10.577/13.250/17.464/3.016 ms
+PING 10.138.3.39 (10.138.3.39) 56(84) bytes of data.
+64 bytes from 10.138.3.39: icmp_seq=1 ttl=56 time=38.2 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.3.39: icmp_seq=2 ttl=56 time=24.9 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.3.39: icmp_seq=3 ttl=56 time=20.1 ms
+
+--- 10.138.3.39 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1998ms
+rtt min/avg/max/mdev = 20.116/27.769/38.249/7.668 ms
+PING 10.138.121.30 (10.138.121.30) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.33.250 icmp_seq=1 Destination Host Unreachable
+From 172.25.33.250 icmp_seq=2 Destination Host Unreachable
+From 172.25.33.250 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.121.30 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2001ms
+, pipe 3
+PING 10.228.0.115 (10.228.0.115) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.228.0.97 icmp_seq=1 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=2 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.115 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.42.194 (10.138.42.194) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.148.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.148.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.148.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.42.194 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.139.53.110 (10.139.53.110) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.139.53.33 icmp_seq=1 Destination Host Unreachable
+From 10.139.53.33 icmp_seq=2 Destination Host Unreachable
+From 10.139.53.33 icmp_seq=3 Destination Host Unreachable
+
+--- 10.139.53.110 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.120.100 (10.138.120.100) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.100 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2001ms
+, pipe 3
+PING 10.138.3.8 (10.138.3.8) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.8 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2002ms
+, pipe 3
+PING 10.228.0.119 (10.228.0.119) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.228.0.97 icmp_seq=1 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=2 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.119 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2000ms
+, pipe 3
+PING 10.138.121.118 (10.138.121.118) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.121.97 icmp_seq=1 Destination Host Unreachable
+From 10.138.121.97 icmp_seq=2 Destination Host Unreachable
+From 10.138.121.97 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.121.118 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2001ms
+, pipe 3
+PING 10.228.8.155 (10.228.8.155) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.155 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.138.3.237 (10.138.3.237) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.237 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.42.210 (10.138.42.210) 56(84) bytes of data.
+64 bytes from 10.138.42.210: icmp_seq=1 ttl=58 time=12.6 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.42.210: icmp_seq=2 ttl=58 time=18.6 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.42.210: icmp_seq=3 ttl=58 time=20.6 ms
+
+--- 10.138.42.210 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1998ms
+rtt min/avg/max/mdev = 12.661/17.327/20.639/3.394 ms
+PING 10.228.8.36 (10.228.8.36) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.36 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.138.35.98 (10.138.35.98) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.1.234 icmp_seq=1 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=2 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.35.98 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.138.93.21 (10.138.93.21) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.93.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.93.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.93.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.93.21 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.77.155 (10.138.77.155) 56(84) bytes of data.
+64 bytes from 10.138.77.155: icmp_seq=1 ttl=61 time=74.4 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.77.155: icmp_seq=2 ttl=61 time=3.99 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.77.155: icmp_seq=3 ttl=61 time=14.3 ms
+
+--- 10.138.77.155 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1998ms
+rtt min/avg/max/mdev = 3.997/30.926/74.408/31.036 ms
+PING 10.138.77.69 (10.138.77.69) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.139.250.18 icmp_seq=1 Destination Host Unreachable
+From 10.139.250.18 icmp_seq=2 Destination Host Unreachable
+From 10.139.250.18 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.77.69 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.3.76 (10.138.3.76) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.76 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.148.76 (10.138.148.76) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.148.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.148.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.148.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.148.76 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.3.180 (10.138.3.180) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.161 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.161 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.161 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.180 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.228.1.137 (10.228.1.137) 56(84) bytes of data.
+64 bytes from 10.228.1.137: icmp_seq=1 ttl=59 time=5.70 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.228.1.137: icmp_seq=2 ttl=59 time=5.73 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.228.1.137: icmp_seq=3 ttl=59 time=6.44 ms
+
+--- 10.228.1.137 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1998ms
+rtt min/avg/max/mdev = 5.706/5.959/6.442/0.352 ms
+PING 10.138.35.79 (10.138.35.79) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.1.234 icmp_seq=1 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=2 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.35.79 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.3.145 (10.138.3.145) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.145 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.228.0.25 (10.228.0.25) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.34.174 icmp_seq=1 Destination Host Unreachable
+From 172.25.34.174 icmp_seq=2 Destination Host Unreachable
+From 172.25.34.174 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.25 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.228.0.140 (10.228.0.140) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.228.0.97 icmp_seq=1 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=2 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.140 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.138.35.50 (10.138.35.50) 56(84) bytes of data.
+64 bytes from 10.138.35.50: icmp_seq=1 ttl=58 time=14.7 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.35.50: icmp_seq=2 ttl=58 time=13.7 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.35.50: icmp_seq=3 ttl=58 time=21.0 ms
+
+--- 10.138.35.50 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 13.796/16.528/21.050/3.223 ms
+PING 10.138.120.113 (10.138.120.113) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.113 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.140.46.40 (10.140.46.40) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.139.250.17 icmp_seq=1 Destination Host Unreachable
+From 10.139.250.17 icmp_seq=2 Destination Host Unreachable
+From 10.139.250.17 icmp_seq=3 Destination Host Unreachable
+
+--- 10.140.46.40 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.3.247 (10.138.3.247) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.247 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.3.229 (10.138.3.229) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.229 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.138.3.35 (10.138.3.35) 56(84) bytes of data.
+64 bytes from 10.138.3.35: icmp_seq=1 ttl=55 time=25.8 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.3.35: icmp_seq=2 ttl=55 time=22.6 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.3.35: icmp_seq=3 ttl=55 time=29.0 ms
+
+--- 10.138.3.35 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2000ms
+rtt min/avg/max/mdev = 22.624/25.861/29.064/2.629 ms
+PING 10.138.120.117 (10.138.120.117) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.117 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.138.35.93 (10.138.35.93) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.1.234 icmp_seq=1 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=2 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.35.93 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.138.120.86 (10.138.120.86) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.86 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.228.8.133 (10.228.8.133) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.133 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.57.13 (10.138.57.13) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.47.189 icmp_seq=1 Destination Host Unreachable
+From 172.25.47.189 icmp_seq=2 Destination Host Unreachable
+From 172.25.47.189 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.57.13 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.228.0.35 (10.228.0.35) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.34.174 icmp_seq=1 Destination Host Unreachable
+From 172.25.34.174 icmp_seq=2 Destination Host Unreachable
+From 172.25.34.174 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.35 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.228.8.104 (10.228.8.104) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.104 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1998ms
+, pipe 3
+PING 10.138.57.23 (10.138.57.23) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.47.189 icmp_seq=1 Destination Host Unreachable
+From 172.25.47.189 icmp_seq=2 Destination Host Unreachable
+From 172.25.47.189 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.57.23 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.138.3.139 (10.138.3.139) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.139 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.138.77.142 (10.138.77.142) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.139.250.18 icmp_seq=1 Destination Host Unreachable
+From 10.139.250.18 icmp_seq=2 Destination Host Unreachable
+From 10.139.250.18 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.77.142 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.138.35.90 (10.138.35.90) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.1.234 icmp_seq=1 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=2 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.35.90 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.228.8.139 (10.228.8.139) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.139 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2000ms
+, pipe 3
+PING 10.228.8.100 (10.228.8.100) 56(84) bytes of data.
+64 bytes from 10.228.8.100: icmp_seq=1 ttl=58 time=19.1 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.228.8.100: icmp_seq=2 ttl=58 time=6.72 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.228.8.100: icmp_seq=3 ttl=58 time=8.33 ms
+
+--- 10.228.8.100 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2001ms
+rtt min/avg/max/mdev = 6.724/11.396/19.127/5.507 ms
+PING 10.138.90.15 (10.138.90.15) 56(84) bytes of data.
+64 bytes from 10.138.90.15: icmp_seq=1 ttl=59 time=11.3 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.90.15: icmp_seq=2 ttl=59 time=6.96 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.90.15: icmp_seq=3 ttl=59 time=7.93 ms
+
+--- 10.138.90.15 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2001ms
+rtt min/avg/max/mdev = 6.968/8.765/11.395/1.902 ms
+PING 10.138.3.9 (10.138.3.9) 56(84) bytes of data.
+64 bytes from 10.138.3.9: icmp_seq=1 ttl=57 time=19.1 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.3.9: icmp_seq=2 ttl=57 time=10.4 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.3.9: icmp_seq=3 ttl=57 time=30.6 ms
+
+--- 10.138.3.9 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1998ms
+rtt min/avg/max/mdev = 10.471/20.075/30.613/8.249 ms
+PING 10.228.8.156 (10.228.8.156) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.156 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.139.30.7 (10.139.30.7) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.139.250.22 icmp_seq=1 Destination Host Unreachable
+From 10.139.250.22 icmp_seq=2 Destination Host Unreachable
+From 10.139.250.22 icmp_seq=3 Destination Host Unreachable
+
+--- 10.139.30.7 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.139.30.7 (10.139.30.7) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.139.250.22 icmp_seq=1 Destination Host Unreachable
+From 10.139.250.22 icmp_seq=2 Destination Host Unreachable
+From 10.139.250.22 icmp_seq=3 Destination Host Unreachable
+
+--- 10.139.30.7 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.139.30.7 (10.139.30.7) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.139.250.22 icmp_seq=1 Destination Host Unreachable
+From 10.139.250.22 icmp_seq=2 Destination Host Unreachable
+From 10.139.250.22 icmp_seq=3 Destination Host Unreachable
+
+--- 10.139.30.7 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.120.79 (10.138.120.79) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.79 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.138.57.240 (10.138.57.240) 56(84) bytes of data.
+64 bytes from 10.138.57.240: icmp_seq=1 ttl=57 time=23.0 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.57.240: icmp_seq=2 ttl=57 time=28.3 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.57.240: icmp_seq=3 ttl=57 time=30.0 ms
+
+--- 10.138.57.240 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1999ms
+rtt min/avg/max/mdev = 23.005/27.150/30.089/3.018 ms
+PING 10.228.8.57 (10.228.8.57) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.57 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.77.81 (10.138.77.81) 56(84) bytes of data.
+64 bytes from 10.138.77.81: icmp_seq=1 ttl=61 time=7.64 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.77.81: icmp_seq=2 ttl=61 time=4.34 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+
+--- 10.138.77.81 ping statistics ---
+3 packets transmitted, 2 received, 33% packet loss, time 2000ms
+rtt min/avg/max/mdev = 4.347/5.998/7.649/1.651 ms
+PING 10.138.35.68 (10.138.35.68) 56(84) bytes of data.
+64 bytes from 10.138.35.68: icmp_seq=1 ttl=53 time=14.0 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.35.68: icmp_seq=2 ttl=53 time=11.3 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.35.68: icmp_seq=3 ttl=53 time=20.4 ms
+
+--- 10.138.35.68 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2001ms
+rtt min/avg/max/mdev = 11.357/15.292/20.446/3.809 ms
+PING 10.138.121.38 (10.138.121.38) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.33.250 icmp_seq=1 Destination Host Unreachable
+From 172.25.33.250 icmp_seq=2 Destination Host Unreachable
+From 172.25.33.250 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.121.38 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.138.90.3 (10.138.90.3) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.90.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.90.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.90.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.90.3 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.228.8.35 (10.228.8.35) 56(84) bytes of data.
+64 bytes from 10.228.8.35: icmp_seq=1 ttl=58 time=158 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.228.8.35: icmp_seq=2 ttl=58 time=44.8 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.228.8.35: icmp_seq=3 ttl=58 time=59.2 ms
+
+--- 10.228.8.35 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1999ms
+rtt min/avg/max/mdev = 44.830/87.609/158.792/50.675 ms
+PING 10.139.34.36 (10.139.34.36) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.16.185 icmp_seq=1 Destination Host Unreachable
+From 172.25.16.185 icmp_seq=2 Destination Host Unreachable
+From 172.25.16.185 icmp_seq=3 Destination Host Unreachable
+
+--- 10.139.34.36 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.228.8.99 (10.228.8.99) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.99 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2000ms
+, pipe 3
+PING 10.139.53.100 (10.139.53.100) 56(84) bytes of data.
+64 bytes from 10.139.53.100: icmp_seq=1 ttl=57 time=34.6 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.139.53.100: icmp_seq=2 ttl=57 time=26.9 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.139.53.100: icmp_seq=3 ttl=57 time=18.3 ms
+
+--- 10.139.53.100 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2001ms
+rtt min/avg/max/mdev = 18.399/26.661/34.658/6.641 ms
+PING 10.138.120.149 (10.138.120.149) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.149 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.228.0.114 (10.228.0.114) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.228.0.97 icmp_seq=1 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=2 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.114 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.77.90 (10.138.77.90) 56(84) bytes of data.
+64 bytes from 10.138.77.90: icmp_seq=1 ttl=61 time=27.9 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.77.90: icmp_seq=2 ttl=61 time=4.93 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.77.90: icmp_seq=3 ttl=61 time=4.46 ms
+
+--- 10.138.77.90 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2000ms
+rtt min/avg/max/mdev = 4.463/12.466/27.999/10.985 ms
+PING 10.138.42.177 (10.138.42.177) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.148.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.148.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.148.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.42.177 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.138.3.33 (10.138.3.33) 56(84) bytes of data.
+64 bytes from 10.138.3.33: icmp_seq=1 ttl=57 time=14.7 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.3.33: icmp_seq=2 ttl=57 time=14.2 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.3.33: icmp_seq=3 ttl=57 time=19.1 ms
+
+--- 10.138.3.33 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2000ms
+rtt min/avg/max/mdev = 14.286/16.049/19.128/2.189 ms
+PING 10.138.3.164 (10.138.3.164) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.161 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.161 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.161 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.164 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.138.121.8 (10.138.121.8) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.33.250 icmp_seq=1 Destination Host Unreachable
+From 172.25.33.250 icmp_seq=2 Destination Host Unreachable
+From 172.25.33.250 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.121.8 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.35.109 (10.138.35.109) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.1.234 icmp_seq=1 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=2 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.35.109 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.35.57 (10.138.35.57) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.47.198 icmp_seq=1 Destination Host Unreachable
+From 172.25.47.198 icmp_seq=2 Destination Host Unreachable
+From 172.25.47.198 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.35.57 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2323ms
+, pipe 3
+PING 10.138.3.244 (10.138.3.244) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.244 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2005ms
+, pipe 3
+PING 10.138.121.109 (10.138.121.109) 56(84) bytes of data.
+64 bytes from 10.138.121.109: icmp_seq=1 ttl=58 time=9.12 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.121.109: icmp_seq=2 ttl=58 time=30.1 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.121.109: icmp_seq=3 ttl=58 time=25.7 ms
+
+--- 10.138.121.109 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2000ms
+rtt min/avg/max/mdev = 9.124/21.680/30.195/9.065 ms
+PING 10.138.57.243 (10.138.57.243) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.139.250.21 icmp_seq=1 Destination Host Unreachable
+From 10.139.250.21 icmp_seq=2 Destination Host Unreachable
+From 10.139.250.21 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.57.243 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2014ms
+, pipe 3
+PING 10.228.0.162 (10.228.0.162) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.228.0.97 icmp_seq=1 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=2 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.162 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2017ms
+, pipe 3
+PING 10.138.3.12 (10.138.3.12) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.12 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2000ms
+, pipe 3
+PING 10.138.120.109 (10.138.120.109) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.109 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.77.111 (10.138.77.111) 56(84) bytes of data.
+From 10.138.77.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.77.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.77.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.77.111 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2000ms
+, pipe 3
+PING 10.139.30.6 (10.139.30.6) 56(84) bytes of data.
+64 bytes from 10.139.30.6: icmp_seq=1 ttl=55 time=67.7 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.139.30.6: icmp_seq=2 ttl=55 time=38.2 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.139.30.6: icmp_seq=3 ttl=55 time=84.8 ms
+
+--- 10.139.30.6 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1998ms
+rtt min/avg/max/mdev = 38.208/63.610/84.871/19.273 ms
+PING 10.138.121.135 (10.138.121.135) 56(84) bytes of data.
+64 bytes from 10.138.121.135: icmp_seq=1 ttl=56 time=23.3 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.121.135: icmp_seq=2 ttl=56 time=10.2 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.121.135: icmp_seq=3 ttl=56 time=9.22 ms
+
+--- 10.138.121.135 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2000ms
+rtt min/avg/max/mdev = 9.225/14.293/23.394/6.450 ms
+PING 10.138.57.174 (10.138.57.174) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.47.189 icmp_seq=1 Destination Host Unreachable
+From 172.25.47.189 icmp_seq=2 Destination Host Unreachable
+From 172.25.47.189 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.57.174 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.228.8.113 (10.228.8.113) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.113 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2001ms
+, pipe 3
+PING 10.138.120.84 (10.138.120.84) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.84 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2002ms
+, pipe 3
+PING 10.138.35.47 (10.138.35.47) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.47.198 icmp_seq=1 Destination Host Unreachable
+From 172.25.47.198 icmp_seq=2 Destination Host Unreachable
+From 172.25.47.198 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.35.47 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2002ms
+, pipe 3
+PING 10.138.35.55 (10.138.35.55) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.47.198 icmp_seq=1 Destination Host Unreachable
+From 172.25.47.198 icmp_seq=2 Destination Host Unreachable
+From 172.25.47.198 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.35.55 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2001ms
+, pipe 3
+PING 10.139.53.103 (10.139.53.103) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.139.53.33 icmp_seq=1 Destination Host Unreachable
+From 10.139.53.33 icmp_seq=2 Destination Host Unreachable
+From 10.139.53.33 icmp_seq=3 Destination Host Unreachable
+
+--- 10.139.53.103 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2001ms
+, pipe 3
+PING 10.228.0.66 (10.228.0.66) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.34.174 icmp_seq=1 Destination Host Unreachable
+From 172.25.34.174 icmp_seq=2 Destination Host Unreachable
+From 172.25.34.174 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.66 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2000ms
+, pipe 3
+PING 10.138.3.173 (10.138.3.173) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.161 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.161 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.161 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.173 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2001ms
+, pipe 3
+PING 10.138.120.158 (10.138.120.158) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.158 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2007ms
+, pipe 3
+PING 10.138.121.105 (10.138.121.105) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.121.97 icmp_seq=1 Destination Host Unreachable
+From 10.138.121.97 icmp_seq=2 Destination Host Unreachable
+From 10.138.121.97 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.121.105 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.138.57.168 (10.138.57.168) 56(84) bytes of data.
+64 bytes from 10.138.57.168: icmp_seq=1 ttl=56 time=16.5 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.57.168: icmp_seq=2 ttl=56 time=12.0 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.57.168: icmp_seq=3 ttl=56 time=29.0 ms
+
+--- 10.138.57.168 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2001ms
+rtt min/avg/max/mdev = 12.009/19.231/29.088/7.217 ms
+PING 10.139.34.3 (10.139.34.3) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.16.185 icmp_seq=1 Destination Host Unreachable
+From 172.25.16.185 icmp_seq=2 Destination Host Unreachable
+From 172.25.16.185 icmp_seq=3 Destination Host Unreachable
+
+--- 10.139.34.3 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2011ms
+, pipe 3
+PING 10.139.53.97 (10.139.53.97) 56(84) bytes of data.
+64 bytes from 10.139.53.97: icmp_seq=1 ttl=58 time=11.5 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.139.53.97: icmp_seq=2 ttl=58 time=19.3 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.139.53.97: icmp_seq=3 ttl=58 time=13.0 ms
+
+--- 10.139.53.97 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2000ms
+rtt min/avg/max/mdev = 11.593/14.663/19.367/3.380 ms
+PING 10.138.3.73 (10.138.3.73) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.73 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2000ms
+, pipe 3
+PING 10.138.42.178 (10.138.42.178) 56(84) bytes of data.
+64 bytes from 10.138.42.178: icmp_seq=1 ttl=58 time=9.43 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.42.178: icmp_seq=2 ttl=58 time=9.41 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.42.178: icmp_seq=3 ttl=58 time=9.65 ms
+
+--- 10.138.42.178 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 9.410/9.501/9.655/0.109 ms
+PING 10.138.120.131 (10.138.120.131) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.131 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2007ms
+, pipe 3
+PING 10.138.120.108 (10.138.120.108) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.108 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.228.8.141 (10.228.8.141) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.141 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.120.150 (10.138.120.150) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.150 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2014ms
+, pipe 3
+PING 10.138.3.37 (10.138.3.37) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.33 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.33 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.33 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.37 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.138.77.156 (10.138.77.156) 56(84) bytes of data.
+64 bytes from 10.138.77.156: icmp_seq=1 ttl=61 time=43.0 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.77.156: icmp_seq=2 ttl=61 time=26.5 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+
+--- 10.138.77.156 ping statistics ---
+3 packets transmitted, 2 received, 33% packet loss, time 1998ms
+rtt min/avg/max/mdev = 26.542/34.818/43.095/8.278 ms
+PING 10.138.93.24 (10.138.93.24) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.93.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.93.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.93.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.93.24 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2001ms
+, pipe 3
+PING 10.139.53.104 (10.139.53.104) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.139.53.33 icmp_seq=1 Destination Host Unreachable
+From 10.139.53.33 icmp_seq=2 Destination Host Unreachable
+From 10.139.53.33 icmp_seq=3 Destination Host Unreachable
+
+--- 10.139.53.104 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.35.52 (10.138.35.52) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.47.198 icmp_seq=1 Destination Host Unreachable
+From 172.25.47.198 icmp_seq=2 Destination Host Unreachable
+From 172.25.47.198 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.35.52 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.138.42.37 (10.138.42.37) 56(84) bytes of data.
+64 bytes from 10.138.42.37: icmp_seq=1 ttl=58 time=28.3 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.42.37: icmp_seq=2 ttl=58 time=10.1 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.42.37: icmp_seq=3 ttl=58 time=11.1 ms
+
+--- 10.138.42.37 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2000ms
+rtt min/avg/max/mdev = 10.131/16.549/28.328/8.341 ms
+PING 10.139.34.2 (10.139.34.2) 56(84) bytes of data.
+64 bytes from 10.139.34.2: icmp_seq=1 ttl=57 time=9.87 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.139.34.2: icmp_seq=2 ttl=57 time=15.3 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.139.34.2: icmp_seq=3 ttl=57 time=14.4 ms
+
+--- 10.139.34.2 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 9.871/13.217/15.342/2.396 ms
+PING 10.138.57.10 (10.138.57.10) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.47.189 icmp_seq=1 Destination Host Unreachable
+From 172.25.47.189 icmp_seq=2 Destination Host Unreachable
+From 172.25.47.189 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.57.10 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.138.42.40 (10.138.42.40) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.148.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.148.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.148.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.42.40 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.3.137 (10.138.3.137) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.137 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.138.85.74 (10.138.85.74) 56(84) bytes of data.
+64 bytes from 10.138.85.74: icmp_seq=1 ttl=56 time=24.6 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.85.74: icmp_seq=2 ttl=56 time=17.3 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.85.74: icmp_seq=3 ttl=56 time=22.6 ms
+
+--- 10.138.85.74 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2000ms
+rtt min/avg/max/mdev = 17.386/21.562/24.631/3.062 ms
+PING 10.138.77.200 (10.138.77.200) 56(84) bytes of data.
+From 10.138.77.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.77.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.77.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.77.200 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2002ms
+, pipe 3
+PING 10.138.148.67 (10.138.148.67) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.148.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.148.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.148.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.148.67 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.139.34.37 (10.139.34.37) 56(84) bytes of data.
+64 bytes from 10.139.34.37: icmp_seq=1 ttl=57 time=9.79 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.139.34.37: icmp_seq=2 ttl=57 time=8.75 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.139.34.37: icmp_seq=3 ttl=57 time=8.58 ms
+
+--- 10.139.34.37 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1998ms
+rtt min/avg/max/mdev = 8.589/9.044/9.792/0.543 ms
+PING 10.228.8.34 (10.228.8.34) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.34 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2000ms
+, pipe 3
+PING 10.228.8.114 (10.228.8.114) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.114 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.90.17 (10.138.90.17) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.90.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.90.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.90.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.90.17 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2001ms
+, pipe 3
+PING 10.138.85.196 (10.138.85.196) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.43.110 icmp_seq=1 Destination Host Unreachable
+From 172.25.43.110 icmp_seq=2 Destination Host Unreachable
+From 172.25.43.110 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.85.196 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.138.93.23 (10.138.93.23) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.93.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.93.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.93.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.93.23 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2002ms
+, pipe 3
+PING 10.139.34.38 (10.139.34.38) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.16.185 icmp_seq=1 Destination Host Unreachable
+From 172.25.16.185 icmp_seq=2 Destination Host Unreachable
+From 172.25.16.185 icmp_seq=3 Destination Host Unreachable
+
+--- 10.139.34.38 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.3.148 (10.138.3.148) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.148 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.138.121.24 (10.138.121.24) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.33.250 icmp_seq=1 Destination Host Unreachable
+From 172.25.33.250 icmp_seq=2 Destination Host Unreachable
+From 172.25.33.250 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.121.24 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.138.77.68 (10.138.77.68) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.139.250.18 icmp_seq=1 Destination Host Unreachable
+From 10.139.250.18 icmp_seq=2 Destination Host Unreachable
+From 10.139.250.18 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.77.68 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.120.114 (10.138.120.114) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.114 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.228.0.144 (10.228.0.144) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.228.0.97 icmp_seq=1 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=2 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.144 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.138.93.14 (10.138.93.14) 56(84) bytes of data.
+64 bytes from 10.138.93.14: icmp_seq=1 ttl=56 time=15.8 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.93.14: icmp_seq=2 ttl=56 time=11.5 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.93.14: icmp_seq=3 ttl=56 time=18.4 ms
+
+--- 10.138.93.14 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2001ms
+rtt min/avg/max/mdev = 11.549/15.272/18.410/2.835 ms
+PING 10.140.46.73 (10.140.46.73) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.139.250.17 icmp_seq=1 Destination Host Unreachable
+From 10.139.250.17 icmp_seq=2 Destination Host Unreachable
+From 10.139.250.17 icmp_seq=3 Destination Host Unreachable
+
+--- 10.140.46.73 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2003ms
+, pipe 3
+PING 10.138.122.3 (10.138.122.3) 56(84) bytes of data.
+64 bytes from 10.138.122.3: icmp_seq=1 ttl=57 time=24.0 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.122.3: icmp_seq=2 ttl=57 time=37.2 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.122.3: icmp_seq=3 ttl=57 time=27.5 ms
+
+--- 10.138.122.3 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1998ms
+rtt min/avg/max/mdev = 24.045/29.612/37.277/5.601 ms
+PING 10.139.53.99 (10.139.53.99) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.139.53.33 icmp_seq=1 Destination Host Unreachable
+From 10.139.53.33 icmp_seq=2 Destination Host Unreachable
+From 10.139.53.33 icmp_seq=3 Destination Host Unreachable
+
+--- 10.139.53.99 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.138.77.113 (10.138.77.113) 56(84) bytes of data.
+From 10.138.77.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.77.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.77.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.77.113 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.139.53.102 (10.139.53.102) 56(84) bytes of data.
+64 bytes from 10.139.53.102: icmp_seq=1 ttl=57 time=13.9 ms
+64 bytes from 10.139.53.102: icmp_seq=2 ttl=57 time=14.3 ms
+64 bytes from 10.139.53.102: icmp_seq=3 ttl=57 time=20.7 ms
+
+--- 10.139.53.102 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2000ms
+rtt min/avg/max/mdev = 13.905/16.329/20.711/3.107 ms
+PING 10.138.3.246 (10.138.3.246) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.246 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.138.57.233 (10.138.57.233) 56(84) bytes of data.
+64 bytes from 10.138.57.233: icmp_seq=1 ttl=57 time=23.1 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.57.233: icmp_seq=2 ttl=57 time=21.8 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.57.233: icmp_seq=3 ttl=57 time=31.1 ms
+
+--- 10.138.57.233 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1998ms
+rtt min/avg/max/mdev = 21.815/25.359/31.121/4.113 ms
+PING 10.138.35.80 (10.138.35.80) 56(84) bytes of data.
+From 172.25.1.234 icmp_seq=1 Destination Host Unreachable
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.1.234 icmp_seq=2 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.35.80 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1998ms
+, pipe 2
+PING 10.138.93.72 (10.138.93.72) 56(84) bytes of data.
+From 172.25.61.242 icmp_seq=1 Destination Net Unreachable
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.242 icmp_seq=2 Destination Net Unreachable
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.242 icmp_seq=3 Destination Net Unreachable
+
+--- 10.138.93.72 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2002ms
+
+PING 10.228.8.38 (10.228.8.38) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.38 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.138.35.105 (10.138.35.105) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.1.234 icmp_seq=1 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=2 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.35.105 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.139.34.41 (10.139.34.41) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.16.185 icmp_seq=1 Destination Host Unreachable
+From 172.25.16.185 icmp_seq=2 Destination Host Unreachable
+From 172.25.16.185 icmp_seq=3 Destination Host Unreachable
+
+--- 10.139.34.41 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.138.3.6 (10.138.3.6) 56(84) bytes of data.
+64 bytes from 10.138.3.6: icmp_seq=1 ttl=57 time=11.9 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.3.6: icmp_seq=2 ttl=57 time=18.8 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.3.6: icmp_seq=3 ttl=57 time=47.4 ms
+
+--- 10.138.3.6 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1999ms
+rtt min/avg/max/mdev = 11.972/26.098/47.437/15.351 ms
+PING 10.138.85.76 (10.138.85.76) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.43.110 icmp_seq=1 Destination Host Unreachable
+From 172.25.43.110 icmp_seq=2 Destination Host Unreachable
+From 172.25.43.110 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.85.76 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.228.0.152 (10.228.0.152) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.228.0.97 icmp_seq=1 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=2 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.152 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.228.0.143 (10.228.0.143) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.228.0.97 icmp_seq=1 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=2 Destination Host Unreachable
+From 10.228.0.97 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.0.143 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.3.154 (10.138.3.154) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.154 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.138.42.172 (10.138.42.172) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.148.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.148.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.148.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.42.172 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.138.93.30 (10.138.93.30) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.93.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.93.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.93.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.93.30 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.120.122 (10.138.120.122) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.122 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.138.57.105 (10.138.57.105) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.47.189 icmp_seq=1 Destination Host Unreachable
+From 172.25.47.189 icmp_seq=2 Destination Host Unreachable
+From 172.25.47.189 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.57.105 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.138.90.13 (10.138.90.13) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.90.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.90.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.90.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.90.13 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2009ms
+, pipe 3
+PING 10.228.8.111 (10.228.8.111) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.82 icmp_seq=1 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=2 Destination Host Unreachable
+From 172.25.61.82 icmp_seq=3 Destination Host Unreachable
+
+--- 10.228.8.111 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.228.0.137 (10.228.0.137) 56(84) bytes of data.
+64 bytes from 10.228.0.137: icmp_seq=1 ttl=59 time=222 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.228.0.137: icmp_seq=2 ttl=59 time=8.00 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.228.0.137: icmp_seq=3 ttl=59 time=5.24 ms
+
+--- 10.228.0.137 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 5.243/78.651/222.708/101.869 ms
+PING 10.138.3.36 (10.138.3.36) 56(84) bytes of data.
+64 bytes from 10.138.3.36: icmp_seq=1 ttl=56 time=34.0 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.3.36: icmp_seq=2 ttl=56 time=21.1 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.3.36: icmp_seq=3 ttl=56 time=16.6 ms
+
+--- 10.138.3.36 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2000ms
+rtt min/avg/max/mdev = 16.637/23.932/34.019/7.367 ms
+PING 10.138.35.114 (10.138.35.114) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.1.234 icmp_seq=1 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=2 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.35.114 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2001ms
+, pipe 3
+PING 10.138.35.114 (10.138.35.114) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.1.234 icmp_seq=1 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=2 Destination Host Unreachable
+From 172.25.1.234 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.35.114 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.35.51 (10.138.35.51) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.47.198 icmp_seq=1 Destination Host Unreachable
+From 172.25.47.198 icmp_seq=2 Destination Host Unreachable
+From 172.25.47.198 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.35.51 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.120.94 (10.138.120.94) 56(84) bytes of data.
+64 bytes from 10.138.120.94: icmp_seq=1 ttl=56 time=55.1 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.120.94: icmp_seq=2 ttl=56 time=14.3 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.120.94: icmp_seq=3 ttl=56 time=24.7 ms
+
+--- 10.138.120.94 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2000ms
+rtt min/avg/max/mdev = 14.306/31.391/55.141/17.325 ms
+PING 10.138.120.93 (10.138.120.93) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.93 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.138.30.103 (10.138.30.103) 56(84) bytes of data.
+64 bytes from 10.138.30.103: icmp_seq=1 ttl=58 time=15.4 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.30.103: icmp_seq=2 ttl=58 time=13.0 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.30.103: icmp_seq=3 ttl=58 time=34.3 ms
+
+--- 10.138.30.103 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 13.016/20.926/34.348/9.542 ms
+PING 10.228.0.80 (10.228.0.80) 56(84) bytes of data.
+64 bytes from 10.228.0.80: icmp_seq=1 ttl=58 time=12.4 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.228.0.80: icmp_seq=2 ttl=58 time=12.3 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.228.0.80: icmp_seq=3 ttl=58 time=13.0 ms
+
+--- 10.228.0.80 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1999ms
+rtt min/avg/max/mdev = 12.372/12.610/13.033/0.299 ms
+PING 10.138.121.71 (10.138.121.71) 56(84) bytes of data.
+From 172.25.61.242 icmp_seq=1 Destination Net Unreachable
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.242 icmp_seq=2 Destination Net Unreachable
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.61.242 icmp_seq=3 Destination Net Unreachable
+
+--- 10.138.121.71 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2000ms
+
+PING 10.138.121.131 (10.138.121.131) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.121.131 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2001ms
+, pipe 3
+PING 10.138.121.131 (10.138.121.131) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.121.131 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.138.120.99 (10.138.120.99) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.120.65 icmp_seq=1 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=2 Destination Host Unreachable
+From 10.138.120.65 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.120.99 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
+PING 10.138.42.198 (10.138.42.198) 56(84) bytes of data.
+64 bytes from 10.138.42.198: icmp_seq=1 ttl=58 time=11.9 ms
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.42.198: icmp_seq=2 ttl=58 time=28.8 ms
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+64 bytes from 10.138.42.198: icmp_seq=3 ttl=58 time=17.2 ms
+
+--- 10.138.42.198 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1998ms
+rtt min/avg/max/mdev = 11.930/19.347/28.853/7.064 ms
+PING 10.138.93.22 (10.138.93.22) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.93.1 icmp_seq=1 Destination Host Unreachable
+From 10.138.93.1 icmp_seq=2 Destination Host Unreachable
+From 10.138.93.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.93.22 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2008ms
+, pipe 3
+PING 10.138.3.174 (10.138.3.174) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.3.161 icmp_seq=1 Destination Host Unreachable
+From 10.138.3.161 icmp_seq=2 Destination Host Unreachable
+From 10.138.3.161 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.3.174 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2010ms
+, pipe 3
+PING 10.138.121.7 (10.138.121.7) 56(84) bytes of data.
+From 10.138.77.1: icmp_seq=2 Redirect Host(New nexthop: 172.25.34.209)
+From 10.138.77.1: icmp_seq=3 Redirect Host(New nexthop: 172.25.34.209)
+From 172.25.33.250 icmp_seq=1 Destination Host Unreachable
+From 172.25.33.250 icmp_seq=2 Destination Host Unreachable
+From 172.25.33.250 icmp_seq=3 Destination Host Unreachable
+
+--- 10.138.121.7 ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 1999ms
+, pipe 3
