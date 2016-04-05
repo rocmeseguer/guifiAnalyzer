@@ -17,7 +17,8 @@ from collections import Counter
 from ..guifiwrapper.guifiwrapper import *
 
 #root = 3671
-root = 2444
+#root = 2444
+root = 17711
 g = CNMLWrapper(root)
 
 
@@ -48,6 +49,8 @@ mgmt = ['iperf', 'LDAP', 'DNS', 'SNPgraphs', 'NTP', 'AirControl']
 services = [s.type for s in g.services.values() if s.type in user]
 totalServices = len(services)
 services = Counter(services).items()
+from operator import itemgetter
+sercices = services.sort(key=itemgetter(1), reverse=True)
 servicesNumber = len(services)
 types = [typ for (typ, value) in services]
 values = [float(value) / float(totalServices) for (typ, value) in services]
@@ -58,7 +61,8 @@ width = 0.35
 
 fig = plt.figure()
 fig.set_canvas(plt.gcf().canvas)
-ax = fig.add_subplot(121)
+#ax = fig.add_subplot(121)
+ax = fig.add_subplot(111)
 rects = ax.bar(ind, values, width, color='black')
 ax.set_xlim(-width, len(ind) + width)
 ax.set_ylim(0, 0.7)
@@ -74,25 +78,27 @@ plt.setp(xtickNames, rotation=45, fontsize=13)
 services1 = [s.type for s in g.services.values() if s.type in mgmt]
 totalServices1 = len(services1)
 services1 = Counter(services1).items()
+sercices1 = services1.sort(key=itemgetter(1), reverse=True)
 servicesNumber1 = len(services1)
 types1 = [typ for (typ, value1) in services1]
 values1 = [float(value) / float(totalServices1) for (typ, value) in services1]
 
+if False: 
+# Disable analytical mgmt frequency image
+    ind1 = np.arange(servicesNumber1)
 
-ind1 = np.arange(servicesNumber1)
-
-ax1 = fig.add_subplot(122)
-rects = ax1.bar(ind1, values1, width, color='black')
-ax1.set_xlim(-width, len(ind1) + width)
-ax1.set_ylim(0, 0.7)
-# ax.set_ylim(0,45)
-# ax1.set_ylabel('Frequency')
-#ax1.set_xlabel('Service Type')
-ax1.set_title('Management Services Frequency')
-xTickMarks1 = [str(i) for i in types1]
-ax1.set_xticks(ind1 + width)
-xtickNames1 = ax1.set_xticklabels(xTickMarks1)
-plt.setp(xtickNames1, rotation=0, fontsize=13)
+    ax1 = fig.add_subplot(122)
+    rects = ax1.bar(ind1, values1, width, color='black')
+    ax1.set_xlim(-width, len(ind1) + width)
+    ax1.set_ylim(0, 0.7)
+    # ax.set_ylim(0,45)
+    # ax1.set_ylabel('Frequency')
+    #ax1.set_xlabel('Service Type')
+    ax1.set_title('Management Services Frequency')
+    xTickMarks1 = [str(i) for i in types1]
+    ax1.set_xticks(ind1 + width)
+    xtickNames1 = ax1.set_xticklabels(xTickMarks1)
+    plt.setp(xtickNames1, rotation=0, fontsize=13)
 
 plt.show()
 figfile = os.path.join(baseservicesdir, str(root) + "services_frequency")
@@ -108,6 +114,7 @@ for s in g.services.values():
 services = [s.type for s in g.services.values()]
 totalServices = len(services)
 services = Counter(services).items()
+sercices = services.sort(key=itemgetter(1), reverse=True)
 servicesNumber = len(services)
 types = [typ for (typ, value) in services]
 values = [float(value) / float(totalServices) for (typ, value) in services]

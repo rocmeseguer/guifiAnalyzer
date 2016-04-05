@@ -15,12 +15,14 @@ from collections import Counter
 
 import pandas as pd
 
-from ..guifiwrapper.guifiwrapper import *
+from ..guifiwrapper.guifiwrapper import CNMLWrapper
 
 
 #root = 3671
-root = 18672
-zonename = 'valencia'
+#root = 18672
+#zonename = 'valencia'
+root = 17711
+zonename = 'Iberian_peninsula'
 
 
 import os
@@ -45,46 +47,48 @@ def data2TimeSeries(data):
 
 g = CNMLWrapper(root)
 
-subzones = g.zone.subzones
-print subzones
-zoneset = []
-for z in subzones:
-    # print g.zones[z].workingZone.totalNodes
-    if g.zones[z].workingZone.totalNodes > 100:
-        zoneset.append(z)
-print zoneset
+#subzones = g.zone.subzones
+#print subzones
+#zoneset = []
+#for z in subzones:
+#    # print g.zones[z].workingZone.totalNodes
+#    if g.zones[z].workingZone.totalNodes > 100:
+#        zoneset.append(z)
+#print zoneset
 
-for z in zoneset:
-    g = CNMLWrapper(z)
+#for z in zoneset:
+#g = CNMLWrapper(z)
 
-    proxies = [p.created.date()
-               for p in g.services.values() if p.type == 'Proxy']
-    if proxies:
-        proxiesCS = data2TimeSeries(proxies)
-        nodes = [n.created.date() for n in g.nodes.values()]
-        nodesCS = data2TimeSeries(nodes)
+proxies = [p.created.date()
+           for p in g.services.values() if p.type == 'Proxy']
+if proxies:
+    proxiesCS = data2TimeSeries(proxies)
+    nodes = [n.created.date() for n in g.nodes.values()]
+    nodesCS = data2TimeSeries(nodes)
 
-        #proxiesCS = proxiesTS.cumsum()
-        #nodesCS = nodesTS.cumsum()
-        data = {'proxies_creation': proxiesCS, 'nodes_creation': nodesCS}
-        df = pd.DataFrame(data).astype('float64')
-        df['proxiesPer20Nodes'] = df.proxies_creation / \
-            (df.nodes_creation / 20)
+    #proxiesCS = proxiesTS.cumsum()
+    #nodesCS = nodesTS.cumsum()
+    data = {'proxies_creation': proxiesCS, 'nodes_creation': nodesCS}
+    df = pd.DataFrame(data).astype('float64')
+    #df['proxiesPer20Nodes'] = df.proxies_creation / \
+    #    (df.nodes_creation / 20)
+    df['NodesPerProxy'] = df.nodes_creation / \
+        (df.proxies_creation)
 
-        fig, axes = plt.subplots(nrows=3, ncols=1)
-        for i, c in enumerate(df.columns):
-            df[c].plot(
-                ax=axes[i],
-                figsize=(
-                    12,
-                    10),
-                title=c +
-                " " +
-                g.zone.title)
-        #df['proxiesPer100Nodes'].plot(figsize=(12, 10), title='proxiesPer100Nodes'+" "+g.zone.title)
-        # plt.show()
+    fig, axes = plt.subplots(nrows=3, ncols=1)
+    for i, c in enumerate(df.columns):
+        df[c].plot(
+            ax=axes[i],
+            figsize=(
+                12,
+                10),
+            title=c +
+            " " +
+            g.zone.title)
+    #df['proxiesPer100Nodes'].plot(figsize=(12, 10), title='proxiesPer100Nodes'+" "+g.zone.title)
+    plt.show()
 
-        basenodesproxiesdir = os.path.join(basedir, '')
-        figfile = os.path.join(zonedir, str(g.zone.id) + 'nodesNproxies')
-        fig.savefig(figfile, format='png', dpi=fig.dpi)
-        plt.close(fig)
+    basenodesproxiesdir = os.path.join(basedir, '')
+    figfile = os.path.join(zonedir, str(g.zone.id) + 'nodesNproxies')
+    fig.savefig(figfile, format='png', dpi=fig.dpi)
+    plt.close(fig)
