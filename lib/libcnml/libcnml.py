@@ -300,7 +300,7 @@ class CNMLDevice(object):
     """
     This CNMLDevice class represents a device of a node in the network
     """
-    def __init__(self, did, name, firmware, status, title, dtype, parent, graphserverId=None):
+    def __init__(self, did, name, firmware, status, title, dtype, mainipv4, parent, graphserverId=None):
         self.id = did
         self.name = name
         self.firmware = firmware
@@ -310,6 +310,7 @@ class CNMLDevice(object):
         self.graphserverId = graphserverId
         self.radios = dict()
         self.interfaces = dict()
+        self.mainipv4 = mainipv4
         self.parentNode = parent
 
     def getRadios(self):
@@ -333,13 +334,14 @@ class CNMLDevice(object):
         status = Status.strToStatus(status)
         title = d.get('title')
         dtype = d.get('type')
+        mainipv4 = d.get('mainipv4')
         graphserverId = d.get('graph_server') or 0
         graphserverId = int(graphserverId)
         #nlinks = d.getAttribute('links') or 0
         #nlinks = int(nlinks)
         #por qué no tiene un atributo radios="2" en lugar de links="2"??
 
-        newdevice = CNMLDevice(did, name, firmware, status, title, dtype, parent, graphserverId)
+        newdevice = CNMLDevice(did, name, firmware, status, title, dtype, mainipv4, parent, graphserverId)
         return newdevice
 
     @staticmethod
@@ -351,13 +353,14 @@ class CNMLDevice(object):
         status = Status.strToStatus(status)
         title = d.getAttribute("title")
         dtype = d.getAttribute("type")
+        mainipv4 = d.getAttribute("mainipv4")
         graphserverId = d.getAttribute('graph_server') or 0
         graphserverId = int(graphserverId)
         #nlinks = d.getAttribute('links') or 0
         #nlinks = int(nlinks)
         #por qué no tiene un atributo radios="2" en lugar de links="2"??
 
-        newdevice = CNMLDevice(did, name, firmware, status, title, dtype, parent, graphserverId)
+        newdevice = CNMLDevice(did, name, firmware, status, title, dtype, mainipv4, parent, graphserverId)
         return newdevice
 
     @staticmethod

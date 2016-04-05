@@ -11,8 +11,9 @@
 >
 
 <!ATTLIST class
-	network_description	CDATA	#REQUIRED
 	mapping			CDATA	#REQUIRED
+	network_description	CDATA	#IMPLIED
+	node_description	CDATA	#IMPLIED
 >
 
 <!ATTLIST network
@@ -71,6 +72,7 @@
 	title			CDATA	#REQUIRED
 	type			CDATA	#REQUIRED
 	updated			CDATA	#IMPLIED
+	mainipv4		CDATA	#REQUIRED
 >
 
 <!ATTLIST service
@@ -114,7 +116,7 @@
 	linked_node_id		CDATA	#REQUIRED
 >
 
-<!ELEMENT cnml (class, network)>
+<!ELEMENT cnml (class, (network | node))>
 <!ELEMENT class EMPTY>
 <!ELEMENT network (zone)?>
 <!ELEMENT zone (#PCDATA | zone | node)*>

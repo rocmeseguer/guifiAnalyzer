@@ -5,7 +5,7 @@ import sys
 # sys.path.append('lib/libcnml')
 # sys.path.append('lib/pyGuifiAPI')
 
-from ..lib import libcnml
+from ..lib import libcnml as libcnml
 from ..lib.libcnml import logger as logger
 import logging
 
@@ -141,6 +141,7 @@ def cnmlObjectCopy(obj):
             obj.status,
             obj.title,
             obj.type,
+            obj.mainipv4,
             obj.parentNode,
             obj.graphserverId)
         new.radios = obj.radios.copy()
