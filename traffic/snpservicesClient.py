@@ -8,6 +8,9 @@ import socket
 
 from exceptions import *
 
+import pdb
+
+from guifiAnalyzer.lib.pingparser import pingparser 
 
 commands = ["help", "version", "phpinfo", "serverinfo"]
 services = [
@@ -21,7 +24,7 @@ services = [
 
 
 
-def buildArgs(args):
+def buildArgs(args,command):
     """
     Take a dictionary of arguments and values and convert it to a url
     string
@@ -31,13 +34,16 @@ def buildArgs(args):
         arguments += "&" + str(arg)
         if args[arg]:
             arguments += "="
-            for i in args[arg]:
-                if i == args[arg][-1]:
-                    #print i
-                    arguments += str(i)
-                else:
-                    # print i
-                    arguments += str(i) + ","
+            if command == 'stats':
+                for i in args[arg]:
+                    if i == args[arg][-1]:
+                        #print i
+                        arguments += str(i)
+                    else:
+                        # print i
+                        arguments += str(i) + ","
+            else:
+                arguments += str(args[arg])
     return arguments
 
 def doRequest(base, arguments, timeout):
@@ -158,7 +164,7 @@ def snpRequest(ip, command="help", args={}, debug=False, timeout=0, csv = False)
 
         base = "http://" + str(ip) + "/snpservices/index.php?call=" + command
         # Build arguments
-        arguments = buildArgs(args)
+        arguments = buildArgs(args, command)
         # Url character Limit
         # http://stackoverflow.com/a/1289610
         if len(arguments) < 4000:
@@ -186,7 +192,59 @@ def snpGetDevices(ip, devices):
     #    outfile.write(response)
 
 
+def snpLiveTracerouteParser(data):
+    """Parses livetraceroute keeping only
+       guifi 10.*.*.* ips
+    """
+    import re
 
+    #exp = re.compile(r'\s+(\d+)\s+(\d+.\d+.\d+.\d+)\s+\((\d+.\d+.\d+.\d+)\)\s+(\d+.\d+)\s+ms\s+(?:![A-Z]\s+)?(\d+.\d+)\s+ms\s+(?:![A-Z]\s+)?(\d+.\d+)\s+ms(?:\s+![A-Z])?')
+    exp = re.compile(r'\s+(\d+)\s+([^\s\*]+)\s+\((\d+.\d+.\d+.\d+)\)\s+(\d+.\d+)\s+ms\s+(?:![A-Z]\s+)?(\d+.\d+)\s+ms\s+(?:![A-Z]\s+)?(\d+.\d+)\s+ms(?:\s+![A-Z])?')
+    exp1 = re.compile(r'\s+(\d+)\s+\*\s+\*\s+\*\s*')
+    lines = data
+    hops = {}
+    counter = 0
+    for line in lines[1:-1]:
+        match = exp.search(line)
+        try:
+            groups = list(match.groups())
+        except Exception, e:
+            print 'ERROR in line: %s' % line 
+            continue
+
+        # If ip starts with 10 and is different with the last ip read
+        if groups[2].split('.')[0] !='10' or (counter>= 2 and groups[2]==hops[counter]['ip']):
+            continue
+        else:
+            counter += 1
+            hop = counter
+            ip = groups[2]
+            avg_rtt = (float(groups[3]) + float(groups[4]) + float(groups[5]))/3
+            hops[hop] = {'hop':hop, 'ip':ip,'avg_rtt':avg_rtt}
+    #pdb.set_trace()
+    print hops
+    return hops
+
+
+def snpLivePingParser(data):
+    """Parses liveping  using pingparser:
+        Parses the `ping_output` string into a dictionary containing the following
+        fields:
+
+            `host`: *string*; the target hostname that was pinged
+            `sent`: *int*; the number of ping request packets sent
+            `received`: *int*; the number of ping reply packets received
+            `packet_loss`: *int*; the percentage of  packet loss
+            `minping`: *float*; the minimum (fastest) round trip ping request/reply
+                        time in milliseconds
+            `avgping`: *float*; the average round trip ping time in milliseconds
+            `maxping`: *float*; the maximum (slowest) round trip ping time in
+                        milliseconds
+            `jitter`: *float*; the standard deviation between round trip ping times
+                        in milliseconds
+    """
+     
+    return pingparser.parse(data)
 
 #TEST
 #from guifiAnalyzer.traffic import testParallel as par
