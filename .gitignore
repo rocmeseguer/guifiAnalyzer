@@ -1,3 +1,4 @@
+proxies/logs/*
 db/settings.py
 *.json
 *.pyc
