@@ -463,6 +463,13 @@ def mapping(zone, core, output=""):
 	#proxies['3982'] = '3982-ips'
 	proxies.append('3982')
 
+	# SOS
+	# SOS FAKE THE EXTRA NODE
+	# SOS
+	services['3982'] = {'parentDevice':'my_device'}
+	devices['my_device'] = {'parentNode':'3982', 'mainipv4':'10.138.85.130'}
+
+
 
 	zone_ips = getDBZoneIps(devices, ifaces)
 	zone_networks = getIPNetworksFromIPs(zone_ips)
@@ -491,12 +498,7 @@ def mapping(zone, core, output=""):
 	proxies_router_ips = {p:map(ipInc, n) for p,n in proxies_networks.iteritems()}
 	#change id of proxy from device to node
 
-	# SOS
-	# SOS FAKE THE EXTRA NODE
-	# SOS
-	services['3982'] = {'parentDevice':'my_device'}
-	devices['my_device'] = {'parentNode':'my_node'}
-
+	
 	proxies_router_ips = {devices[services[p]['parentDevice']]['parentNode']:n for p, n in proxies_router_ips.iteritems()}
 	proxy_nodes = proxies_router_ips.keys()
 
@@ -518,7 +520,7 @@ def mapping(zone, core, output=""):
 	
 
 	# GET UNIQUE USERS FROM LOGS
-	logs_users_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logs', 'new', 'ips_usernames')
+	#logs_users_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logs', 'new', 'ips_usernames')
 	#network_users_per_proxy = {k:getLogNetworksUsers(logs_users_path, d) for k, d in proxies.iteritems()}
 	network_users_per_proxy = {k:users for k,(nets,users) in proxies_networks_n_users.iteritems()}
 	
@@ -656,8 +658,8 @@ def mapping(zone, core, output=""):
 				for p in proxy.replace(' ', '').split(','):
 					if p != '':
 						print client
-						helper.append({'nodeId':client, 'router':data['router'], 'proxy':p, 'bytes':bytes_per_user[client]})
-
+						if client in bytes_per_user:
+							helper.append({'nodeId':client, 'router':data['router'], 'proxy':p, 'bytes':bytes_per_user[client]})
 		#pdb.set_trace()
 		bytes_ts_per_user = []
 		for user,bytes_ts in bytes_ts_per_user1.iteritems():

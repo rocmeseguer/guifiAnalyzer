@@ -161,8 +161,8 @@ def createGraph(root, core):
     # SOS FAKE THE EXTRA NODE AND LINKS
     # SOS
 
-    graph.add_node('my_node', 
-                    {'name': 'my_node', 
+    graph.add_node('3982', 
+                    {'name': '3982', 
                     'status': 2,
                     'type': 'supernode',
                     'isproxy': 1,
@@ -174,7 +174,7 @@ def createGraph(root, core):
 
 
     graph.add_edge(
-                'my_node', '4890', 
+                '3982', '4890', 
                         {'id': '1', 
                         'type': 'wds' 
                         #'direction': 'b',
@@ -182,7 +182,7 @@ def createGraph(root, core):
                         })
 
     graph.add_edge(
-                'my_node', '11697', 
+                '3982', '11697', 
                         {'id': '1', 
                         'type': 'wds' 
                         #'direction': 'b',
@@ -190,7 +190,7 @@ def createGraph(root, core):
                         })
 
     graph.add_edge(
-                'my_node', '7193', 
+                '3982', '7193', 
                         {'id': '1', 
                         'type': 'wds' 
                         #'direction': 'b',
@@ -203,9 +203,9 @@ def createGraph(root, core):
         graph.node[i]['isproxy'] = 0
         graph.node[i]['isrouter'] = 1
         if  graph.node[i]['proxies'] == "N":
-            graph.node[i]['proxies'] = 'my_node'
+            graph.node[i]['proxies'] = '3982'
         else:
-            graph.node[i]['proxies'] += 'my_node'
+            graph.node[i]['proxies'] += '3982'
 
 
     G = max(networkx.connected_component_subgraphs(graph), key=len)

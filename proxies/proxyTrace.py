@@ -25,18 +25,21 @@ core = False
 
 
 proxy_graph = {
-	'5417':"10.138.85.130", 
-	'4892':"10.228.0.83",
-	'7193':'perafita.guifi.net',
-	'11697':'10.138.3.162'
+	#'5417':"10.138.85.130", 
+	#'4892':"10.228.0.83",
+	#'7193':'perafita.guifi.net',
+	#'11697':'10.138.3.162'
 }
 
 read_traceroute = {
-	'7857':'7857_traceroute.out'
+	'7857':'7857_traceroute.out',
+	'5417':'5417_traceroute.out',
+	'3982':'my_node_traceroute.out',
+	'4892':'4892_traceroute.out'
 }
 
 proxy_pair = {
-	'3982':('7193','11697')
+	#'my_node':('7193','11697')
 }
 
 file_dir = os.path.join( os.getcwd(), 'guifiAnalyzerOut', 'results', 'proxyTrace')
@@ -282,7 +285,7 @@ def combineLogTraceroute(df_proxy_clients, shortest_paths):
 		router = proxy_clients['router'][i]
 		proxy = proxy_clients['proxy'][i]
 		bytes = proxy_clients['bytes'][i]
-		if proxy == 'my_node':
+		if proxy == 'my_proxy':
 			proxy = '3982'
 		for destination, paths in shortest_paths.iteritems():
 			temp = paths[paths.router==router]
@@ -571,9 +574,7 @@ def drawComparativeTotalLinksBytes(dfs,links_proxies):
 	raw_input("End")
 
 
-def drawLinksBytesTS(final_df,links_proxies, df_bytes_ts_per_user, title):
-
-
+def getLinksBytesTS(final_df,links_proxies, df_bytes_ts_per_user, title):
 	final_df = final_df[final_df.reached == True]
 	final_df = final_df[final_df.router != final_df.proxy]
 	final_df = final_df[final_df.destination==final_df.proxy].set_index('nodeId')
@@ -649,16 +650,15 @@ def drawLinksBytesTS(final_df,links_proxies, df_bytes_ts_per_user, title):
 							if isinstance(links_bytes_ts[link_name], pd.DataFrame):
 								print '4'
 								pdb.set_trace()
-	df_links_bytes_ts = pd.concat(links_bytes_ts.values(),axis=1)
-	df_links_bytes_ts.plot(legend=False,logy=True, title=title)
-	plt.show()
-	raw_input("End")
-
-	print 'Sum: %s' % df_links_bytes_ts.sum(axis=1).sum()
+	df_links_bytes_ts = pd.concat(links_bytes_ts.values(),axis=1)	
+	print '%s \nSum: %s' % (title,df_links_bytes_ts.sum(axis=1).sum())
 
 	return df_links_bytes_ts
 
-
+def drawLinksBytesTS(df_links_bytes_ts):
+	df_links_bytes_ts.plot(legend=False,logy=True, title=title)
+	plt.show()
+	raw_input("End")
 
 def getMinDelayDF(final_df):
 	min_delay_df = final_df[final_df.reached==True]
@@ -694,11 +694,12 @@ def getMaxHopsDF(final_df):
 
 
 def dfRandomRow(df):
-	if '7857' in pd.unique(df.proxy.ravel()).tolist():
+	#if '7857' in pd.unique(df.proxy.ravel()).tolist():
 		# Give priority to 7857 because it does not exist in many results
-		return df[df.destination=='7857']
-	else:
-		return df.sample(n=1, random_state=randomState)
+	#	return df[df.destination=='7857']
+	#else:
+	#	return df.sample(n=1, random_state=randomState)
+	return df.sample(n=1, random_state=randomState)
 
 def getRandomProxyDF(final_df):
 	# Choose proxies from a specific distribution
@@ -744,7 +745,6 @@ def drawBytesPerHour(dfs):
 		df.name = name
 		df.plot(legend=True, logy=True)
 		print df.sum()
-	pdb.set_trace()
 	plt.show()
 	raw_input("End")
 
@@ -774,29 +774,30 @@ def drawShortestPaths(proxies):
 
 	final_df = combineLogTraceroute(df_proxy_clients, shortest_paths)
 
+
 	#plotECDFDelays(final_df)
 
 	#drawLinksBytesECDF(final_df,links_proxies)
 
-	final_link_bytes_df = drawLinksBytesTS(final_df,links_proxies, df_bytes_ts_per_user, 'current')
+	final_link_bytes_df = getLinksBytesTS(final_df,links_proxies, df_bytes_ts_per_user, 'current')
 
 	min_delay_df = getMinDelayDF(final_df)
-	min_delay_link_bytes_df = drawLinksBytesTS(min_delay_df,links_proxies, df_bytes_ts_per_user, 'min_delay')
+	min_delay_link_bytes_df = getLinksBytesTS(min_delay_df,links_proxies, df_bytes_ts_per_user, 'min_delay')
 
 
 
 	max_delay_df = getMaxDelayDF(final_df)
 
 	min_hops_df = getMinHopsDF(final_df)
-	min_hops_link_bytes_df = drawLinksBytesTS(min_hops_df,links_proxies, df_bytes_ts_per_user, 'min_hops')
+	min_hops_link_bytes_df = getLinksBytesTS(min_hops_df,links_proxies, df_bytes_ts_per_user, 'min_hops')
 
 	max_hops_df = getMaxHopsDF(final_df)
 
 	random_proxy_df = getRandomProxyDF(final_df)
-	random_proxy_link_bytes_df = drawLinksBytesTS(random_proxy_df,links_proxies, df_bytes_ts_per_user, 'random_proxy')
+	random_proxy_link_bytes_df = getLinksBytesTS(random_proxy_df,links_proxies, df_bytes_ts_per_user, 'random_proxy')
 
 	
-	#drawProxySelectionFrequency(final_df, random_proxy_df, min_delay_df, min_hops_df)
+	drawProxySelectionFrequency(final_df, random_proxy_df, min_delay_df, min_hops_df)
 
 	#drawComparativeLinksBytesECDF({'current':final_df,'random_proxy':random_proxy_df,
 	#								'min_delay':min_delay_df, 'min_hops':min_hops_df}, links_proxies)
@@ -804,7 +805,7 @@ def drawShortestPaths(proxies):
 	#drawComparativeTotalLinksBytes({'current':final_df,'random_proxy':random_proxy_df,
 	#								'min_delay':min_delay_df, 'min_hops':min_hops_df}, links_proxies)
 	
-
+	pdb.set_trace()
 	drawBytesPerHour({'current':final_link_bytes_df,'random_proxy':random_proxy_link_bytes_df,
 						'min_delay':min_delay_link_bytes_df, 'min_hops':min_hops_link_bytes_df})
 
