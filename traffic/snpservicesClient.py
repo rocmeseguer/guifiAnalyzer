@@ -204,7 +204,7 @@ def snpLiveTracerouteParser(data):
     lines = data
     hops = {}
     counter = 0
-    for line in lines[1:-1]:
+    for line in lines:
         match = exp.search(line)
         try:
             groups = list(match.groups())
