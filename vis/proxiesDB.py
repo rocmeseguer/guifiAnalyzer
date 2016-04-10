@@ -173,30 +173,48 @@ def createGraph(root, core):
                     'zone' : '8346'})
 
 
+    # Remove this edges and add the entrypoints of 3982 to the
+    # zone which are 85069,9991
+    #graph.add_edge(
+    #            '3982', '4890', 
+    #                    {'id': '1', 
+    #                    'type': 'wds' 
+                        #'direction': 'b',
+                        #'group': link['status'],
+    #                    })
+
+    #graph.add_edge(
+    #            '3982', '11697', 
+    #                    {'id': '1', 
+    #                    'type': 'wds' 
+                        #'direction': 'b',
+                        #'group': link['status'],
+    #                    })
+
+    #graph.add_edge(
+    #            '3982', '7193', 
+    #                    {'id': '1', 
+    #                    'type': 'wds' 
+                        #'direction': 'b',
+                        #'group': link['status'],
+    #                    })
+
     graph.add_edge(
-                '3982', '4890', 
+                '3982', '85069', 
+                        {'id': '1', 
+                        'type': 'wds' 
+                        #'direction': 'b',
+                        #'group': link['status'],
+                        })
+    graph.add_edge(
+                '3982', '9991', 
                         {'id': '1', 
                         'type': 'wds' 
                         #'direction': 'b',
                         #'group': link['status'],
                         })
 
-    graph.add_edge(
-                '3982', '11697', 
-                        {'id': '1', 
-                        'type': 'wds' 
-                        #'direction': 'b',
-                        #'group': link['status'],
-                        })
-
-    graph.add_edge(
-                '3982', '7193', 
-                        {'id': '1', 
-                        'type': 'wds' 
-                        #'direction': 'b',
-                        #'group': link['status'],
-                        })
-
+    
 
 
     for  i in ['4890','11697','7193']:
@@ -207,6 +225,14 @@ def createGraph(root, core):
         else:
             graph.node[i]['proxies'] += '3982'
 
+
+    graph.add_edge(
+                '4892', '9215', 
+                        {'id': '11', 
+                        'type': 'wds' 
+                        #'direction': 'b',
+                        #'group': link['status'],
+                        })
 
     G = max(networkx.connected_component_subgraphs(graph), key=len)
     ips_per_node = keepConnectedNodes(ips_per_node,G)

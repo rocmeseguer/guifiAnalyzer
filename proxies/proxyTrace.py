@@ -25,21 +25,21 @@ core = False
 
 
 proxy_graph = {
-	#'5417':"10.138.85.130", 
-	#'4892':"10.228.0.83",
-	#'7193':'perafita.guifi.net',
-	#'11697':'10.138.3.162'
+	'5417':"10.138.85.130", 
+	'4892':"10.228.0.83",
+	'7193':'perafita.guifi.net',
+	'11697':'10.138.3.162'
 }
 
 read_traceroute = {
 	'7857':'7857_traceroute.out',
-	'5417':'5417_traceroute.out',
-	'3982':'my_node_traceroute.out',
-	'4892':'4892_traceroute.out'
+	#'5417':'5417_traceroute.out',
+	#'3982':'my_node_traceroute.out',
+	#'4892':'4892_traceroute.out'
 }
 
 proxy_pair = {
-	#'my_node':('7193','11697')
+	'3982':('7193','11697')
 }
 
 file_dir = os.path.join( os.getcwd(), 'guifiAnalyzerOut', 'results', 'proxyTrace')
@@ -54,6 +54,13 @@ def parseLiveTraceroute(data, node_per_ip):
 	hop = 0
 	for counter, data in output.iteritems():
 		node = node_per_ip[data['ip']][0] if data['ip'] in node_per_ip else None
+		#Fix ip 10.139.250.41 that probably belongs to node 9215
+		if data['ip'] == '10.139.250.41':
+			#node = '9215'
+			node = '4891'
+		if data['ip'] == '10.140.200.130' or data['ip'] == "10.38.141.65" or data['ip'] =="10.138.49.1"  or data['ip'] == "10.138.0.1" or data['ip'] == "10.138.61.129":
+			node = '3982'
+
 		if hop in traceroute and traceroute[hop]['node'] == node:
 			continue
 		else:
@@ -100,6 +107,10 @@ def calculateLinks(proxy, traceroute):
 			links.append((node_a,node_b))
 			src += 1
 			dst += 1
+	#pdb.set_trace()
+	#for (a,b) in links:
+		#if a == None or b == None:
+		#	pdb.set_trace()
 	return links
 
 
@@ -138,16 +149,22 @@ def findShortestPaths(proxy):
 		if router == proxy:
 			shortest_paths.append({'router':router,
 								'path':0, 
-								'reached':True, 
+								'reached':True,
+								'delay':0, 
 								'shortest_path':0})
 		else:
 			# If proxy is working and colocated with a graphserver
 			if proxy in proxy_graph:
-				data = snpRequest(ip=proxy_graph[proxy], command='livetraceroute', 
-									args={'ip':ips[0], 'count':3}, timeout=60)
-				data = data.split('\n')
-				traceroute = parseLiveTraceroute(data, node_per_ip)
-				distance, reached, shortest_path_length, delay = calculatePathLenghts(proxy, router, traceroute, G)
+				reached = False
+				count = 0
+				while reached==False and count < len(ips):
+					print 'EFFORT %s' % count
+					data = snpRequest(ip=proxy_graph[proxy], command='livetraceroute', 
+										args={'ip':ips[count], 'count':3}, timeout=60)
+					data = data.split('\n')
+					traceroute = parseLiveTraceroute(data, node_per_ip)
+					distance, reached, shortest_path_length, delay = calculatePathLenghts(proxy, router, traceroute, G)
+					count += 1
 				links[router] = calculateLinks(proxy, traceroute)
 			# if proxy is not colocated with a graphserver and we have
 			# obtained manually the traceroute
@@ -161,12 +178,17 @@ def findShortestPaths(proxy):
 				# Use random select of proxy
 				proxy_list = list(proxy_pair[proxy])
 				help_proxy = random.choice(proxy_list)
-				data = snpRequest(ip=proxy_graph[help_proxy], command='livetraceroute', 
-									args={'ip':ips[0], 'count':3}, timeout=60)
-				data = data.split('\n')
-				traceroute = parseLiveTraceroute(data, node_per_ip)
-				distance, reached, shortest_path_length, delay = calculatePathLenghts(help_proxy, router, traceroute, G)
+				reached = False
+				count = 0
+				while reached==False and count < len(ips):
+					data = snpRequest(ip=proxy_graph[help_proxy], command='livetraceroute', 
+										args={'ip':ips[count], 'count':3}, timeout=60)
+					data = data.split('\n')
+					traceroute = parseLiveTraceroute(data, node_per_ip)
+					distance, reached, shortest_path_length, delay = calculatePathLenghts(help_proxy, router, traceroute, G)
+					count += 1
 				links[router] = calculateLinks(help_proxy, traceroute)
+
 
 				#information from old logs
 
@@ -302,6 +324,8 @@ def combineLogTraceroute(df_proxy_clients, shortest_paths):
 				shortest_distance = temp['shortest_path'].item() + 1
 			
 			delay = temp['delay'].item()
+			if destination == router:
+				delay = 0
 
 			data.append({'nodeId': nodeId,
 						'router': router,
@@ -319,7 +343,7 @@ def combineLogTraceroute(df_proxy_clients, shortest_paths):
 
 
 
-def plotBetweeness(links_proxies, G, final_df, title):
+def getBetweeness(links_proxies, G, final_df):
 	df = final_df[final_df.reached==True]
 	df = df[df.destination==df.proxy].set_index('nodeId')
 	proxies_routers_count_df = df.groupby(['proxy','router']).size()
@@ -362,10 +386,26 @@ def plotBetweeness(links_proxies, G, final_df, title):
 	none_links = 0
 	for src, dst in links:
 		if src != None and dst != None:
-			if 'weight' in G[src][dst]:
-				G[src][dst]['weight'] += 1
-			else:
-				G[src][dst]['weight'] = 0
+			try:
+				if 'weight' in G[src][dst]:
+					G[src][dst]['weight'] += 1
+				else:
+					G[src][dst]['weight'] = 0
+			except Exception, e:
+				# It seems that traceroute includes a link that does 
+				# not exist in the cnml db
+				G.add_edge('4206', '4982', 
+                        {'id': '1', 
+                        'type': 'wds' 
+                        #'direction': 'b',
+                        #'group': link['status'],
+                        })
+				if 'weight' in G[src][dst]:
+					G[src][dst]['weight'] += 1
+				else:
+					G[src][dst]['weight'] = 0
+				#print e
+				#pdb.set_trace()
 		else:
 			none_links += 1
 
@@ -440,40 +480,55 @@ def plotBetweeness(links_proxies, G, final_df, title):
 							'weighted_edge_betweeness' : tr_edge_between[(a,b)]})
 
 
-	df_betweeness = pd.DataFrame(betweeness)
+	return pd.DataFrame(betweeness)
+
+def plotBetweeness(dfs):
 	#df_betweeness[['edge_betweeness','weighted_edge_betweeness']].plot()
 	#df_betweeness.plot(x='edge_betweeness',y='weighted_edge_betweeness', kind='scatter', style='x', color='r')
-	plt.scatter(df_betweeness['edge_betweeness'],df_betweeness['weighted_edge_betweeness'],s=40,marker='x')
-	
-	#plt.legend = ''
-	
-	# Linear Reggression
-	# Following: http://stamfordresearch.com/linear-regression-using-pandas-python/
-	
-	# Get the linear models
-	lm_original = np.polyfit(df_betweeness['edge_betweeness'], df_betweeness['weighted_edge_betweeness'], 1)
-	# calculate the y values based on the co-efficients from the model
-	r_x, r_y = zip(*((i, i*lm_original[0] + lm_original[1]) for i in df_betweeness['edge_betweeness']))
-	# Put in to a data frame, to keep is all nice
-	lm_original_plot = pd.DataFrame({
-		'edge_betweeness' : r_x,
-		'weighted_edge_betweeness' : r_y})
-	plt.plot(r_x,r_y)
-	plt.xlabel('Edge Betweeness', fontsize=18)
-	plt.ylabel('Weighted Edge Betweeness', fontsize=18)
-	plt.title(title)
-	plt.show()
+	plt.figure()
+	i=1
+	for title,df_betweeness in dfs.iteritems():
+		plt.subplot(2,2,i)
+		plt.scatter(df_betweeness['edge_betweeness'],df_betweeness['weighted_edge_betweeness'],s=40,marker='x')
+		
+		#plt.legend = ''
+		
+		# Linear Reggression
+		# Following: http://stamfordresearch.com/linear-regression-using-pandas-python/
+		
+		# Get the linear models
+		lm_original = np.polyfit(df_betweeness['edge_betweeness'], df_betweeness['weighted_edge_betweeness'], 1)
+		# calculate the y values based on the co-efficients from the model
+		r_x, r_y = zip(*((i, i*lm_original[0] + lm_original[1]) for i in df_betweeness['edge_betweeness']))
+		# Put in to a data frame, to keep is all nice
+		legend = 'y='+str(lm_original[0])+'x + '+str(lm_original[1])
+		lm_original_plot = pd.DataFrame({
+			'edge_betweeness' : r_x,
+			'weighted_edge_betweeness' : r_y})
+		line, = plt.plot(r_x,r_y, label=legend)
+		plt.legend(handles=[line])
+		plt.xlabel('Edge Betweeness', fontsize=18)
+		plt.ylim(-0.1,0.6)
+		plt.ylabel('Weighted Edge Betweeness', fontsize=18)
+		plt.title(title)
+		plt.show()
+		i += 1
 	raw_input("End")
 
-	#df_betweeness[['paths','min_paths']].plot()
-	#plt.show()
-	ecdf_bet = getECDF(df_betweeness['edge_betweeness'])
-	ecdf_bet.plot(legend=True)
-	plt.show()
-	ecdf_bet1 = getECDF(df_betweeness['weighted_edge_betweeness'])
-	ecdf_bet1.plot(legend=True)
-	plt.title(title)
-	plt.show()
+def plotBetweenessECDF(dfs):
+	plt.figure()
+	i=1
+	for title,df_betweeness in dfs.iteritems():
+		plt.subplot(2,2,i)
+		ecdf_bet = getECDF(df_betweeness['edge_betweeness'])
+		ecdf_bet.plot(legend=True)
+		plt.show()
+		ecdf_bet1 = getECDF(df_betweeness['weighted_edge_betweeness'])
+		ecdf_bet1.plot(legend=True)
+		plt.title(title)
+		plt.show()
+		plt.xlim(0,0.5)
+		i +=1
 	raw_input("End")
 
 
@@ -527,6 +582,7 @@ def drawLinksBytesECDF(final_df,links_proxies):
 
 	df = pd.DataFrame(pd.Series(bytes_per_link, name='Gbytes'))
 	ecdf = getECDF(df['Gbytes']/1000000000)
+	plt.figure()
 	ax=ecdf.plot(legend=False, title="ECDF Total GBytes Per Link")
 	ax.set_xlabel('GBytes')
 	ax.set_ylabel('ECDF')
@@ -537,6 +593,7 @@ def drawLinksBytesECDF(final_df,links_proxies):
 def drawComparativeLinksBytesECDF(dfs,links_proxies):
 	all_links = [l for j in links_proxies.values() for l in j.values()]
 	all_links = sum(all_links,[])
+	plt.figure()
 	for name,df in dfs.iteritems():
 		bytes_per_link = caluclateBytesPerLink(df,links_proxies)
 
@@ -575,9 +632,8 @@ def drawComparativeTotalLinksBytes(dfs,links_proxies):
 
 
 def getLinksBytesTS(final_df,links_proxies, df_bytes_ts_per_user, title):
-	final_df = final_df[final_df.reached == True]
 	final_df = final_df[final_df.router != final_df.proxy]
-	final_df = final_df[final_df.destination==final_df.proxy].set_index('nodeId')
+	final_df = final_df.set_index('nodeId')
 	final_df.drop_duplicates(inplace = True)
 	#df_bytes_ts_per_user.index = pd.DatetimeIndex(df_bytes_ts_per_user.index)
 	#idx = pd.date_range(df_bytes_ts_per_user.index[0],df_bytes_ts_per_user.index[-1],freq="60min")
@@ -610,7 +666,7 @@ def getLinksBytesTS(final_df,links_proxies, df_bytes_ts_per_user, title):
 							if link_name in links_bytes_ts:
 								#print '1'
 								#pdb.set_trace()
-								links_bytes_ts[link_name].add(df1, fill_value=0)
+								links_bytes_ts[link_name] = links_bytes_ts[link_name].add(df1, fill_value=0)
 								if isinstance(links_bytes_ts[link_name], pd.DataFrame):
 									print '1'
 									pdb.set_trace()
@@ -623,6 +679,8 @@ def getLinksBytesTS(final_df,links_proxies, df_bytes_ts_per_user, title):
 								if isinstance(links_bytes_ts[link_name], pd.DataFrame):
 									print '2'
 									pdb.set_trace()
+						else:
+							print 'FOUND ONE'
 			else:
 				# If node is client of one proxy
 				router = final_df.loc[nodeId]['router']
@@ -640,7 +698,7 @@ def getLinksBytesTS(final_df,links_proxies, df_bytes_ts_per_user, title):
 							df1 = df_bytes_ts_per_user[nodeId]
 
 						if link_name in links_bytes_ts:
-							links_bytes_ts[link_name].add(df1, fill_value=0)
+							links_bytes_ts[link_name] = links_bytes_ts[link_name].add(df1, fill_value=0)
 							if isinstance(links_bytes_ts[link_name], pd.DataFrame):
 								print '3'
 								pdb.set_trace()
@@ -650,45 +708,54 @@ def getLinksBytesTS(final_df,links_proxies, df_bytes_ts_per_user, title):
 							if isinstance(links_bytes_ts[link_name], pd.DataFrame):
 								print '4'
 								pdb.set_trace()
+					else:
+						print 'FOUND ONE'
+		else:
+			print 'Node %s has no time series' % nodeId
 	df_links_bytes_ts = pd.concat(links_bytes_ts.values(),axis=1)	
 	print '%s \nSum: %s' % (title,df_links_bytes_ts.sum(axis=1).sum())
 
 	return df_links_bytes_ts
 
 def drawLinksBytesTS(df_links_bytes_ts):
+	plt.figure()
 	df_links_bytes_ts.plot(legend=False,logy=True, title=title)
 	plt.show()
 	raw_input("End")
 
 def getMinDelayDF(final_df):
 	min_delay_df = final_df[final_df.reached==True]
-	min_delay_idx = min_delay_df.groupby('nodeId')['delay'].idxmin(skipna=True)
+	min_delay_idx = min_delay_df.groupby(['nodeId','proxy'])['delay'].idxmin(skipna=True)
 	min_delay_df = min_delay_df.loc[min_delay_idx]
 	min_delay_df['proxy'] = min_delay_df['destination']
+	min_delay_df = min_delay_df.dropna()
 
 	return min_delay_df
 
 def getMaxDelayDF(final_df):
 	max_delay_df = final_df[final_df.reached==True]
-	max_delay_idx = max_delay_df.groupby('nodeId')['delay'].idxmax(skipna=True)
+	max_delay_idx = max_delay_df.groupby(['nodeId','proxy'])['delay'].idxmax(skipna=True)
 	max_delay_df = max_delay_df.loc[max_delay_idx]
 	max_delay_df['proxy'] = max_delay_df['destination']
+	max_delay_df = max_delay_df.dropna()
 
 	return max_delay_df
 
 def getMinHopsDF(final_df):
 	min_hops_df = final_df[final_df.reached==True]
-	min_hops_idx = min_hops_df.groupby('nodeId')['distance'].idxmin(skipna=True)
+	min_hops_idx = min_hops_df.groupby(['nodeId','proxy'])['distance'].idxmin(skipna=True)
 	min_hops_df = min_hops_df.loc[min_hops_idx]
 	min_hops_df['proxy'] = min_hops_df['destination']
+	min_hops_df = min_hops_df.dropna()
 
 	return min_hops_df
 
 def getMaxHopsDF(final_df):
 	max_hops_df = final_df[final_df.reached==True]
-	max_hops_idx = max_hops_df.groupby('nodeId')['distance'].idxmax(skipna=True)
+	max_hops_idx = max_hops_df.groupby(['nodeId','proxy'])['distance'].idxmax(skipna=True)
 	max_hops_df = max_hops_df.loc[max_hops_idx]
 	max_hops_df['proxy'] = max_hops_df['destination']
+	max_hops_df = max_hops_df.dropna()
 
 	return max_hops_df
 
@@ -707,11 +774,13 @@ def getRandomProxyDF(final_df):
 	proxies = pd.unique(final_df.proxy.ravel()).tolist()
 	#random_proxy_df = final_df.copy()
 	random_proxy_df = final_df[final_df.reached == True]
-	random_proxy_df = random_proxy_df.groupby('nodeId').apply(dfRandomRow)
+	random_proxy_df = random_proxy_df.groupby(['nodeId','proxy']).apply(dfRandomRow)
 	random_proxy_df['proxy'] = random_proxy_df['destination']
+	random_proxy_df = random_proxy_df.dropna()
 
 	return random_proxy_df
-
+def countNodes(df):
+	return len(pd.unique(df.nodeId.ravel()).tolist())
 
 def drawProxySelectionFrequency(final_df, random_proxy_df, min_delay_df, min_hops_df):
 	temp = final_df[final_df.reached == True]
@@ -720,23 +789,45 @@ def drawProxySelectionFrequency(final_df, random_proxy_df, min_delay_df, min_hop
 	freq2 = random_proxy_df.groupby('proxy').size()/random_proxy_df['proxy'].count()
 	freq3 = min_delay_df.groupby('proxy').size()/min_delay_df['proxy'].count()
 	freq4 = min_hops_df.groupby('proxy').size()/min_hops_df['proxy'].count()
-	freq = pd.DataFrame({'Current Situation':freq1,'Random Proxy Selection':freq2, 'Min Delay Proxy':freq3, 'Min Hops Proxy':freq4})
+	freq = pd.DataFrame({'Current Situation':freq1,
+						'Random Proxy Selection':freq2,
+						'Min Delay Proxy':freq3,
+						'Min Hops Proxy':freq4})
 	freq.plot(kind='bar',title='Frequency of proxy selection')
 	plt.ylabel('Frequency')
 	plt.show()
 	raw_input("End")
 
-	temp1 = final_df[final_df.reached == True]
-	freq5 = temp1.groupby('proxy').size()/temp1['proxy'].count()
-	freq6 = final_df.groupby('proxy').size()/final_df['proxy'].count()
-	freq = pd.DataFrame({'All Measurements':freq5,'Succesfull measurements':freq6})
-	freq.plot(kind='bar', title='Understanding Measurements')
-	plt.ylabel('Frequency')
+	abs_freq1 = temp.groupby('proxy').size()
+	abs_freq2 = random_proxy_df.groupby('proxy').size()
+	abs_freq3 = min_delay_df.groupby('proxy').size()
+	abs_freq4 = min_hops_df.groupby('proxy').size()
+	abs_freq = pd.DataFrame({'Current Situation':abs_freq1,
+							'Random Proxy Selection':abs_freq2, 
+							'Min Delay Proxy':abs_freq3, 
+							'Min Hops Proxy':abs_freq4})
+	abs_freq.plot.box(title='Boxplot of Absolute Frequency of proxy selection')
+	plt.ylabel('Absolute Frequency')
 	plt.show()
 	raw_input("End")
 
+	if False:
+		temp1 = final_df[final_df.reached == True]
+		#Frequency
+		#freq5 = temp1.groupby('proxy').size()/temp1['proxy'].count()
+		#freq6 = final_df.groupby('proxy').size()/final_df['proxy'].count()
+		#Absolute
+		freq5 = temp1.groupby('destination').apply(countNodes)
+		freq6 = final_df.groupby('destination').apply(countNodes)
+		freq = pd.DataFrame({'All Measurements':freq6,'Succesfull measurements':freq5})
+		freq.plot(kind='bar', title='Understanding Measurements')
+		plt.ylabel('Frequency')
+		plt.show()
+		raw_input("End")
+
 
 def drawBytesPerHour(dfs):
+	plt.figure()
 	for name,df in dfs.iteritems():
 		df = df.resample('60Min',how='sum')
 		df['hour'] = df.index.hour
@@ -747,6 +838,28 @@ def drawBytesPerHour(dfs):
 		print df.sum()
 	plt.show()
 	raw_input("End")
+
+
+def drawComparativeLoadPerProxy(dfs):
+	results = []
+	for title, df in dfs.iteritems():
+		bytes = df.groupby('proxy')['bytes'].sum()
+		bytes.name = title
+		results.append(bytes)
+	results_df = pd.concat(results, axis=1)
+	results_df.plot.box(logy=True)
+	plt.ylabel('Bytes')
+	plt.title('Proxy Load Boxplot of various approaches')
+	plt.show()
+	raw_input("End")
+	results_df = results_df.T
+	results_df.plot(kind='bar',legend=True,logy=True)
+	plt.ylabel('Bytes')
+	plt.title('Load Per Proxy Per approach')
+	plt.xticks(rotation=90)
+	plt.show()
+	raw_input("End")
+	#pdb.set_trace()
 
 
 
@@ -775,11 +888,14 @@ def drawShortestPaths(proxies):
 	final_df = combineLogTraceroute(df_proxy_clients, shortest_paths)
 
 
+	current_df = final_df[final_df.reached==True]
+	current_df = current_df[current_df.destination==current_df.proxy]
+
 	#plotECDFDelays(final_df)
 
 	#drawLinksBytesECDF(final_df,links_proxies)
 
-	final_link_bytes_df = getLinksBytesTS(final_df,links_proxies, df_bytes_ts_per_user, 'current')
+	final_link_bytes_df = getLinksBytesTS(current_df,links_proxies, df_bytes_ts_per_user, 'current')
 
 	min_delay_df = getMinDelayDF(final_df)
 	min_delay_link_bytes_df = getLinksBytesTS(min_delay_df,links_proxies, df_bytes_ts_per_user, 'min_delay')
@@ -799,32 +915,34 @@ def drawShortestPaths(proxies):
 	
 	drawProxySelectionFrequency(final_df, random_proxy_df, min_delay_df, min_hops_df)
 
-	#drawComparativeLinksBytesECDF({'current':final_df,'random_proxy':random_proxy_df,
-	#								'min_delay':min_delay_df, 'min_hops':min_hops_df}, links_proxies)
+	drawComparativeLinksBytesECDF({'current':current_df,'random_proxy':random_proxy_df,
+									'min_delay':min_delay_df, 'min_hops':min_hops_df}, links_proxies)
 	
-	#drawComparativeTotalLinksBytes({'current':final_df,'random_proxy':random_proxy_df,
-	#								'min_delay':min_delay_df, 'min_hops':min_hops_df}, links_proxies)
+	drawComparativeTotalLinksBytes({'current':current_df,'random_proxy':random_proxy_df,
+									'min_delay':min_delay_df, 'min_hops':min_hops_df}, links_proxies)
 	
-	pdb.set_trace()
 	drawBytesPerHour({'current':final_link_bytes_df,'random_proxy':random_proxy_link_bytes_df,
 						'min_delay':min_delay_link_bytes_df, 'min_hops':min_hops_link_bytes_df})
 
 
-	#plotBetweeness(links_proxies, G, final_df, 'Current Edge Betweeness')
-	#plotBetweeness(links_proxies, G, min_delay_df, 'Min Delay Edge Betweeness')
-	#plotBetweeness(links_proxies, G, min_hops_df, 'Min Hops Edge Betweeness')
-	#plotBetweeness(links_proxies, G, random_proxy_df, 'Random Proxy Edge Betweeness')
+	drawComparativeLoadPerProxy({'current':current_df,'random_proxy':random_proxy_df,
+									'min_delay':min_delay_df, 'min_hops':min_hops_df})
 
 
-	#routers = shortest_paths.values()[0].set_index('router').to_dict()['reached'].keys()
-	#proxy_per_router = {}
-	#for p,sp in shortest_paths.iteritems():
-	#	df = sp[sp.reached==True]
+	current_bet = getBetweeness(links_proxies, G, current_df)
+	min_delay_bet = getBetweeness(links_proxies, G, min_delay_df)
+	min_hops_bet = getBetweeness(links_proxies, G, min_hops_df)
+	random_proxy_bet = getBetweeness(links_proxies, G, random_proxy_df)
 
-	
-	#df_reached_shortest_paths = df_shortest_paths.set_index('router')
-	#df_reached_shortest_paths = df_reached_shortest_paths[df_reached_shortest_paths.reached==True]
-	
+	plotBetweeness({'Current Edge Betweeness':current_bet,
+					'Min Delay Edge Betweeness':min_delay_bet,
+					'Min Hops Edge Betweeness': min_hops_bet,
+					'Random Proxy Edge Betweeness':random_proxy_bet})
+
+	plotBetweenessECDF({'Current Edge Betweeness':current_bet,
+					'Min Delay Edge Betweeness':min_delay_bet,
+					'Min Hops Edge Betweeness': min_hops_bet,
+					'Random Proxy Edge Betweeness':random_proxy_bet})
 
 
 	#plotProxyToRoutersShortestPathvsRealPath(df_reached_shortest_paths)
@@ -847,3 +965,4 @@ def drawShortestPaths(proxies):
 if __name__ == '__main__' :
 	#drawShortestPaths('4892')
 	drawShortestPaths(['7857','3982','4892','5417'])
+	#drawShortestPaths(['5417'])
