@@ -80,17 +80,22 @@ def getBytesPerUser(proxies):
 			bytes_per_user[user] = df['bytes'].sum()
 	return bytes_per_user
 
-def getBytesTSPerUser(proxies):
+def getBytesElapsedTSPerUser(proxies):
 	bytes_ts_per_user = {}
 	bytes_per_user = {}
+	elapsed_ts_per_user = {}
+	elapsed_per_user = {}
 	for proxy in proxies:
 		parser = SquidParser(proxy)
 		dfs = parser.getUsersTimeSeries()
 		for user, df in dfs.iteritems():
-			ts = pd.Series(df['bytes'].resample('60Min', how='sum'), name=user)
-			bytes_ts_per_user[user] = ts
+			bytes_ts = pd.Series(df['bytes'].resample('60Min', how='sum'), name=user)
+			elapsed_ts = pd.Series(df['timeElapsed'].resample('60Min', how='sum'), name=user)
+			bytes_ts_per_user[user] = bytes_ts
 			bytes_per_user[user] = df['bytes'].sum()
-	return bytes_ts_per_user, bytes_per_user
+			elapsed_ts_per_user[user] = elapsed_ts
+			elapsed_per_user[user] = df['timeElapsed'].sum()
+	return bytes_ts_per_user, bytes_per_user, elapsed_ts_per_user, elapsed_per_user
 
 
 def plotProxiesStats(proxy_ids):

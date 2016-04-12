@@ -11,13 +11,13 @@ from guifiAnalyzer.db.infrastructure import InfraDB
 from guifiAnalyzer.db.traffic_assistant import TrafficAssistantDB
 
 from guifiAnalyzer.proxies.squidparser.squidparser import SquidParser, log_dir
-from guifiAnalyzer.proxies.squidparser.getLogStats import getUsersProxiesBytesLog, getBytesTSPerUser
+from guifiAnalyzer.proxies.squidparser.getLogStats import getUsersProxiesBytesLog, getBytesElapsedTSPerUser
 
 
 from pprint import pprint
 from collections import Counter
 
-import pickle
+import cPickle as pickle
 
 import pdb
 
@@ -635,22 +635,33 @@ def mapping(zone, core, output=""):
 	#usersproxies_stats_df.columns = [userId_to_nodeId[user] for user in usersproxies_stats_df.columns]
 	#pdb.set_trace()
 
+
+
+	bytes_ts_per_user1, bytes_per_user1, elapsed_ts_per_user1, elapsed_per_user1 = getBytesElapsedTSPerUser(proxies)
+
+
 	if output == 'new_clients':
 
 		fil = os.path.join(output_dir,'proxy_clients_dic')
 		with open(fil,'w') as f:
 			pickle.dump(proxy_clients, f)
 
-		#bytes_per_user_fil = os.path.join(output_dir,'bytes_per_user')
-		#if os.path.isfile(bytes_per_user_fil):
-		#	with open(bytes_per_user_fil,'rb') as f:
-		#		bytes_per_user1 = pickle.load(f)
-		#else:
-		#	bytes_per_user1 = getBytesPerUser(proxies)
-		#	with open(bytes_per_user_fil,'w') as f:
-		#		pickle.dump(bytes_per_user1, f)
-		bytes_ts_per_user1, bytes_per_user1 = getBytesTSPerUser(proxies)
+		# Read log data if they exist or calculate them and
+		# write them in file for future reference
+		log_data_fil = os.path.join(output_dir, 'log_data')
+		if os.path.isfile(log_data_fil):
+			with open(log_data_fil, 'rb') as f:
+				bytes_ts_per_user1, bytes_per_user1, elapsed_ts_per_user1, elapsed_per_user1 = pickle.load(f)
+		else:
+			bytes_ts_per_user1, bytes_per_user1, elapsed_ts_per_user1, elapsed_per_user1 = getBytesElapsedTSPerUser(proxies)
+			t = (bytes_ts_per_user1, bytes_per_user1, elapsed_ts_per_user1, elapsed_per_user1)
+			with open(log_data_fil, 'w') as f:
+				pickle.dump(t, f)
+		#bytes_ts_per_user1, bytes_per_user1, elapsed_ts_per_user1, elapsed_per_user1 = getBytesElapsedTSPerUser(proxies)
+		
+		# Translate userIds to nodeIds
 		bytes_per_user = {userId_to_nodeId[user]:bytes for user,bytes in bytes_per_user1.iteritems() if user in userId_to_nodeId}
+		elapsed_per_user = {userId_to_nodeId[user]:elapsed for user,elapsed in elapsed_per_user1.iteritems() if user in userId_to_nodeId}
 
 		helper = []
 		for client, data in proxy_clients.iteritems():
@@ -659,7 +670,7 @@ def mapping(zone, core, output=""):
 					if p != '':
 						print client
 						if client in bytes_per_user:
-							helper.append({'nodeId':client, 'router':data['router'], 'proxy':p, 'bytes':bytes_per_user[client]})
+							helper.append({'nodeId':client, 'router':data['router'], 'proxy':p, 'bytes':bytes_per_user[client], 'elapsed':elapsed_per_user[client]})
 		#pdb.set_trace()
 		bytes_ts_per_user = []
 		for user,bytes_ts in bytes_ts_per_user1.iteritems():
@@ -670,6 +681,16 @@ def mapping(zone, core, output=""):
 		df_bytes_ts_per_user = pd.concat(bytes_ts_per_user, axis=1).fillna(0)
 		fil = os.path.join(output_dir, 'df_bytes_ts_per_user')
 		df_bytes_ts_per_user.to_pickle(fil)
+
+		elapsed_ts_per_user = []
+		for user,elapsed_ts in elapsed_ts_per_user1.iteritems():
+			if user in userId_to_nodeId:
+				elapsed_ts.name = userId_to_nodeId[user]
+				df = pd.DataFrame(elapsed_ts)
+				elapsed_ts_per_user.append(df)
+		df_elapsed_ts_per_user = pd.concat(elapsed_ts_per_user, axis=1).fillna(0)
+		fil = os.path.join(output_dir, 'df_elapsed_ts_per_user')
+		df_elapsed_ts_per_user.to_pickle(fil)
 
 
 		df_proxy_clients = pd.DataFrame(helper)
