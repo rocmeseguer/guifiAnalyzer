@@ -14,7 +14,7 @@ randomState = np.random.RandomState()
 import random
 from collections import Counter, defaultdict
 
-import pickle
+import cPickle as pickle
 
 import os
 from pprint import pprint
@@ -307,6 +307,7 @@ def combineLogTraceroute(df_proxy_clients, shortest_paths):
 		router = proxy_clients['router'][i]
 		proxy = proxy_clients['proxy'][i]
 		bytes = proxy_clients['bytes'][i]
+		elapsed = proxy_clients['elapsed'][i]
 		if proxy == 'my_proxy':
 			proxy = '3982'
 		for destination, paths in shortest_paths.iteritems():
@@ -331,6 +332,7 @@ def combineLogTraceroute(df_proxy_clients, shortest_paths):
 						'router': router,
 						'proxy' : proxy,
 						'bytes' : bytes,
+						'elapsed': elapsed,
 						'destination' : destination,
 						'reached' : reached,
 						'delay' : delay,
@@ -776,9 +778,11 @@ def getRandomProxyDF(final_df):
 	random_proxy_df = final_df[final_df.reached == True]
 	random_proxy_df = random_proxy_df.groupby(['nodeId','proxy']).apply(dfRandomRow)
 	random_proxy_df['proxy'] = random_proxy_df['destination']
+	random_proxy_df = random_proxy_df.reset_index(level=[0,1],drop=True)
 	random_proxy_df = random_proxy_df.dropna()
 
 	return random_proxy_df
+
 def countNodes(df):
 	return len(pd.unique(df.nodeId.ravel()).tolist())
 
@@ -840,27 +844,46 @@ def drawBytesPerHour(dfs):
 	raw_input("End")
 
 
-def drawComparativeLoadPerProxy(dfs):
+def drawComparativeBytesElapsedPerProxy(dfs,column, name):
 	results = []
 	for title, df in dfs.iteritems():
-		bytes = df.groupby('proxy')['bytes'].sum()
+		bytes = df.groupby('proxy')[column].sum()
 		bytes.name = title
 		results.append(bytes)
 	results_df = pd.concat(results, axis=1)
 	results_df.plot.box(logy=True)
-	plt.ylabel('Bytes')
-	plt.title('Proxy Load Boxplot of various approaches')
+	plt.ylabel(name)
+	title = 'Proxy '+name+' Boxplot of various approaches'
+	plt.title(title)
 	plt.show()
 	raw_input("End")
 	results_df = results_df.T
 	results_df.plot(kind='bar',legend=True,logy=True)
-	plt.ylabel('Bytes')
-	plt.title('Load Per Proxy Per approach')
+	plt.ylabel(name)
+	title = name+' Per Proxy Per approach'
+	plt.title(title)
 	plt.xticks(rotation=90)
 	plt.show()
 	raw_input("End")
 	#pdb.set_trace()
 
+def drawComparativeSpeedPerProxy(dfs):
+	results = []
+	for title, df in dfs.iteritems():
+		df['speed'] = df.bytes/df.elapsed.replace({ 0 : np.nan })
+		#pdb.set_trace()
+		#speed = df.groupby('proxy')['speed'].sum()
+		speed = df['speed']
+		speed.name = title
+		pdb.set_trace()
+		results.append(speed)
+	results_df = pd.concat(results, axis=1)
+	results_df.plot.box(logy=True)
+	plt.ylabel('Bytes/Sec')
+	plt.title('Proxy Speed Boxplot of various approaches')
+	plt.show()
+	raw_input("End")
+	#pdb.set_trace()
 
 
 def drawShortestPaths(proxies):
@@ -925,10 +948,15 @@ def drawShortestPaths(proxies):
 						'min_delay':min_delay_link_bytes_df, 'min_hops':min_hops_link_bytes_df})
 
 
-	drawComparativeLoadPerProxy({'current':current_df,'random_proxy':random_proxy_df,
+	drawComparativeBytesElapsedPerProxy({'current':current_df,'random_proxy':random_proxy_df,
+									'min_delay':min_delay_df, 'min_hops':min_hops_df}, 'bytes','Load Bytes')
+
+	drawComparativeBytesElapsedPerProxy({'current':current_df,'random_proxy':random_proxy_df,
+									'min_delay':min_delay_df, 'min_hops':min_hops_df}, 'elapsed','Elapsed Time')
+
+	drawComparativeSpeedPerProxy({'current':current_df,'random_proxy':random_proxy_df,
 									'min_delay':min_delay_df, 'min_hops':min_hops_df})
-
-
+	
 	current_bet = getBetweeness(links_proxies, G, current_df)
 	min_delay_bet = getBetweeness(links_proxies, G, min_delay_df)
 	min_hops_bet = getBetweeness(links_proxies, G, min_hops_df)
