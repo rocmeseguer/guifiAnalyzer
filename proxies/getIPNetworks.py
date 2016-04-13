@@ -637,7 +637,6 @@ def mapping(zone, core, output=""):
 
 
 
-	bytes_ts_per_user1, bytes_per_user1, elapsed_ts_per_user1, elapsed_per_user1 = getBytesElapsedTSPerUser(proxies)
 
 
 	if output == 'new_clients':
