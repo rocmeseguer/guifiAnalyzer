@@ -610,6 +610,21 @@ def drawComparativeLinksBytesECDF(dfs,links_proxies):
 	plt.show()
 	raw_input("End")
 
+	series = []
+	for name,df in dfs.iteritems():
+		bytes_per_link = caluclateBytesPerLink(df,links_proxies)
+		s = pd.Series(bytes_per_link, name=name)
+		series.append(s/1000000000)
+	df = pd.concat(series, axis=1)
+	df.plot.box()
+	plt.title("Boxplot GBytes Per Link Per Approach")
+	plt.ylabel('GBytes')
+	plt.show()
+	raw_input("End")
+
+
+
+
 
 def drawComparativeTotalLinksBytes(dfs,links_proxies):
 	all_links = [l for j in links_proxies.values() for l in j.values()]
@@ -810,7 +825,8 @@ def drawProxySelectionFrequency(final_df, random_proxy_df, min_delay_df, min_hop
 							'Random Proxy Selection':abs_freq2, 
 							'Min Delay Proxy':abs_freq3, 
 							'Min Hops Proxy':abs_freq4})
-	abs_freq.plot.box(title='Boxplot of Absolute Frequency of proxy selection')
+	#abs_freq.plot.box(title='Boxplot of Absolute Frequency of proxy selection')
+	abs_freq.plot(kind='bars', title='Boxplot of Absolute Frequency of proxy selection')
 	plt.ylabel('Absolute Frequency')
 	plt.show()
 	raw_input("End")
