@@ -10,8 +10,8 @@ import random
 from guifiAnalyzer.db.infrastructure import InfraDB
 from guifiAnalyzer.db.traffic_assistant import TrafficAssistantDB
 
-from guifiAnalyzer.proxies.squidparser.squidparser import SquidParser, log_dir
-from guifiAnalyzer.proxies.squidparser.getLogStats import getUsersProxiesBytesLog, getBytesElapsedTSPerUser
+from guifiAnalyzer.proxies.squidparser.squidparser import SquidUserParser, log_dir
+from guifiAnalyzer.proxies.squidparser.getUserLogStats import getUsersProxiesBytesLog, getBytesElapsedTSPerUser
 
 
 from pprint import pprint
@@ -179,7 +179,7 @@ def getLogNetworksNUsers(proxy_id):
 			proxy_nets_users = pickle.load(f)
 	else:
 		#If not calculate
-		parser = SquidParser(proxy_id)
+		parser = SquidUserParser(proxy_id)
 		proxy_nets = parser.ips
 		# Filter out non 10.* proxy_nets
 		proxy_nets = [ip for ip in proxy_nets if ip.split('.')[0] == '10']
