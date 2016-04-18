@@ -105,7 +105,7 @@ class SquidUrlParser(object):
 						'ts': ts,
 						'user': l.remhost+':'+l.rfc931,
 						'timeElapsed': l.elapsed,
-						'bytes': l.bytes,
+						'bytes': int(l.bytes),
 						'url': getDomain(l.url),
 						'type': l.type,
 						'cache_status': l.status.split('/')[0],
