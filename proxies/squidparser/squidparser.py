@@ -106,6 +106,7 @@ class SquidUrlParser(object):
 						'user': l.remhost+':'+l.rfc931,
 						'timeElapsed': l.elapsed,
 						'bytes': int(l.bytes),
+						'method': l.method,
 						'url': getDomain(l.url),
 						'type': l.type,
 						'cache_status': l.status.split('/')[0],
@@ -115,3 +116,39 @@ class SquidUrlParser(object):
 		df = pd.DataFrame(result)
 		#df.index = pd.to_datetime(df.index, unit='s')
 		return df
+
+
+class SquidTrafficParser(object):
+
+	def __init__(self,proxy_id):
+		self.proxy_id = proxy_id
+		self.logs = []
+		self.populate()
+
+	def populate(self):
+		name = self.proxy_id+'_*_access_*.log.gz'
+		for fil in os.listdir(log_dir):
+		    if fnmatch.fnmatch(fil, name):
+		    	path = os.path.join(log_dir,fil)
+		    	date = fil.split('_')[1]
+		        log = SquidLog(path)
+		        self.logs.append(log)
+
+	def getTrafficTimeSeries(self):
+		result = []
+		for log in self.logs:
+			for l in log:
+				ts = datetime.datetime.fromtimestamp(l.ts)
+				url = l.url
+				dic = {'proxy':self.proxy_id,
+						'ts': ts,
+						'user': l.rfc931,
+						'timeElapsed': l.elapsed,
+						'bytes': int(l.bytes),
+						'request_status': l.status.split('/')[1]}
+				result.append(dic)
+
+		df = pd.DataFrame(result)
+		#df.index = pd.to_datetime(df.index, unit='s')
+		return df
+
