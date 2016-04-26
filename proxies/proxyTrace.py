@@ -7,6 +7,7 @@ from getIPNetworks import invertListDic
 
 import networkx as nx
 import pandas as pd
+from sklearn.decomposition import PCA
 from matplotlib import pyplot as plt
 import numpy as np
 randomState = np.random.RandomState()
@@ -491,24 +492,16 @@ def plotBetweeness(dfs):
 	i=1
 	for title,df_betweeness in dfs.iteritems():
 		plt.subplot(2,2,i)
+		
+		pca = PCA(n_components=2)
+		df_betweeness_pca = pca.fit(df_betweeness[['edge_betweeness','weighted_edge_betweeness']]) 
+		axis = df_betweeness_pca.components_.T 
 		plt.scatter(df_betweeness['edge_betweeness'],df_betweeness['weighted_edge_betweeness'],s=40,marker='x')
-		
-		#plt.legend = ''
-		
-		# Linear Reggression
-		# Following: http://stamfordresearch.com/linear-regression-using-pandas-python/
-		
-		# Get the linear models
-		lm_original = np.polyfit(df_betweeness['edge_betweeness'], df_betweeness['weighted_edge_betweeness'], 1)
-		# calculate the y values based on the co-efficients from the model
-		r_x, r_y = zip(*((i, i*lm_original[0] + lm_original[1]) for i in df_betweeness['edge_betweeness']))
-		# Put in to a data frame, to keep is all nice
-		legend = 'y='+str(lm_original[0])+'x + '+str(lm_original[1])
-		lm_original_plot = pd.DataFrame({
-			'edge_betweeness' : r_x,
-			'weighted_edge_betweeness' : r_y})
-		line, = plt.plot(r_x,r_y, label=legend)
-		plt.legend(handles=[line])
+		axis /= axis.std()
+		x_axis, y_axis = axis
+		plt.quiver(0, 0, x_axis, y_axis, zorder=11, width=0.01, scale=15, color='r')
+
+
 		plt.xlabel('Edge Betweeness', fontsize=18)
 		plt.ylim(-0.1,0.6)
 		plt.ylabel('Weighted Edge Betweeness', fontsize=18)
