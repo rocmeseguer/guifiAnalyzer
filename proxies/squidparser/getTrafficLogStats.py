@@ -31,6 +31,11 @@ def start_process():
     print 'Starting', multiprocessing.current_process().name
 
 
+def resampler_count(array_like):
+	return array_like.size
+
+
+
 def proxiesStats(proxy_ids):
 	### GET TIME SERIES
 	logs_df_file = os.path.join(output_dir,'logs_df')
@@ -48,25 +53,28 @@ def proxiesStats(proxy_ids):
 		logs_df.to_pickle(logs_df_file)
 
 
-	bytes_ts = pd.Series(logs_df[['bytes','ts']].set_index('ts').bytes.resample('60Min', how='sum'))
-	df = pd.DataFrame(bytes_ts)
+	bytes_ts = pd.Series(logs_df['bytes'].set_index('ts').bytes.resample('60Min', how='sum'))
+	requests_ts = pd.Series(logs_df['bytes'].set_index('ts').bytes.resample('60Min', how='resampler_count'))
+	bytes_df = pd.DataFrame(bytes_ts)
+	requests_df = pd.DataFrame(requests_ts)
+	pdb.set_trace()
 
 	### PLOT GENERAL TIME SERIES GRAPHS
-	df.plot(logy=True)
+	bytes_df.plot(logy=True)
 	plt.show()
 	raw_input('End')
 
-	periodogram = stattools.periodogram(df.bytes)
-	plotTwin(df,'Bytes',periodogram,'Frequency','Periodogram')
+	periodogram = stattools.periodogram(bytes_df.bytes)
+	plotTwin(bytes_df,'Bytes', periodogram, 'Frequency', 'Periodogram')
 
-	acf = stattools.acf(df)
-	plotTwin(df,'Bytes','acf','Correlation Coefficient', 'Autocorrelation',df)
+	acf = stattools.acf(bytes_df)
+	plotTwin(bytes_df, 'Bytes', 'acf', 'Correlation Coefficient', 'Autocorrelation', bytes_df)
 
-	pacf = stattools.pacf(df)
-	plotTwin(df,'Bytes','pacf','Partial Correlation Coefficient', 'Partial Autocorrelation', df)
+	pacf = stattools.pacf(bytes_df)
+	plotTwin(bytes_df, 'Bytes', 'pacf', 'Partial Correlation Coefficient', 'Partial Autocorrelation', bytes_df)
 
 
-	decomposition = seasonal_decompose(df.values,freq=24)
+	decomposition = seasonal_decompose(bytes_df.values, freq=24)
 	decomposition.plot()
 	plt.show()
 	raw_input('End')
@@ -76,25 +84,25 @@ def proxiesStats(proxy_ids):
 
 
 	### EVEN/ODD ANALYSIS 
-	#odd_mask = df.index.map(lambda x: x.day%2 ) == 1
-	odd_mask = df.index.map(lambda x: x.day in [15,17,19,21]) == True
-	df_odd = df[odd_mask].shift(-7,'D')
+	#odd_mask = bytes_df.index.map(lambda x: x.day%2 ) == 1
+	odd_mask = bytes_df.index.map(lambda x: x.day in [15,17,19,21]) == True
+	bytes_df_odd = bytes_df[odd_mask].shift(-7,'D')
 
-	#even_mask = df.index.map(lambda x: x.day%2) == 0
-	even_mask = df.index.map(lambda x: x.day in [8,10,12,14]) == True
-	df_even = df[even_mask]
+	#even_mask = bytes_df.index.map(lambda x: x.day%2) == 0
+	even_mask = bytes_df.index.map(lambda x: x.day in [8,10,12,14]) == True
+	bytes_df_even = bytes_df[even_mask]
 
 	fig, ax1 = plt.subplots()
-	lns1 = ax1.plot(df_odd, 'b--', label='Odd', visible=True)
-	lns2 =ax1.plot(df_even, 'b:', label='Even', visible=True)
+	lns1 = ax1.plot(bytes_df_odd, 'b--', label='Odd', visible=True)
+	lns2 =ax1.plot(bytes_df_even, 'b:', label='Even', visible=True)
 	ax1.set_ylabel('Bytes', color='b', fontsize=18)
 	ax1.set_yscale('log')
 	for tl in ax1.get_yticklabels():
 		tl.set_color('b')
 	
-	#corr = pd.rolling_corr(arg1=df_odd['bytes'],arg2=df_even['bytes'].shift(-24,'H'),window=24)
-	#corr = pd.rolling_corr(arg1=df_odd['bytes'],arg2=df_even['bytes'],window=24)
-	corr = df_odd['bytes'].rolling(window=24).corr(other=df_even['bytes'])
+	#corr = pd.rolling_corr(arg1=bytes_df_odd['bytes'],arg2=bytes_df_even['bytes'].shift(-24,'H'),window=24)
+	#corr = pd.rolling_corr(arg1=bytes_df_odd['bytes'],arg2=bytes_df_even['bytes'],window=24)
+	corr = bytes_df_odd['bytes'].rolling(window=24).corr(other=bytes_df_even['bytes'])
 
 	ax2=ax1.twinx()
 	lns3 = ax2.plot(corr, 'r-', label='Correlation', visible=True)
@@ -107,7 +115,7 @@ def proxiesStats(proxy_ids):
 	plt.show()
 	raw_input('End')
 
-	print 'Even/Odd correlation: %s' %  df_odd.corrwith(df_even).bytes
+	print 'Even/Odd correlation: %s' %  bytes_df_odd.corrwith(bytes_df_even).bytes
 
 
 
