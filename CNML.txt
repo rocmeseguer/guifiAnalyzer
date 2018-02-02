@@ -1,0 +1,17 @@
+Tiennes que hacer los siguientes pasos:
+1) crear una nueva carpeta
+2) descargar el fichero [1] dentro de la carpeta
+3) ejecutar dentro de la carpeta: git clone https://github.com/emmdim/guifiAnalyzer.git
+4) installar los paquetes networkx y igraph (igraph es opcional pero es util para imprimir y otras cosas).
+ 
+Ya puedes ejecutar el fichero con: python graph.py
+Te preguntara que zona quieres analyzar, ahi pones el codigo de la zona (lo puedes encontrar en la pagina de guifi) y enter.
+Ya esta.
+La ejecucion va a crear dos carpetas la "cnml" que no se usa y guifiAnalyzerOut que dentro se guardan los ficheros cnml.
+
+Despues puedes seguir con la analysis. Si quieres ayuda pide me pk tengo bastante experiencia en esto.
+
+He añadido unas funciones de ayuda para exportar en JSON y GML. Tambien una funcion que pinta el grafo con igraph.
+He dejado una fucnion vacia (analyzeGraph) para hacer el analysis.
+
+[1]: https://gist.githubusercontent.com/emmdim/0c0663256bf858c59e21a64d29b116d7/raw/137dcf8da350073c9ec5b6b9f94c175aff3af1bf/graph.py
